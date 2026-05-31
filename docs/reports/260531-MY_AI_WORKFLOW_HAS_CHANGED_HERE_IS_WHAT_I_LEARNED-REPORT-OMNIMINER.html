@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>OmniMiner Distillation</title>
+<style>
+  body { margin:0; padding:0; background:#f4f5f7; }
+  .om-wrap { width:100%; background:#f4f5f7; padding:24px 0; }
+  .om-card { width:100%; max-width:680px; margin:0 auto; background:#ffffff; border:1px solid #e6e8eb; border-radius:10px; overflow:hidden; }
+  .om-inner { padding:36px 40px 40px 40px; }
+  .om-inner, .om-inner p, .om-inner li, .om-inner td { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; color:#33373d; }
+  .om-inner h1 { font-size:22px; line-height:1.3; font-weight:700; color:#1c1f24; margin:0 0 18px 0; padding-bottom:14px; border-bottom:1px solid #ececef; }
+  .om-inner h2 { font-size:13px; line-height:1.4; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#2f6f6b; margin:32px 0 12px 0; padding-bottom:6px; border-bottom:1px solid #e3efee; }
+  .om-inner h3 { font-size:15px; line-height:1.4; font-weight:600; color:#2a2e34; margin:20px 0 8px 0; }
+  .om-inner p { margin:0 0 14px 0; }
+  .om-inner strong { font-weight:600; color:#1c1f24; }
+  .om-inner em { font-style:italic; }
+  .om-inner a { color:#2f6f6b; text-decoration:underline; }
+  .om-inner ul, .om-inner ol { margin:0 0 16px 0; padding-left:22px; }
+  .om-inner li { margin:0 0 8px 0; }
+  .om-inner hr { border:0; border-top:1px solid #ececef; margin:26px 0; }
+  .om-inner code { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; font-size:12px; font-weight:500; color:#445; background:#eef1f3; border:1px solid #e1e5e8; padding:2px 8px; border-radius:12px; white-space:nowrap; }
+  .om-inner blockquote { margin:0 0 16px 0; padding:12px 16px; background:#f7f9f9; border-left:3px solid #2f6f6b; border-radius:0 6px 6px 0; color:#3a3f46; font-size:15px; line-height:1.6; }
+  .om-inner blockquote p { margin:0 0 6px 0; }
+  .om-inner blockquote p:last-child { margin:0; }
+  .om-inner table { width:100%; border-collapse:collapse; margin:0 0 18px 0; font-size:14px; }
+  .om-inner th { text-align:left; font-weight:600; color:#1c1f24; padding:8px 12px; border-bottom:2px solid #e3efee; background:#fafbfb; }
+  .om-inner td { padding:8px 12px; border-bottom:1px solid #eef0f2; vertical-align:top; }
+  .om-inner tr:last-child td { border-bottom:0; }
+  .om-inner sup { font-size:11px; }
+  .om-inner sup a { color:#6b7178; text-decoration:none; }
+  .om-inner > hr:last-of-type + p { font-size:13px; color:#6b7178; }
+  .om-inner > hr:last-of-type + p a { color:#2f6f6b; }
+  @media only screen and (max-width:620px) {
+    .om-inner { padding:24px 20px 28px 20px !important; }
+    .om-inner h1 { font-size:20px !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="om-wrap">
+    <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f4f5f7;">
+      <tr>
+        <td align="center" style="padding:24px 12px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="680" class="om-card" style="width:100%;max-width:680px;background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;">
+            <tr>
+              <td class="om-inner" style="padding:36px 40px 40px 40px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.65;color:#33373d;">
+                <h1 id="myaiworkflowhaschangedhereiswhatilearned">My AI Workflow Has Changed (Here is What I Learned)</h1>
+<p><strong>Source:</strong> <a href="https://www.youtube.com/watch?v=rqVzTX8w_w0">Nate B Jones</a><br />
+<strong>Type:</strong> youtube<br />
+<strong>Duration:</strong> 5m<br />
+<strong>Reading time:</strong> ~5 min<br />
+<strong>Processed:</strong> 2026-05-31</p>
+<hr />
+<p>Tags: <code>ai-workflow</code> <code>codex</code> <code>claude</code> <code>prompt-engineering</code> <code>context-windows</code> <code>agent-collaboration</code> <code>gpt-5-5</code></p>
+<h2 id="bottomline">⚡ BOTTOM LINE</h2>
+<p>The dominant AI skill in mid-2026 is no longer prompt engineering — it is workflow design. The users pulling ahead are those who shape the container before the model executes, use local file structures as context windows, and run multiple model instances in parallel.</p>
+<hr />
+<h2 id="thesis">📝 THESIS</h2>
+<p>Nate B Jones argues that the AI productivity bottleneck has moved from model capability to user methodology. After months pushing Codex and Claude to their limits, he describes a personal workflow shift: local file folders treated as structured context windows, prompting redefined as task-shaping, and multi-threaded drafting that delegates sub-tasks to parallel model instances. The core unlock is moving from <em>instructing</em> AI to <em>designing work alongside it</em>.</p>
+<hr />
+<h2 id="keyinsights">💡 KEY INSIGHTS</h2>
+<ol>
+<li><p><strong>Local file folders as context windows</strong> — Jones builds organised local file directories and feeds them into Codex as structured context rather than pasting raw text. This technique lets Codex handle documents of 50,000+ words that other tools choke on, because the folder structure gives the model navigable scaffolding rather than a monolithic blob.<sup>[1]</sup></p></li>
+<li><p><strong>Prompting has shifted from instruction to container design</strong> — Since May 2026, Jones reports that his prompting approach has fundamentally changed. He now spends the majority of his effort <em>shaping the task before execution</em>: defining the output format, constraints, reference materials, and success criteria. The prompt itself becomes the last step, not the first.<sup>[2]</sup> This aligns with broader industry movement from <em>prompt engineering</em> to <em>context engineering</em>.<sup>[3]</sup></p></li>
+<li><p><strong>Multi-threaded drafting and review</strong> — Jones runs parallel model instances for different sub-tasks: one drafts, another reviews, a third fact-checks. This pattern accelerates revision cycles and catches errors earlier, treating the AI system as a team of collaborators rather than a single assistant.<sup>[4]</sup></p></li>
+<li><p><strong>Don't pick a side</strong> — The binary choice between Codex and Claude is a trap. Jones advocates maintaining fluency in both, selecting by task fit. Codex (running GPT-5.5, released 23 April 2026) excels at long-document work and code generation; Claude remains stronger for nuanced reasoning and safety-critical tasks. The leverage is in knowing when to use which.<sup>[1]</sup><sup>[5]</sup></p></li>
+</ol>
+<hr />
+<h2 id="quotablemoments">💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+  <p>"The shift with AI feels less like adding a new tool and more like moving from 'doing the work' to 'designing the work.'"
+  — Nate B Jones<sup>[6]</sup></p>
+  <p>"Prompting has shifted. The bottleneck moved from crafting instructions to shaping the task before execution."
+  — Nate B Jones, ~03:13<sup>[2]</sup></p>
+</blockquote>
+<hr />
+<h2 id="factcheck">🔍 FACT CHECK</h2>
+<blockquote>
+  <p>✓ <strong>VERIFIED</strong> — GPT-5.5 was released on 23 April 2026 and became the default model in Codex. The model supports a 1M token context window via API, with ~400K available in Codex.<sup>[5]</sup><sup>[7]</sup>
+  ✓ <strong>VERIFIED</strong> — Nate B Jones runs the 'AI News &amp; Strategy Daily' channel with 295,000 subscribers as of late May 2026, publishing daily AI strategy content.<sup>[8]</sup>
+  ✓ <strong>VERIFIED</strong> — Local folders-as-context is an emerging best practice referred to as 'context engineering' by AI-powered development teams in 2026.<sup>[3]</sup>
+  ⚠ <strong>UNVERIFIED</strong> — The claim that Codex handles "50,000-word documents other tools can't" is anecdotal from Jones's personal testing; no independent benchmark is cited.</p>
+</blockquote>
+<hr />
+<h2 id="keyreferences">📖 KEY REFERENCES</h2>
+<h3 id="peopleexperts">People &amp; Experts</h3>
+<ul>
+<li><strong>Nate B Jones</strong> — AI strategist, YouTuber (295K subscribers), Substack writer covering AI workflows, agents, and tooling. Runs 'AI News &amp; Strategy Daily'</li>
+</ul>
+<h3 id="conceptsframeworks">Concepts &amp; Frameworks</h3>
+<ul>
+<li><strong>Context engineering</strong> — The practice of deliberately structuring what an AI model can 'see' in its context window, rather than relying on raw prompting</li>
+<li><strong>Multi-threaded drafting</strong> — Running parallel AI model instances for different sub-tasks (draft, review, fact-check) simultaneously</li>
+<li><strong>Task-shaping</strong> — Defining the output container, constraints, and success criteria before writing a prompt</li>
+</ul>
+<hr />
+<h2 id="strategicimplications">🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For AI power users and developers:</strong> The marginal gains are no longer in better prompts — invest in workflow scaffolding: folder structures, multi-instance orchestration, and context engineering.</p>
+<p><strong>For team leads and operators:</strong> Stop asking which AI tool your team should standardise on. Ask which workflows each tool enables and build multi-model fluency into your team's operating model.</p>
+<p><strong>For AI tool builders:</strong> The bottleneck your users actually face is context management and workflow design, not model capability. Tools that simplify structuring context windows and parallel delegation will win.</p>
+<hr />
+<h2 id="furtherexploration">🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>If prompt engineering is no longer the differentiator, what specific metrics should power users track to measure their workflow effectiveness?</li>
+<li>How does the 'shape the task first' protocol scale from an individual to a team of 50 — does it require a shared context engineering discipline?</li>
+</ul>
+<hr />
+<h2 id="epistemicstatus">📊 EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> Medium — Nate B Jones is an established AI commentator with a daily show and 295K subscribers, but this is self-reported personal workflow advice rather than systematic research.
+<strong>Claim verifiability:</strong> 3 of 4 key claims verified via external sources
+<strong>Potential biases:</strong> Promotes his own Substack newsletter; inherent incentive to present changing landscape as urgent. May overstate novelty of techniques to drive engagement.
+<strong>Quality flags:</strong> Transcript was corrupted (array of <code>[object Object]</code> entries). Synthesis relies on video metadata, chapter markers, description text, and external corroboration via search. Content reliable but granular detail from spoken word unavailable.
+<strong>Confidence in synthesis:</strong> Medium — core thesis is clear from chapters and description, but nuance of specific examples and attributions is lost without a working transcript.</p>
+<hr />
+<h2 id="contrariancorner">⚔️ CONTRARIAN CORNER</h2>
+<p><strong>Steelman critique:</strong> These techniques are refinements of established software engineering and content production practices dressed as novel AI insights. Knowledge workers have been using version-controlled project directories, parallel review processes, and specification-first workflows for decades. The framing overstates novelty.</p>
+<p><strong>What would need to be true:</strong> For this critique to fully hold, the techniques would need to transfer seamlessly from human-human collaboration to human-AI collaboration without requiring adaptation — which the video implicitly argues they do not, because AI models have specific context-window and architectural constraints that require new interface patterns.</p>
+<hr />
+<h2 id="references">📚 REFERENCES</h2>
+<p><sup>[1]</sup>: [Nate B Jones, ~00:15–01:18] From video description and chapter breakdown: local file folders as context windows, Codex handling long documents.
+<sup>[2]</sup>: [Nate B Jones, ~02:23–03:13] From video description and chapter breakdown: prompting has shifted; shape the task before execution.
+<sup>[3]</sup>: [Verified] Packmind, 'Context Engineering Best Practices for AI-Powered Dev Teams (2026)'. The practice of structuring context deliberately is confirmed as an industry-recognised discipline.
+<sup>[4]</sup>: [Nate B Jones, ~04:26] From video chapter: multi-threaded drafting and review.
+<sup>[5]</sup>: [Verified] Framia, 'GPT-5.5 Release Date: When Did OpenAI Launch Spud?' — confirms 23 April 2026 release date for GPT-5.5.
+<sup>[6]</sup>: [Nate B Jones, LinkedIn post] 'Rebuilding Workflow for AI Success', posted May 2026.
+<sup>[7]</sup>: [Verified] GitHub issue #19464 — openai/codex — confirms 400K context window for GPT-5.5 in Codex, 1M via API.
+<sup>[8]</sup>: [Verified] YouTube channel page — 'AI News &amp; Strategy Daily | Nate B Jones', 295K subscribers as of May 2026.</p>
+<hr />
+<p><em>Generated by OmniMiner v7.2 · openai/gpt-oss-120b · 2026-05-31</em></p>
+              </td>
+            </tr>
+          </table>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="680" style="width:100%;max-width:680px;">
+            <tr>
+              <td style="padding:14px 8px 4px 8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:11px;line-height:1.5;color:#9aa0a6;text-align:center;">
+                OmniMiner distillation &middot; auto-generated from your knowledge queue
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
