@@ -278,7 +278,11 @@ def parse_report(path: Path) -> dict | None:
     title = fv("title")
     source_url = fv("source_url")
     duration = fv("duration")
-    author = fv("author")
+    # `author` is the clean channel/podcast/publication name (with spaces) that
+    # drives the TYPE · SOURCE line. OmniMiner frontmatter historically wrote this
+    # as `source_channel`; read either so the whole existing corpus gets a clean
+    # source line without re-firing. (PROC-OMNIMINER_TRIGGER §10a)
+    author = fv("author") or fv("source_channel")
     lbs_fm = fv("lbs").upper()[:2]
     goal = fv("goal")
     tags = [str(t).lower().strip() for t in fm["tags"]] if isinstance(fm.get("tags"), list) else []
@@ -296,8 +300,8 @@ def parse_report(path: Path) -> dict | None:
 
     # Date
     date_iso = None
-    if fv("date_processed"):
-        dp = fv("date_processed")
+    if fv("date_processed") or fv("processed_date"):
+        dp = fv("date_processed") or fv("processed_date")
         if re.fullmatch(r"\d{6}", dp):
             date_iso = f"20{dp[:2]}-{dp[2:4]}-{dp[4:]}"
         elif re.fullmatch(r"\d{4}-\d{2}-\d{2}", dp):

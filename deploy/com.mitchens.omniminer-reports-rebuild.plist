@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  OmniMiner reports-site rebuild watcher.  STAGED — NOT loaded by default.
+  Publishes to PUBLIC repo mitchens84/omniminer-reports; enabling is operator-gated
+  (PROC-OMNIMINER_TRIGGER §9 publish-by-default confirmation).
+
+  Install (after deciding to enable):
+    cp deploy/com.mitchens.omniminer-reports-rebuild.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.mitchens.omniminer-reports-rebuild.plist
+  Disable:
+    launchctl unload ~/Library/LaunchAgents/com.mitchens.omniminer-reports-rebuild.plist
+
+  WatchPaths fires on filesystem events (may be unreliable on the GDrive FUSE mount);
+  StartInterval is the reliable backstop. The script itself no-ops cheaply when no
+  source .md is newer than the last build, so a short interval is inexpensive.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.mitchens.omniminer-reports-rebuild</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/mitchens/Local/APPS/omniminer-reports/rebuild_and_push.sh</string>
+    </array>
+    <key>WatchPaths</key>
+    <array>
+        <string>/Users/mitchens/Library/CloudStorage/GoogleDrive-henspham@gmail.com/My Drive/_SYNC/OMNIMINER</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>900</integer>
+    <key>RunAtLoad</key>
+    <false/>
+    <key>StandardOutPath</key>
+    <string>/Users/mitchens/Local/APPS/omniminer-reports/rebuild.launchd.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/mitchens/Local/APPS/omniminer-reports/rebuild.launchd.log</string>
+</dict>
+</plist>
