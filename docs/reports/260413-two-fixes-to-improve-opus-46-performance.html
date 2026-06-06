@@ -6,16 +6,10 @@
 </head><body class="report"><div class="wrap">
 <a class="backlink" href="../index.html">&larr; All reports</a>
 <div class="card">
-<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-04-13 &middot; <a href="https://www.youtube.com/watch?v=L1CH00T3FeA">source</a></p>
-<h1>📄 Two Fixes To Improve Opus 4.6 Performance</h1>
-<p><strong>Source:</strong> YouTube Channel · 1:15 · YouTube<br>
-<strong>Published:</strong> 260412<br>
-<strong>Link:</strong> https://www.youtube.com/watch?v=L1CH00T3FeA<br>
-<strong>Reading time:</strong> ~2 min</p>
-<p><strong>Tags:</strong> <code>claude code</code> <code>ai coding</code> <code>performance tuning</code> <code>adaptive thinking</code></p>
-<hr>
+<p class="src">YOUTUBE</p><h1>Two Fixes To Improve Opus 4.6 Performance</h1>
+<p class="submeta">Video &middot; AI &amp; Technology &middot; 13 Apr 2026 &middot; 1m &middot; <a href="https://www.youtube.com/watch?v=L1CH00T3FeA">source</a></p>
 <h2>⚡ BOTTOM LINE</h2>
-<p>Two specific configuration changes—setting effort to max and disabling adaptive thinking—can restore Claude Code&rsquo;s performance to pre-February 2026 levels, as confirmed by the tool&rsquo;s creator.</p>
+<p>Two specific configuration changes—setting effort to max and disabling adaptive thinking—can restore Claude Code's performance to pre-February 2026 levels, as confirmed by the tool's creator.</p>
 <hr>
 <h2>📝 THESIS</h2>
 <p>Claude Code users experiencing degraded performance with Opus 4.6 can fix it by overriding two default settings: manually setting effort to max (which no longer defaults to high) and disabling adaptive thinking, forcing the model to always use maximum reasoning capacity regardless of perceived task complexity.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
@@ -26,10 +20,10 @@
 <p><strong>Effort levels no longer default to high</strong> — Since February 2026, Claude Code defaults to medium effort instead of high or max, requiring explicit <code>/effort max</code> commands for optimal performance.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></p>
 </li>
 <li>
-<p><strong>Adaptive thinking under-allocates reasoning</strong> — The creator, Boris Cherny, acknowledged that the adaptive thinking feature causes the model to &ldquo;sometimes think less on simpler questions,&rdquo; leading to inconsistent performance.<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup> [✓]</p>
+<p><strong>Adaptive thinking under-allocates reasoning</strong> — The creator, Boris Cherny, acknowledged that the adaptive thinking feature causes the model to "sometimes think less on simpler questions," leading to inconsistent performance.<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup> [✓]</p>
 </li>
 <li>
-<p><strong>Settings work best together</strong> — Setting <code>/effort max</code> alone doesn&rsquo;t fully solve the problem because adaptive thinking can still override effort settings, making both configuration changes necessary for consistent maximum performance.<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup> [✓]</p>
+<p><strong>Settings work best together</strong> — Setting <code>/effort max</code> alone doesn't fully solve the problem because adaptive thinking can still override effort settings, making both configuration changes necessary for consistent maximum performance.<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup> [✓]</p>
 </li>
 <li>
 <p><strong>Session vs. permanent settings</strong> — The <code>/effort max</code> command is session-only, requiring users to either reapply it each session or modify their settings folder defaults for persistent changes.<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup></p>
@@ -38,7 +32,7 @@
 <hr>
 <h2>💬 QUOTABLE MOMENTS</h2>
 <blockquote>
-<p>&ldquo;This is literally a suggestion from Churnney himself. He actually posted about this on hacker news because someone was bringing up how they did all these tests and it looked like Opus wasn&rsquo;t performing as well.&rdquo;<br>
+<p>"This is literally a suggestion from Churnney himself. He actually posted about this on hacker news because someone was bringing up how they did all these tests and it looked like Opus wasn't performing as well."<br>
 — [YouTube Channel, ~0:40]<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></p>
 </blockquote>
 <hr>
@@ -46,7 +40,7 @@
 <blockquote>
 <p>✓ <strong>VERIFIED</strong> — Boris Cherny is the actual creator and head of Claude Code at Anthropic, confirming his authority on these recommendations.<sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup></p>
 <p>✓ <strong>VERIFIED</strong> — The adaptive thinking feature was introduced in Opus 4.6 and allows Claude to dynamically decide thinking allocation based on perceived task complexity, sometimes reducing reasoning for simpler tasks.<sup id="fnref:7"><a class="footnote-ref" href="#fn:7">7</a></sup></p>
-<p>✓ <strong>VERIFIED</strong> — The recommended settings (<code>/effort max</code> plus <code>CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1</code>) were indeed confirmed by Cherny as restoring &ldquo;pre-February behavior where Claude always thought deeply.&rdquo;<sup id="fnref:8"><a class="footnote-ref" href="#fn:8">8</a></sup></p>
+<p>✓ <strong>VERIFIED</strong> — The recommended settings (<code>/effort max</code> plus <code>CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1</code>) were indeed confirmed by Cherny as restoring "pre-February behavior where Claude always thought deeply."<sup id="fnref:8"><a class="footnote-ref" href="#fn:8">8</a></sup></p>
 </blockquote>
 <hr>
 <h2>📖 KEY REFERENCES</h2>
@@ -72,8 +66,8 @@
 <h2>🧭 FURTHER EXPLORATION</h2>
 <ul>
 <li>What are the computational cost implications of running Claude Code with adaptive thinking disabled versus enabled for different types of coding tasks?</li>
-<li>How might the &ldquo;under-allocating reasoning&rdquo; problem with adaptive thinking affect different user skill levels differently?</li>
-<li>What other performance tuning parameters beyond effort and adaptive thinking might significantly impact Claude Code&rsquo;s effectiveness?</li>
+<li>How might the "under-allocating reasoning" problem with adaptive thinking affect different user skill levels differently?</li>
+<li>What other performance tuning parameters beyond effort and adaptive thinking might significantly impact Claude Code's effectiveness?</li>
 </ul>
 <hr>
 <h2>📊 EPISTEMIC STATUS</h2>
@@ -89,31 +83,31 @@
 <hr>
 <ol>
 <li id="fn:1">
-<p>[YouTube Channel, ~0:15] &ldquo;If you feel like claude code in Opus 4.6 just hasn&rsquo;t been performing as well lately, then here are two settings you can change.&rdquo;&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>[YouTube Channel, ~0:15] "If you feel like claude code in Opus 4.6 just hasn't been performing as well lately, then here are two settings you can change."&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 <li id="fn:2">
-<p>[YouTube Channel, ~0:25] &ldquo;The first setting you need to change is the effort because it doesn&rsquo;t default to high or max anymore.&rdquo;&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+<p>[YouTube Channel, ~0:25] "The first setting you need to change is the effort because it doesn't default to high or max anymore."&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn:3">
-<p>[YouTube Channel, ~0:40] &ldquo;The second setting you want to change is claude code disable adaptive thinking one. This is literally a suggestion from Churnney himself.&rdquo;&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+<p>[YouTube Channel, ~0:40] "The second setting you want to change is claude code disable adaptive thinking one. This is literally a suggestion from Churnney himself."&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 <li id="fn:4">
-<p>[Verified] Documentation confirms <code>/effort max</code> without disabling adaptive thinking doesn&rsquo;t completely solve performance issues because the model might still decide not to think on certain turns.&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+<p>[Verified] Documentation confirms <code>/effort max</code> without disabling adaptive thinking doesn't completely solve performance issues because the model might still decide not to think on certain turns.&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
 </li>
 <li id="fn:5">
-<p>[YouTube Channel, ~0:30] &ldquo;This is session only. So you will need to do this each time or change the default setting in your settings folder.&rdquo;&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+<p>[YouTube Channel, ~0:30] "This is session only. So you will need to do this each time or change the default setting in your settings folder."&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
 </li>
 <li id="fn:6">
-<p>[Verified] LinkedIn profile confirms Boris Cherny as &ldquo;Creator &amp; Head of Claude Code @Anthropic.&rdquo;&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+<p>[Verified] LinkedIn profile confirms Boris Cherny as "Creator &amp; Head of Claude Code @Anthropic."&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
 </li>
 <li id="fn:7">
-<p>[Verified] Amazon Bedrock documentation describes adaptive thinking as &ldquo;letting Claude dynamically decide when and how much to think based on the complexity of each request.&rdquo;&#160;<a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+<p>[Verified] Amazon Bedrock documentation describes adaptive thinking as "letting Claude dynamically decide when and how much to think based on the complexity of each request."&#160;<a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">&#8617;</a></p>
 </li>
 <li id="fn:8">
-<p>[Verified] Technical guide confirms these settings &ldquo;restore the pre-February behavior where Claude always thought deeply.&rdquo;&#160;<a class="footnote-backref" href="#fnref:8" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+<p>[Verified] Technical guide confirms these settings "restore the pre-February behavior where Claude always thought deeply."&#160;<a class="footnote-backref" href="#fnref:8" title="Jump back to footnote 8 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
 </div>
-<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+<footer class="site">OmniMiner distillation &middot; transcript withheld</footer>
 </div></body></html>

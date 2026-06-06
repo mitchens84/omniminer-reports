@@ -28,11 +28,20 @@ python3 build_site.py --source /path/to/reports
 
 Idempotent — re-run to rebuild from scratch.
 
-## Privacy gates
+## Privacy & quality gates
 
 1. Transcript truncation at `## Full Transcript` (automatic).
 2. `EXCLUDE_FROM_PUBLIC` marker anywhere in a report's source `.md`.
 3. `exclude.txt` — one report slug per line.
+4. **Quality gate** — a report is skipped if its distillation is a failed generation:
+   raw unexecuted tool-call output (`<function_calls>…`), an "unprocessable/unparseable
+   transcript", or an effectively empty body (<350 chars of prose). Such source files
+   should be quarantined and re-fired via the Airtable `TRANSCRIBE` button.
+
+Categories shown to readers are general-audience plain English (AI & Technology,
+Health & Nutrition, Mind & Philosophy, Money & Business, Society & Culture,
+Productivity & Learning, General) — **not** the internal LBS codes. Each report's
+LBS code is still emitted in `manifest.json` for downstream use (e.g. the website).
 
 **This repo is public.** Publishing is a deliberate act: rebuild, review, then
 `git push`. See `00-MASTER/00-KERNEL/PROC-OMNIMINER_TRIGGER.md` §9.

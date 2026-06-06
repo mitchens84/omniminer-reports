@@ -3,18 +3,18 @@
 build_site.py — OmniMiner Reports static-site generator.
 
 Reads OmniMiner distillation reports (markdown) from the _SYNC/OMNIMINER GDrive
-folder, strips the raw transcript, classifies each report into an LBS-aligned
-topic bucket, and emits a classified, searchable index plus one rendered HTML
+folder, strips the raw transcript, classifies each report into a general-audience
+topic category, and emits a classified, searchable index plus one rendered HTML
 page per report into ./docs (the GitHub Pages source).
 
 Privacy: bodies are truncated at the "## Full Transcript" header so only the
-distillation is published. A report is withheld if it contains the literal
-marker EXCLUDE_FROM_PUBLIC or its slug is listed in exclude.txt.
+distillation is published. A report is withheld if it contains EXCLUDE_FROM_PUBLIC,
+is listed in exclude.txt, or fails the quality gate (empty / raw tool-call output).
 
-Usage:
-  python3 build_site.py [--source PATH] [--limit N] [--quiet]
+Categories are general-audience plain English (NOT the internal LBS codes); each
+report's LBS code is still carried in manifest.json for downstream (website) use.
 
-Default source: ~/Library/CloudStorage/GoogleDrive-.../My Drive/_SYNC/OMNIMINER
+Usage: python3 build_site.py [--source PATH] [--limit N] [--quiet]
 Idempotent: re-running regenerates docs/ from scratch.
 """
 from __future__ import annotations
@@ -22,7 +22,6 @@ from __future__ import annotations
 import argparse
 import html
 import json
-import os
 import re
 import shutil
 import sys
@@ -48,153 +47,246 @@ DEFAULT_SOURCE = (
 TRANSCRIPT_MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript")
 PRIVACY_MARKER = "EXCLUDE_FROM_PUBLIC"
 
-# Classification buckets, in priority order (first match wins for primary bucket).
-# Each: (bucket label, emoji, LBS tag, keyword list matched against title+tags).
-BUCKETS = [
-    ("AI & Technology", "\U0001F916", "6I/7A", [
-        "ai", "a.i", "llm", "claude", "agent", "agentic", "gpt", "openai", "anthropic",
-        "prompt", "codex", "model", "machine learning", "neural", "software", "engineer",
-        "coding", "vibe-coding", "automation", "quantum", "robot", "chatbot", "agi",
-        "front end", "front-end", "infrastructure", "gpu", "compute",
+# Quality gate: a distillation that contains a raw unexecuted tool-call, or is
+# effectively empty, is a failed generation and must not be published.
+QUALITY_TOOLCALL = re.compile(
+    r"function_calls|<invoke\b|</invoke|antml:|name=\"(PERPLEXITY|TAVILY|WIKIPEDIA|CALCULATOR)\""
+    r"|call_[A-Za-z0-9]{16,}", re.I)
+QUALITY_UNPROC = re.compile(r"unprocessable|unparseable|unparsable", re.I)
+QUALITY_MIN_BODY = 350  # chars of real distillation prose
+
+# Display categories — general-audience labels in a fixed, predictable order.
+# Each: (label, lbs_code_for_manifest, keyword list matched on title+tags+goal).
+CATEGORIES = [
+    ("AI & Technology", "6I", [
+        "ai", "a.i", "llm", "claude", "anthropic", "openai", "gpt", "agent", "agentic",
+        "agi", "prompt", "codex", "model", "machine learning", "neural", "software",
+        "engineer", "coding", "vibe-coding", "quantum", "robot", "chatbot", "mcp",
+        "front end", "front-end", "gpu", "compute", "nvidia", "antigravity", "automation",
     ]),
-    ("Health & Nutrition", "\U0001FAC0", "4H", [
+    ("Health & Nutrition", "4H", [
         "health", "nutrition", "diet", "protein", "creatine", "taurine", "cholesterol",
         "exercise", "muscle", "longevity", "sleep", "dementia", "alzheimer", "thyroid",
         "metabolism", "metabolic", "cardiovascular", "supplement", "fasting", "rucking",
         "vegetable", "atherosclerosis", "endotoxin", "fitness", "training", "vo2",
-        "women 40", "medicine", "disease", "mortality", "cook", "food",
+        "women 40", "medicine", "disease", "cook", "food", "vegan", "cancer", "heart",
     ]),
-    ("Money & Economics", "\U0001F4B0", "3P", [
+    ("Mind & Philosophy", "2L", [
+        "stoic", "stoics", "philosophy", "ethic", "psycholog", "attention", "love",
+        "meaning", "virtue", "consciousness", "mindful", "happiness", "dating",
+        "relationship", "loved", "psychosis", "goldstein", "peterson", "mattering",
+    ]),
+    ("Money & Business", "3P", [
         "finance", "economic", "economy", "market", "invest", "money", "shadow banking",
         "revenue", "business", "sell off", "sell-off", "grifter", "wealth", "valuation",
-        "billion", "startup", "vc", "capital",
+        "billion", "startup", "founders", "enterprise", "ipo", "capital", "tipping",
     ]),
-    ("Mind & Philosophy", "\U0001F9D8", "2L", [
-        "stoic", "philosophy", "ethic", "psycholog", "attention", "love", "meaning",
-        "virtue", "consciousness", "mindful", "happiness", "dating", "relationship",
-        "loved", "psychosis", "goldstein", "attention seeking",
+    ("Society & Culture", "8C", [
+        "media", "education", "pedagog", "society", "culture", "documentary", "politic",
+        "democrat", "democracy", "iran", "gaza", "history", "ufo", "smart home", "matter",
+        "humane education",
     ]),
-    ("Productivity & Knowledge", "\U0001F9E0", "0A/6I", [
-        "second brain", "pkm", "note-taking", "note taking", "productivity",
-        "context engineering", "workflow", "tiago forte", "knowledge management",
-        "doable",
-    ]),
-    ("Society & Culture", "\U0001F30D", "8C/9E", [
-        "media", "education", "pedagog", "society", "culture", "documentary",
-        "humane education", "animal", "vegan", "epstein", "politic", "democracy",
-        "decision making", "decision-making",
+    ("Productivity & Learning", "0A", [
+        "second brain", "pkm", "note-taking", "note taking", "productivity", "to do list",
+        "to-do", "context engineering", "workflow", "tiago forte", "knowledge management",
+        "learning", "study",
     ]),
 ]
-FALLBACK_BUCKET = ("General", "\U0001F4DA", "0A", [])
+FALLBACK_CATEGORY = ("General", "0A", [])
+CATEGORY_ORDER = [c[0] for c in CATEGORIES] + [FALLBACK_CATEGORY[0]]
+LBS_OF = {c[0]: c[1] for c in CATEGORIES + [FALLBACK_CATEGORY]}
 
-# LBS-code fallback when keyword classification finds nothing (V7 frontmatter only).
-LBS_BUCKET = {
-    "4H": "Health & Nutrition", "2L": "Mind & Philosophy", "3P": "Money & Economics",
-    "7A": "AI & Technology", "6I": "AI & Technology", "0A": "Productivity & Knowledge",
-    "8C": "Society & Culture", "9E": "Society & Culture", "5R": "Society & Culture",
-    "1N": "General",
-}
-
-CONTENT_TYPES = {
-    "video": ("▶️", ["youtube.com", "youtu.be", "vimeo.com", "loom.com"]),
-    "podcast": ("\U0001F3A7", ["spotify.com", "acast", "megaphone", "apple.co",
-                                "podcast", "substack.com/api/v1/audio", "simplecast",
-                                "buzzsprout", "libsyn"]),
-}
-
-MD_EXTENSIONS = ["extra", "sane_lists", "nl2br", "smarty"]
-
-# Precompiled word-boundary matchers per bucket (avoids "ai" matching "brain").
-_BUCKET_RE = [
-    (b, [re.compile(r"\b" + re.escape(kw) + r"\b", re.I) for kw in b[3]])
-    for b in BUCKETS
+_CAT_RE = [
+    (c, [re.compile(r"\b" + re.escape(kw) + r"\b", re.I) for kw in c[2]])
+    for c in CATEGORIES
 ]
+
+# Content type by source domain.
+CTYPES = {
+    "video": ["youtube.com", "youtu.be", "vimeo.com", "loom.com"],
+    "podcast": ["spotify.com", "acast", "megaphone", "apple.co", "podcast",
+                "simplecast", "buzzsprout", "libsyn", "substack.com/api/v1/audio",
+                "transistor", "pdst.fm", "redcircle", "snipd"],
+}
+# Pretty platform names for the SOURCE line when no author is available.
+PLATFORM = {
+    "youtube.com": "YouTube", "youtu.be": "YouTube", "vimeo.com": "Vimeo",
+    "loom.com": "Loom", "acast.com": "Acast", "open.spotify.com": "Spotify",
+    "spotify.com": "Spotify", "substack.com": "Substack", "megaphone.fm": "Megaphone",
+    "apple.co": "Apple Podcasts", "podcasts.apple.com": "Apple Podcasts",
+    "simplecast.com": "Simplecast",
+}
+
+MD_EXTENSIONS = ["extra", "sane_lists", "nl2br"]
 
 INDEX_JS = """
 const q=document.getElementById('q'),chips=[...document.querySelectorAll('.chip')],
-items=[...document.querySelectorAll('li.item')],secs=[...document.querySelectorAll('section.bucket')],
-no=document.getElementById('noresults');let bf='all';
+items=[...document.querySelectorAll('li.item')],secs=[...document.querySelectorAll('section.cat')],
+count=document.getElementById('count'),no=document.getElementById('noresults');
+let bf='all';
 function apply(){const term=q.value.trim().toLowerCase();let shown=0;
 items.forEach(li=>{const okB=bf==='all'||li.dataset.b===bf;
 const okT=!term||li.dataset.s.includes(term);const v=okB&&okT;
 li.style.display=v?'':'none';if(v)shown++;});
-secs.forEach(s=>{const any=[...s.querySelectorAll('li.item')].some(li=>li.style.display!=='none');
-s.style.display=any?'':'none';});no.style.display=shown?'none':'';}
+secs.forEach(s=>{const vis=[...s.querySelectorAll('li.item')].some(li=>li.style.display!=='none');
+s.style.display=vis?'':'none';
+const h=s.querySelector('h2');if(h)h.style.display=(bf==='all')?'':'none';});
+no.style.display=shown?'none':'';
+count.textContent=shown+(shown===1?' report':' reports');}
 q.addEventListener('input',apply);
 chips.forEach(c=>c.addEventListener('click',()=>{chips.forEach(x=>x.classList.remove('active'));
 c.classList.add('active');bf=c.dataset.b;apply();}));
 """
 
 # ---------------------------------------------------------------------------
-# Parsing
+# Parsing helpers
 # ---------------------------------------------------------------------------
+YAML_FM = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.S)
+FILENAME_DATE8 = re.compile(r"^(\d{4})(\d{2})(\d{2})[_-]")
+FILENAME_DATE6 = re.compile(r"^(\d{2})(\d{2})(\d{2})[_-]")
+URL_RE = re.compile(r"https?://[^\s\)\]]+")
 META_SOURCE = re.compile(r"\*\*Source:?\*\*[:\s]*\[?([^\]\)\n]+)\]?\(?([^)\n]*)\)?", re.I)
 META_PROCESSED = re.compile(r"\*\*Processed:?\*\*[:\s]*([0-9]{4}-[0-9]{2}-[0-9]{2})", re.I)
-META_DURATION = re.compile(r"\*\*Duration:?\*\*[:\s]*([A-Za-z0-9]+)", re.I)
+META_DURATION = re.compile(r"\*\*Duration:?\*\*[:\s|]*([A-Za-z0-9:]+)", re.I)
 TAG_TOKENS = re.compile(r"`+\s*([a-z0-9][\w\- /]*?)\s*`+", re.I)
-FILENAME_DATE8 = re.compile(r"^(\d{4})(\d{2})(\d{2})[_-]")   # YYYYMMDD_  (legacy)
-FILENAME_DATE6 = re.compile(r"^(\d{2})(\d{2})(\d{2})[_-]")     # YYMMDD-    (V7)
-URL_RE = re.compile(r"https?://[^\s\)\]]+")
-YAML_FM = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.S)
+MONTHS = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 
 def slugify(name: str) -> str:
-    s = name.lower()
-    s = re.sub(r"[^a-z0-9]+", "-", s)
+    s = re.sub(r"[^a-z0-9]+", "-", name.lower())
     return s.strip("-")[:80] or "report"
 
 
-def _date_from_filename(name: str) -> str | None:
-    m = FILENAME_DATE8.match(name)
-    if m:
-        return f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
-    m = FILENAME_DATE6.match(name)
-    if m:
-        return f"20{m.group(1)}-{m.group(2)}-{m.group(3)}"
-    return None
+def friendly_date(iso: str) -> str:
+    try:
+        y, m, d = iso.split("-")
+        return f"{int(d)} {MONTHS[int(m)]} {y}"
+    except Exception:
+        return iso
 
 
-def _yymmdd_to_iso(v: str) -> str | None:
-    v = str(v).strip()
-    if re.fullmatch(r"\d{6}", v):
-        return f"20{v[:2]}-{v[2:4]}-{v[4:]}"
-    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", v):
-        return v
+def friendly_duration(v: str) -> str:
+    v = (v or "").strip()
+    if not v:
+        return ""
+    m = re.fullmatch(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", v, re.I)
+    if m:
+        h, mi, s = (int(x) if x else 0 for x in m.groups())
+    else:
+        parts = v.split(":")
+        if all(p.isdigit() for p in parts) and 2 <= len(parts) <= 3:
+            nums = [int(p) for p in parts]
+            h, mi, s = ([0] + nums)[-3:] if len(nums) == 2 else nums
+        else:
+            return ""
+    if h:
+        return f"{h}h {mi}m" if mi else f"{h}h"
+    if mi:
+        return f"{mi}m"
+    return f"{s}s" if s else ""
+
+
+def source_label(author: str, url: str) -> str:
+    """A short uppercase SOURCE name: prefer author/channel, else platform."""
+    if author:
+        a = re.sub(r"\s*\([^)]*\)\s*$", "", author).strip()  # drop "(...)" suffix
+        return a.upper()[:48]
+    if not url:
+        return ""
+    if "doi.org" in url:
+        return "RESEARCH"
+    if "snipd" in url:
+        return "SNIPD"
+    m = re.search(r"https?://([^/]+)", url)
+    host = (m.group(1) if m else "").lower().lstrip("www.")
+    for dom, name in PLATFORM.items():
+        if dom in host:
+            return name.upper()
+    root = host.split(".")[-2] if host.count(".") >= 1 else host
+    return root.upper() if root else ""
+
+
+def content_type(url: str) -> str:
+    u = url.lower()
+    for t, doms in CTYPES.items():
+        if any(d in u for d in doms):
+            return t
+    return "article"
+
+
+def strip_leading_meta(body_md: str) -> str:
+    """Remove the report's own metadata block (Source/Processed/Duration/Type,
+    a Field|Value table, a leading duplicate H1, and empty Summary headers) so
+    only the distillation prose renders under our own header."""
+    lines = body_md.splitlines()
+    out, in_table = [], False
+    started = False
+    for ln in lines:
+        s = ln.strip()
+        if not started:
+            if re.match(r"^#\s+", s):                       # leading duplicate title
+                continue
+            if re.match(r"^\*\*(Source|Processed|Duration|Link|Published|Type|Reading time|Tags)\b", s, re.I):
+                continue
+            if re.match(r"^\|.*\|$", s):                    # Field|Value metadata table
+                in_table = True
+                continue
+            if in_table and re.match(r"^\|[\s:|-]+\|$", s):
+                continue
+            if in_table and re.match(r"^\|.*\|$", s):
+                continue
+            in_table = False
+            if s in ("---", "") or re.match(r"^##\s+(Summary|Distilled Summary)\s*$", s, re.I):
+                continue
+            started = True
+        out.append(ln)
+    return "\n".join(out).strip()
+
+
+def quality_fail(body_md: str) -> str | None:
+    if QUALITY_TOOLCALL.search(body_md):
+        return "raw tool-call output"
+    prose = re.sub(r"^#.*$|^\s*\|.*\|\s*$|^\*\*[^*]+\*\*.*$|^---+$|^\{.*\}$", "",
+                   body_md, flags=re.M).strip()
+    if len(prose) < QUALITY_MIN_BODY:
+        return f"empty distillation ({len(prose)}c)"
     return None
 
 
 def parse_report(path: Path) -> dict | None:
     raw = path.read_text(encoding="utf-8", errors="replace")
     if PRIVACY_MARKER in raw:
-        return None
+        return {"_skip": "EXCLUDE_FROM_PUBLIC"}
+    if QUALITY_UNPROC.search(raw[:400]):
+        return {"_skip": "unprocessable transcript"}
 
-    # --- V7 YAML frontmatter path -----------------------------------------
     fm: dict = {}
     fmm = YAML_FM.match(raw)
     if fmm:
         try:
             import yaml
-            parsed = yaml.safe_load(fmm.group(1))
-            if isinstance(parsed, dict):
-                fm = parsed
-        except Exception:  # noqa: BLE001
+            p = yaml.safe_load(fmm.group(1))
+            if isinstance(p, dict):
+                fm = p
+        except Exception:
             fm = {}
         body_src = raw[fmm.end():]
     else:
         body_src = raw
 
-    title = (str(fm.get("title")).strip() if fm.get("title") else None)
-    source_url = (str(fm.get("source_url")).strip() if fm.get("source_url") else "")
-    duration = (str(fm.get("duration")).strip() if fm.get("duration") else "")
-    lbs = (str(fm.get("lbs")).strip().upper()[:2] if fm.get("lbs") else "")
-    goal = (str(fm.get("goal")).strip() if fm.get("goal") else "")
-    tags = []
-    if isinstance(fm.get("tags"), list):
-        tags = [str(t).lower().strip() for t in fm["tags"] if str(t).strip()]
+    def fv(k):
+        return str(fm.get(k)).strip() if fm.get(k) else ""
+
+    title = fv("title")
+    source_url = fv("source_url")
+    duration = fv("duration")
+    author = fv("author")
+    lbs_fm = fv("lbs").upper()[:2]
+    goal = fv("goal")
+    tags = [str(t).lower().strip() for t in fm["tags"]] if isinstance(fm.get("tags"), list) else []
 
     lines = body_src.splitlines()
-
-    # Title fallback: first markdown H1 (strip leading emoji), then filename.
     if not title:
         for ln in lines[:40]:
             m = re.match(r"^#\s+(.+)", ln)
@@ -202,18 +294,28 @@ def parse_report(path: Path) -> dict | None:
                 title = re.sub(r"^[\U0001F300-\U0001FAFF☀-➿]\s*", "", m.group(1).strip()).strip()
                 break
     if not title:
-        title = (path.stem.replace("_complete", "")
-                 .split("-REPORT-OMNIMINER")[0].replace("_", " ").strip())
+        title = (path.stem.replace("_complete", "").split("-REPORT-OMNIMINER")[0]
+                 .replace("_", " ").strip())
 
-    # Date: frontmatter date_processed, else filename, else **Processed**, else epoch.
-    date_iso = _yymmdd_to_iso(fm.get("date_processed", "")) if fm else None
+    # Date
+    date_iso = None
+    if fv("date_processed"):
+        dp = fv("date_processed")
+        if re.fullmatch(r"\d{6}", dp):
+            date_iso = f"20{dp[:2]}-{dp[2:4]}-{dp[4:]}"
+        elif re.fullmatch(r"\d{4}-\d{2}-\d{2}", dp):
+            date_iso = dp
     if not date_iso:
-        date_iso = _date_from_filename(path.name)
+        m8 = FILENAME_DATE8.match(path.name)
+        m6 = FILENAME_DATE6.match(path.name)
+        if m8:
+            date_iso = f"{m8.group(1)}-{m8.group(2)}-{m8.group(3)}"
+        elif m6:
+            date_iso = f"20{m6.group(1)}-{m6.group(2)}-{m6.group(3)}"
     if not date_iso:
         mp = META_PROCESSED.search(raw)
         date_iso = mp.group(1) if mp else "1970-01-01"
 
-    # Source URL fallback (legacy **Source** line, then first URL).
     if not source_url:
         ms = META_SOURCE.search(raw)
         if ms and ms.group(2).strip().startswith("http"):
@@ -221,75 +323,61 @@ def parse_report(path: Path) -> dict | None:
         else:
             mu = URL_RE.search(raw[:800])
             source_url = mu.group(0) if mu else ""
-
     if not duration:
         md = META_DURATION.search(raw)
         duration = md.group(1) if md else ""
-
-    # Legacy **Tags:** line
     if not tags:
         for ln in lines:
             if re.match(r"\s*\*\*Tags:?\*\*", ln, re.I):
                 tags = [t.lower() for t in TAG_TOKENS.findall(ln)
-                        if t.lower() not in ("tags",) and len(t) > 1]
+                        if t.lower() != "tags" and len(t) > 1]
                 break
 
-    # Body: strip everything from the transcript marker onward.
+    # Body up to transcript
     cut = len(lines)
     for i, ln in enumerate(lines):
         if any(ln.strip().startswith(m) for m in TRANSCRIPT_MARKERS):
             cut = i
             break
-    body_lines = lines[:cut]
+    raw_body = "\n".join(lines[:cut]).strip()
 
-    # Legacy double-title cleanup: start body at the emoji distillation title or ⚡.
-    start = 0
-    if not fm:
-        for i, ln in enumerate(body_lines[:30]):
-            if re.match(r"^#\s+[\U0001F300-\U0001FAFF]", ln) or ln.strip().startswith("## ⚡"):
-                start = i
-                break
-    body_md = "\n".join(body_lines[start:]).strip()
-    body_md = re.sub(r"^##\s+Summary\s*$", "", body_md, flags=re.M)
+    qf = quality_fail(raw_body)
+    if qf:
+        return {"_skip": qf}
 
-    # Classify by highest word-boundary keyword-hit score; LBS fallback; General.
-    haystack = (title + " " + " ".join(tags) + " " + goal + " " + lbs)
-    best_b, best_score = None, 0
-    for b, pats in _BUCKET_RE:
-        score = sum(1 for pat in pats if pat.search(haystack))
+    body_md = strip_leading_meta(raw_body)
+
+    # Classify
+    haystack = (title + " " + " ".join(tags) + " " + goal + " " + lbs_fm)
+    best, best_score = None, 0
+    for c, pats in _CAT_RE:
+        score = sum(1 for p in pats if p.search(haystack))
         if score > best_score:
-            best_b, best_score = b, score
-    bucket = best_b
-    if bucket is None and lbs in LBS_BUCKET:
-        label = LBS_BUCKET[lbs]
-        bucket = next((b for b in BUCKETS + [FALLBACK_BUCKET] if b[0] == label), FALLBACK_BUCKET)
-    if bucket is None:
-        bucket = FALLBACK_BUCKET
+            best, best_score = c, score
+    if best is None:
+        label = next((lab for lab, code in LBS_OF.items() if code == lbs_fm), None)
+        category = (next((c for c in CATEGORIES if c[0] == label), FALLBACK_CATEGORY)
+                    if label else FALLBACK_CATEGORY)
+    else:
+        category = best
 
-    # Content type
-    ctype = "article"
-    cicon = "\U0001F4C4"
-    for name, (icon, doms) in CONTENT_TYPES.items():
-        if any(d in source_url.lower() for d in doms):
-            ctype, cicon = name, icon
-            break
+    ctype = content_type(source_url)
+    src = source_label(author, source_url)
 
-    stem = (path.stem.replace("_complete", "")
-            .split("-REPORT-OMNIMINER")[0])
-    stem = re.sub(r"\s*\(\d+\)\s*$", "", stem)  # drop GDrive ' (N)' dup suffix
+    stem = path.stem.replace("_complete", "").split("-REPORT-OMNIMINER")[0]
+    stem = re.sub(r"\s*\(\d+\)\s*$", "", stem)
     return {
         "slug": slugify(stem) or slugify(title),
         "dedup_key": slugify(stem),
         "title": title,
         "date": date_iso,
-        "source": source_url,
-        "duration": duration,
+        "source_url": source_url,
+        "source_label": src,
+        "duration": friendly_duration(duration),
         "tags": tags,
-        "bucket": bucket[0],
-        "bucket_icon": bucket[1],
-        "bucket_lbs": bucket[2],
+        "category": category[0],
+        "lbs": LBS_OF[category[0]],
         "ctype": ctype,
-        "ctype_icon": cicon,
         "body_md": body_md,
         "src_file": path.name,
     }
@@ -304,36 +392,38 @@ def render_md(body_md: str) -> str:
 
 CSS = """
 :root{--bg:#f4f5f7;--card:#fff;--ink:#33373d;--ink-strong:#1c1f24;--teal:#2f6f6b;
---teal-bg:#e3efee;--line:#e6e8eb;--muted:#9aa0a6;}
+--teal-bg:#e3efee;--line:#e6e8eb;--muted:#9aa0a6;--src:#b07a2f;}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);line-height:1.65}
+body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);line-height:1.6}
 a{color:var(--teal)}
 .wrap{max-width:760px;margin:0 auto;padding:24px 16px 64px}
-header.site{padding:28px 0 8px}
+header.site{padding:26px 0 6px}
 header.site h1{font-size:26px;margin:0 0 6px;color:var(--ink-strong)}
 header.site p{margin:0;color:#5a6068;font-size:14px}
-.controls{position:sticky;top:0;background:var(--bg);padding:14px 0 10px;z-index:5;border-bottom:1px solid var(--line);margin-bottom:8px}
+.controls{position:sticky;top:0;background:var(--bg);padding:14px 0 12px;z-index:5;border-bottom:1px solid var(--line);margin-bottom:6px}
 #q{width:100%;padding:11px 14px;font-size:15px;border:1px solid var(--line);border-radius:10px;background:#fff;outline:none}
 #q:focus{border-color:var(--teal)}
 .filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.chip{font-size:12px;padding:5px 11px;border:1px solid var(--line);border-radius:14px;background:#fff;cursor:pointer;color:#566;user-select:none}
+.chip{font-size:12.5px;padding:5px 12px;border:1px solid var(--line);border-radius:14px;background:#fff;cursor:pointer;color:#566;user-select:none}
 .chip.active{background:var(--teal);color:#fff;border-color:var(--teal)}
-.count{color:var(--muted);font-size:12px;margin-left:4px}
-section.bucket{margin:26px 0 0}
-section.bucket > h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);border-bottom:1px solid var(--teal-bg);padding-bottom:6px;margin:0 0 4px}
+#count{color:var(--muted);font-size:12px;margin:10px 2px 0;display:block}
+section.cat{margin:22px 0 0}
+section.cat > h2{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--teal);border-bottom:1px solid var(--teal-bg);padding-bottom:6px;margin:0 0 2px}
 ul.items{list-style:none;margin:0;padding:0}
-li.item{padding:12px 2px;border-bottom:1px solid #eef0f2;display:flex;gap:10px;align-items:baseline}
-li.item .ico{font-size:14px;flex:0 0 auto}
-li.item a.t{font-weight:600;color:var(--ink-strong);text-decoration:none}
+li.item{padding:13px 2px;border-bottom:1px solid #eef0f2}
+li.item a.t{font-weight:600;font-size:15px;color:var(--ink-strong);text-decoration:none}
 li.item a.t:hover{color:var(--teal);text-decoration:underline}
-li.item .meta{display:block;font-size:12px;color:var(--muted);margin-top:2px}
-li.item .tg{font-size:11px;color:#7a8088}
+li.item .src{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--src);margin:3px 0 2px;font-weight:600}
+li.item .meta{display:block;font-size:12px;color:var(--muted)}
+li.item .tg{color:#aeb4ba}
 .empty{color:var(--muted);font-style:italic;padding:18px 0}
-footer.site{margin-top:40px;text-align:center;color:var(--muted);font-size:11px}
+footer.site{margin-top:40px;text-align:center;color:var(--muted);font-size:11px;line-height:1.7}
 /* report page */
 .report .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:34px 38px}
-.report h1{font-size:23px;color:var(--ink-strong);margin:0 0 10px;padding-bottom:12px;border-bottom:1px solid #ececef}
-.report h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);border-bottom:1px solid var(--teal-bg);padding-bottom:6px;margin:30px 0 12px}
+.report .src{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--src);font-weight:600;margin:0 0 4px}
+.report h1{font-size:23px;color:var(--ink-strong);margin:0 0 8px;line-height:1.3}
+.report .submeta{font-size:12px;color:var(--muted);margin:0 0 4px;padding-bottom:14px;border-bottom:1px solid #ececef}
+.report h2{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal);border-bottom:1px solid var(--teal-bg);padding-bottom:6px;margin:28px 0 12px}
 .report h3{font-size:15px;color:var(--ink-strong)}
 .report blockquote{border-left:3px solid var(--teal-bg);margin:0 0 14px;padding:2px 16px;color:#4a5057}
 .report table{border-collapse:collapse;width:100%;font-size:14px;margin:0 0 16px}
@@ -342,16 +432,26 @@ footer.site{margin-top:40px;text-align:center;color:var(--muted);font-size:11px}
 .report code{font-size:12px;background:#eef1f3;border:1px solid #e1e5e8;padding:1px 6px;border-radius:10px}
 .report img{max-width:100%}
 .backlink{display:inline-block;margin:0 0 16px;font-size:13px;text-decoration:none}
-.report .submeta{font-size:12px;color:var(--muted);margin:0 0 8px}
 @media(max-width:620px){.report .card{padding:22px 18px}.wrap{padding:16px 12px 48px}}
 """
 
 
+def submeta_line(r: dict, with_category: bool) -> str:
+    bits = [r["ctype"].title()]
+    if with_category:
+        bits.append(r["category"])
+    bits.append(friendly_date(r["date"]))
+    if r["duration"]:
+        bits.append(r["duration"])
+    line = " &middot; ".join(html.escape(b) for b in bits)
+    if r["source_url"]:
+        line += f' &middot; <a href="{html.escape(r["source_url"])}">source</a>'
+    return line
+
+
 def report_page(r: dict) -> str:
     body = render_md(r["body_md"])
-    src = (f'<a href="{html.escape(r["source"])}">source</a>'
-           if r["source"] else "source n/a")
-    dur = f' &middot; {html.escape(r["duration"])}' if r["duration"] else ""
+    src = f'<p class="src">{html.escape(r["source_label"])}</p>' if r["source_label"] else ""
     return f"""<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -360,44 +460,46 @@ def report_page(r: dict) -> str:
 </head><body class="report"><div class="wrap">
 <a class="backlink" href="../index.html">&larr; All reports</a>
 <div class="card">
-<p class="submeta">{r["ctype_icon"]} {html.escape(r["ctype"].title())} &middot; {r["bucket_icon"]} {html.escape(r["bucket"])} &middot; {html.escape(r["date"])}{dur} &middot; {src}</p>
+{src}<h1>{html.escape(r["title"])}</h1>
+<p class="submeta">{submeta_line(r, with_category=True)}</p>
 {body}
 </div>
-<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+<footer class="site">OmniMiner distillation &middot; transcript withheld</footer>
 </div></body></html>"""
 
 
 def index_page(reports: list[dict], built_at: str) -> str:
-    order = [b[0] for b in BUCKETS] + [FALLBACK_BUCKET[0]]
-    by_bucket: dict[str, list[dict]] = {b: [] for b in order}
+    by_cat: dict[str, list[dict]] = {c: [] for c in CATEGORY_ORDER}
     for r in reports:
-        by_bucket.setdefault(r["bucket"], []).append(r)
+        by_cat.setdefault(r["category"], []).append(r)
 
-    chips = ['<span class="chip active" data-b="all">All<span class="count">'
-             f'{len(reports)}</span></span>']
+    chips = [f'<span class="chip active" data-b="all">All ({len(reports)})</span>']
     sections = []
-    for b in order:
-        items = sorted(by_bucket.get(b, []), key=lambda x: x["date"], reverse=True)
+    for c in CATEGORY_ORDER:
+        items = sorted(by_cat.get(c, []), key=lambda x: x["date"], reverse=True)
         if not items:
             continue
-        icon = next((x[1] for x in BUCKETS + [FALLBACK_BUCKET] if x[0] == b), "")
-        chips.append(f'<span class="chip" data-b="{html.escape(b)}">{icon} '
-                     f'{html.escape(b)}<span class="count">{len(items)}</span></span>')
+        chips.append(f'<span class="chip" data-b="{html.escape(c)}">{html.escape(c)} ({len(items)})</span>')
         lis = []
         for r in items:
-            tagstr = " ".join("#" + t for t in r["tags"][:5])
-            search = html.escape((r["title"] + " " + " ".join(r["tags"]) + " " + b).lower())
+            srcline = f'<span class="src">{r["ctype"].upper()}'
+            if r["source_label"]:
+                srcline += f' &middot; {html.escape(r["source_label"])}'
+            srcline += "</span>"
+            tagstr = " ".join("#" + t for t in r["tags"][:4])
+            search = html.escape((r["title"] + " " + " ".join(r["tags"]) + " "
+                                  + r["source_label"] + " " + c).lower())
             lis.append(
-                f'<li class="item" data-b="{html.escape(b)}" data-s="{search}">'
-                f'<span class="ico" title="{html.escape(r["ctype"])}">{r["ctype_icon"]}</span>'
-                f'<div><a class="t" href="reports/{r["slug"]}.html">{html.escape(r["title"])}</a>'
-                f'<span class="meta">{html.escape(r["date"])} '
-                f'<span class="tg">{html.escape(tagstr)}</span></span></div></li>'
+                f'<li class="item" data-b="{html.escape(c)}" data-s="{search}">'
+                f'<a class="t" href="reports/{r["slug"]}.html">{html.escape(r["title"])}</a>'
+                f'{srcline}'
+                f'<span class="meta">{html.escape(friendly_date(r["date"]))}'
+                f'{(" &middot; " + r["duration"]) if r["duration"] else ""} '
+                f'<span class="tg">{html.escape(tagstr)}</span></span></li>'
             )
         sections.append(
-            f'<section class="bucket" data-b="{html.escape(b)}">'
-            f'<h2>{icon} {html.escape(b)} <span class="count">{len(items)}</span></h2>'
-            f'<ul class="items">{"".join(lis)}</ul></section>'
+            f'<section class="cat" data-b="{html.escape(c)}">'
+            f'<h2>{html.escape(c)}</h2><ul class="items">{"".join(lis)}</ul></section>'
         )
 
     return f"""<!DOCTYPE html>
@@ -408,16 +510,16 @@ def index_page(reports: list[dict], built_at: str) -> str:
 </head><body><div class="wrap">
 <header class="site">
 <h1>OmniMiner Reports</h1>
-<p>Fact-checked distillations of videos, podcasts and articles from the OmniMiner knowledge pipeline. {len(reports)} reports.</p>
+<p>Fact-checked distillations of the videos, podcasts and articles I work through &mdash; the key points of each, without the transcript.</p>
 </header>
 <div class="controls">
-<input id="q" type="search" placeholder="Search title or tag&hellip;" autocomplete="off">
+<input id="q" type="search" placeholder="Search title, source or tag&hellip;" autocomplete="off">
 <div class="filters">{''.join(chips)}</div>
+<span id="count">{len(reports)} reports</span>
 </div>
 <div id="results">{''.join(sections)}</div>
 <p class="empty" id="noresults" style="display:none">No reports match.</p>
-<footer class="site">Generated {built_at} &middot; distillation only, transcripts withheld &middot;
-per-report <code>EXCLUDE_FROM_PUBLIC</code> kill switch</footer>
+<footer class="site">Generated {built_at} &middot; distillation only, transcripts withheld</footer>
 </div>
 <script>{INDEX_JS}</script>
 </body></html>"""
@@ -459,37 +561,34 @@ def main() -> int:
         except Exception as e:  # noqa: BLE001
             skipped.append((p.name, f"parse error: {e}"))
             continue
-        if r is None:
-            skipped.append((p.name, "EXCLUDE_FROM_PUBLIC marker"))
+        if r is None or "_skip" in r:
+            skipped.append((p.name, r.get("_skip", "skip") if r else "skip"))
             continue
         if r["slug"] in excludes or r["dedup_key"] in excludes:
-            skipped.append((p.name, "in exclude.txt"))
+            skipped.append((p.name, "exclude.txt"))
             continue
         parsed.append((p, r))
 
-    # Dedupe GDrive ' (N)' copies: keep the largest file per dedup_key.
+    # Dedupe GDrive ' (N)' copies: keep the largest source file per dedup_key.
     best: dict[str, tuple[Path, dict]] = {}
     for p, r in parsed:
-        key = r["dedup_key"]
-        if key not in best or p.stat().st_size > best[key][0].stat().st_size:
-            if key in best:
-                skipped.append((p.name, f"dup of {best[key][0].name}"))
-            best[key] = (p, r)
+        k = r["dedup_key"]
+        if k not in best or p.stat().st_size > best[k][0].stat().st_size:
+            if k in best:
+                skipped.append((p.name, f"dup of {best[k][0].name}"))
+            best[k] = (p, r)
         else:
-            skipped.append((p.name, f"dup of {best[key][0].name}"))
+            skipped.append((p.name, f"dup of {best[k][0].name}"))
     reports = [r for _, r in best.values()]
 
-    # Ensure slug uniqueness (distinct captures, same title).
     seen: dict[str, int] = {}
     for r in reports:
-        s = r["slug"]
-        if s in seen:
-            seen[s] += 1
-            r["slug"] = f"{s}-{r['date'].replace('-', '')}"
+        if r["slug"] in seen:
+            seen[r["slug"]] += 1
+            r["slug"] = f"{r['slug']}-{r['date'].replace('-', '')}"
         else:
-            seen[s] = 1
+            seen[r["slug"]] = 1
 
-    # Rebuild docs/ (preserve index.html scaffold backup once).
     if REPORTS_DIR.exists():
         shutil.rmtree(REPORTS_DIR)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -505,19 +604,24 @@ def main() -> int:
     manifest = {
         "built_at": built_at,
         "count": len(reports),
-        "reports": [{k: r[k] for k in ("slug", "title", "date", "bucket", "ctype",
-                                        "tags", "source", "src_file")} for r in reports],
+        "categories": CATEGORY_ORDER,
+        "reports": [{k: r[k] for k in ("slug", "title", "date", "category", "lbs",
+                                        "ctype", "source_label", "source_url", "tags",
+                                        "duration", "src_file")} for r in
+                    sorted(reports, key=lambda x: x["date"], reverse=True)],
     }
     (DOCS / "manifest.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
 
     if not args.quiet:
         from collections import Counter
-        dist = Counter(r["bucket"] for r in reports)
+        dist = Counter(r["category"] for r in reports)
+        qskip = [s for s in skipped if s[1] in ("raw tool-call output", "unprocessable transcript")
+                 or "empty distillation" in s[1]]
         print(f"Built {len(reports)} reports ({len(skipped)} skipped) -> {DOCS}")
-        for b, n in dist.most_common():
-            print(f"  {n:3d}  {b}")
-        if skipped[:5]:
-            print("Skipped sample:", skipped[:5])
+        for c in CATEGORY_ORDER:
+            if dist.get(c):
+                print(f"  {dist[c]:3d}  {c}")
+        print(f"Quality-gate skips: {len(qskip)}", qskip[:6] if qskip else "")
     return 0
 
 
