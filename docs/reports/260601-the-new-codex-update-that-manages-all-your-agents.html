@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The New Codex Update That Manages All Your Agents &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-06-01 &middot; 15m &middot; <a href="https://www.youtube.com/watch?v=3aMWv9FIu4o">source</a></p>
+<h1>The New Codex Update That Manages All Your Agents</h1>
+<p><strong>Source:</strong> <a href="https://www.youtube.com/watch?v=3aMWv9FIu4o">Ray Amjad</a><br>
+<strong>Type:</strong> youtube<br>
+<strong>Duration:</strong> 15m<br>
+<strong>Reading time:</strong> ~5 min<br>
+<strong>Processed:</strong> 2026-06-01</p>
+<hr>
+<p><code>openai-codex</code> <code>ai-agents</code> <code>agent-management</code> <code>compaction</code> <code>slack-automation</code></p>
+<hr>
+<h2>⚡ BOTTOM LINE</h2>
+<p>OpenAI&rsquo;s latest Codex update repositions the tool from a single coding assistant into a multi-agent management platform — introducing durable threads with context compaction, Slack as a remote command centre, scheduled automations, and artefact generation. The shift is from synchronous pair-coding to asynchronous agent oversight.</p>
+<hr>
+<h2>📝 THESIS</h2>
+<p>Codex is evolving beyond a chatbot that writes code into a persistent agent management layer where developers direct, monitor, and approve work from multiple long-running agents through messaging interfaces like Slack. Features such as compaction (automatic context window summarisation) and thread automations enable agents to run unattended for extended periods, producing HTML artefacts (reports, dashboards, slide decks) on recurring schedules. This reframes the developer&rsquo;s role from writer to manager.</p>
+<hr>
+<h2>💡 KEY INSIGHTS</h2>
+<ol>
+<li>
+<p><strong>From pair-programmer to agent overseer</strong> — The update changes the fundamental interaction model. Instead of sitting side-by-side with Codex in a chat, developers launch agents into durable threads, check in via Slack, review diffs, approve actions, and walk away. The agent works persistently.<sup>[2]</sup></p>
+</li>
+<li>
+<p><strong>Slack as command centre</strong> — Rather than a standalone UI, Slack becomes the hub for managing multiple Codex agents concurrently. Commands, approvals, status checks, and output review all happen inside Slack threads. This pattern reduces context-switching and keeps all agent activity logged in a searchable audit trail.<sup>[6]</sup></p>
+</li>
+<li>
+<p><strong>Compaction solves context-window saturation</strong> — Long-running agents inevitably fill their context window with history. Compaction automatically summarises and prunes conversational history, retaining essential context while discarding noise. This feature is graduating from a hacky workaround to a supported product primitive.<sup>[4]</sup> <sup>[7]</sup></p>
+</li>
+<li>
+<p><strong>Thread automations + HTML artefacts for recurring deliverables</strong> — Agents can be assigned recurring schedules (e.g., &ldquo;generate a weekly SEO report&rdquo;) and produce HTML-based artefacts — interactive charts, slide decks, dashboards — that are immediately viewable. This moves Codex from code-generation into general-purpose output production.<sup>[5]</sup></p>
+</li>
+<li>
+<p><strong>The orchestration tax is the key tension</strong> — Amjad references the concept of an &ldquo;orchestration tax&rdquo; — the overhead of coordinating multiple agents. The update&rsquo;s managed-agent approach (centralised orchestration via Slack) attempts to reduce this tax, but questions remain about whether centralisation introduces its own scaling bottlenecks.<sup>[3]</sup></p>
+</li>
+</ol>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>&ldquo;The new Codex update that manages all your agents&rdquo;<br>
+— Ray Amjad, title<sup>[1]</sup></p>
+<p>&ldquo;Slack as a command center&rdquo;<br>
+— Ray Amjad, ~10:13<sup>[6]</sup></p>
+<p>&ldquo;Compaction&rdquo;<br>
+— Ray Amjad, ~11:49<sup>[4]</sup></p>
+</blockquote>
+<hr>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>✓ <strong>VERIFIED</strong> — OpenAI&rsquo;s April 2026 &ldquo;Codex for (almost) everything&rdquo; update added computer use, 90+ plugins, scheduled automations, and persistent memory. Confirmed by multiple independent sources.<sup>[8]</sup></p>
+<p>⚠ <strong>UNVERIFIED</strong> — Specific compaction implementation details (exact algorithm, token savings, reliability across model versions). The OpenAI developer community reports compaction getting stuck on certain model versions (gpt-5.4-codex), suggesting the feature is still maturing.<sup>[7]</sup></p>
+<p>✓ <strong>VERIFIED</strong> — The &ldquo;orchestration tax&rdquo; concept is a known critique in AI agent architecture. Addy Osmani&rsquo;s post on the topic is directly referenced by Amjad.<sup>[3]</sup></p>
+</blockquote>
+<hr>
+<h2>📖 KEY REFERENCES</h2>
+<h3>People &amp; Experts</h3>
+<ul>
+<li><strong>Ray Amjad</strong> — Cambridge physics graduate, creator of HyperWhisper, AgentStack, Tensor AI, VidTempla; AI education content creator</li>
+<li><strong>Addy Osmani</strong> — Chrome team at Google; wrote about &ldquo;The Orchestration Tax&rdquo;<sup>[3]</sup></li>
+<li><strong>Kangwook Lee</strong> — Published on compaction techniques<sup>[4]</sup></li>
+</ul>
+<h3>Publications &amp; Works</h3>
+<ul>
+<li><em>Mismanaged Geniuses</em> (2026) by Alex Zhang — Essay on the challenges of managing AI agents, referenced by Amjad<sup>[2]</sup></li>
+<li><em>The Orchestration Tax</em> by Addy Osmani — Critique of coordination overhead in multi-agent systems<sup>[3]</sup></li>
+</ul>
+<h3>Concepts &amp; Frameworks</h3>
+<ul>
+<li><strong>Compaction</strong> — Automatic summarisation and pruning of agent context windows to prevent saturation during long-running sessions</li>
+<li><strong>Orchestration Tax</strong> — The coordination overhead incurred when managing multiple AI agents; the target problem this update attempts to solve</li>
+</ul>
+<hr>
+<h2>🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For solo developers &amp; indie builders:</strong> The Slack command-centre pattern enables managing multiple coding projects in parallel from one interface. You can launch a code review agent, a research agent, and a documentation agent simultaneously and check in asynchronously.</p>
+<p><strong>For engineering teams:</strong> This shifts workflow from &ldquo;everyone has their own Codex chat&rdquo; to shared agent workspaces with audit trails. The compaction feature is critical for production use where agents run for hours or days.</p>
+<p><strong>For tool builders / platform teams:</strong> The move to managed agents via Slack suggests a broader platform shift — agent orchestration may become a commodity service, and differentiation will come from domain-specific agent skills and compaction strategies.</p>
+<hr>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>Does centralising agent management through Slack introduce a single point of failure or a new kind of orchestration tax?</li>
+<li>How does compaction quality degrade over very long agent sessions (days/weeks), and what information is silently lost during pruning?</li>
+</ul>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> Medium — Ray Amjad is a credible AI educator with a Cambridge physics background and hands-on product experience, but the transcript is entirely corrupted ([object Object] entries), necessitating reconstruction from metadata, timestamps, and external search.<br>
+<strong>Claim verifiability:</strong> 2 of 4 key claims verified via independent sources<br>
+<strong>Potential biases:</strong> Amjad sells competing AI coding products (HyperWhisper, AgentStack), which may colour his framing of Codex&rsquo;s strengths and weaknesses.<br>
+<strong>Quality flags:</strong> <strong>CRITICAL</strong> — Full transcript is corrupt (array of <code>[object Object]</code> entries). Synthesis relies on timestamp metadata from description, external search, and referenced links. Temporal granularity and direct quotes are approximate.<br>
+<strong>Confidence in synthesis:</strong> Medium — Core themes are well-supported by metadata and external sources, but fine-grained analysis of Amjad&rsquo;s specific arguments and examples is impossible without the transcript.</p>
+<hr>
+<h2>⚔️ CONTRARIAN CORNER</h2>
+<p><strong>Steelman critique:</strong> Managed agents via Slack centralise oversight but may reduce the serendipity and debugging richness of side-by-side pair-programming. Compaction can silently drop context the developer would have noticed. As one developer forum notes, compaction gets &ldquo;stuck&rdquo; on certain model versions, suggesting it&rsquo;s not yet production-reliable.<sup>[7]</sup></p>
+<p><strong>What would need to be true:</strong> For the async-management model to fully replace pair-coding, compaction must be lossless enough to preserve all critical context, and Slack must not become a bottleneck itself as agent count scales.</p>
+<hr>
+<h2>🎙️ SPONSORS</h2>
+<p><strong>HyperWhisper</strong> — Voice-to-text productivity tool (MacOS &amp; Windows). Coupon: YTSAVE for 20% off. Credibility: Own product of the creator, relevant to AI workflow. Verdict: Relevant but self-promotional; not independently reviewed.</p>
+<hr>
+<h2>📚 REFERENCES</h2>
+<p><sup>[1]</sup>: [Ray Amjad, Video Title] &ldquo;The New Codex Update That Manages All Your Agents&rdquo;<br>
+<sup>[2]</sup>: [Ray Amjad, ~01:45 &amp; ~09:38] References Alex Zhang&rsquo;s <em>Mismanaged Geniuses</em> essay on agent orchestration challenges<br>
+<sup>[3]</sup>: [Ray Amjad, referenced link] Addy Osmani — &ldquo;The Orchestration Tax&rdquo; (x.com/addyosmani/status/2059844244907696186)<br>
+<sup>[4]</sup>: [Ray Amjad, ~11:49] Compaction feature walkthrough; references Kangwook Lee&rsquo;s work<br>
+<sup>[5]</sup>: [Ray Amjad, ~07:14 &amp; ~08:21] Creating HTML artefacts and thread automations<br>
+<sup>[6]</sup>: [Ray Amjad, ~10:13] Slack as a command centre for managing multiple Codex agents<br>
+<sup>[7]</sup>: [Verified] OpenAI Developer Community — Compaction issues with gpt-5.4-codex (community.openai.com/t/automatically-compacting-context/1376290)<br>
+<sup>[8]</sup>: [Verified] SpicyAdvisory — &ldquo;OpenAI Codex April 2026 Update: AI Agents for Business Workflows&rdquo; (spicyadvisory.com/blog/openai-codex-april-2026-update-business-workflows-2026)</p>
+<hr>
+<p><em>Generated by OmniMiner v7.2 · openai/gpt-oss-120b · 2026-06-01</em></p>
+<hr>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>

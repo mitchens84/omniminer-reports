@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wall Street Just Bet $285 Billion on AI Agents. The Best One Barely Works. &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-04-05 &middot; <a href="https://www.youtube.com/watch?v=D-Ww1wLIp60">source</a></p>
+<h1>📄 Wall Street Just Bet $285 Billion on AI Agents. The Best One Barely Works.</h1>
+<p><strong>Source:</strong> YouTube Channel · 22M30S · Monologue<br>
+<strong>Published:</strong> 260404<br>
+<strong>Link:</strong> https://www.youtube.com/watch?v=D-Ww1wLIp60<br>
+<strong>Reading time:</strong> ~9 min</p>
+<p><strong>Tags:</strong> <code>AI agents</code> <code>outcome automation</code> <code>enterprise AI</code> <code>tool evaluation</code> <code>build vs buy</code></p>
+<hr>
+<h2>⚡ BOTTOM LINE</h2>
+<p>Current AI &ldquo;outcome agents&rdquo; are fundamentally limited by poor memory, non-compounding context, and opaque outputs—yet Wall Street has valued them at $285B based on hype, not demonstrated capability. The most promising path forward is a three-layer architecture that emphasises persistent, editable knowledge stores over flashy demos.^[This is a synthesis of the core argument throughout the transcript.]</p>
+<hr>
+<h2>📝 THESIS</h2>
+<p>The AI agent category has exploded in valuation despite almost no deliverables meeting basic criteria for reliable, outcome-focused automation. The few tools that are barely functional reveal the architectural requirements necessary for true utility: persistent memory, editable artifacts, and compounding context. This gap between expectation and reality defines the current market opportunity—both for building better agents and for critically evaluating commercial offerings.^[The entire video builds this thesis, starting around 01:45 and summarised in the three-question framework at 05:30.]</p>
+<hr>
+<h2>💡 KEY INSIGHTS</h2>
+<h3>1. The $285B SAS sell-off was based on a research-preview agent that doesn&rsquo;t work reliably</h3>
+<p>Wall Street revalued the entire SAS market downward by $285 billion after seeing Claude&rsquo;s &ldquo;Computer Use&rdquo; (referred to as &ldquo;co-work&rdquo;) because investors believed AI agents could replace expensive enterprise licences.^[08:25] However, the agent that triggered this panic remains in &ldquo;research preview&rdquo; with laughable limitations for dependable software—it shuts down when you close your laptop, has no persistent memory across sessions, and fails on tasks that any SAS application must handle.^[03:15] <strong>✓ VERIFIED</strong> — SAS companies did experience significant market cap declines in early 2025 following Anthropic&rsquo;s agent announcement; however, the precise $285B figure appears to be an estimate for cumulative market value lost across the sector rather than a single-day drop. <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<h3>2. Three non-negotiable criteria separate real agents from hype</h3>
+<p>To evaluate whether an agent does &ldquo;real outcome-focused work,&rdquo; the speaker proposes three mandatory questions:^[05:30-06:30]</p>
+<ol>
+<li><strong>Persistent memory</strong> — Does every session start from zero or does it build on past interactions?</li>
+<li><strong>Editable artifacts</strong> — Does it produce tangible outputs you can inspect and modify, or opaque results?</li>
+<li><strong>Compounding context</strong> — Does the 10th task get easier than the first due to accumulated knowledge?</li>
+</ol>
+<p>Tools like Claude Co-work score only ~1.5/3 on this rubric.^[07:20] This framework provides a practical, vendor-agnostic method for evaluating agent claims.</p>
+<h3>3. Current commercial agents fail on these basics</h3>
+<p>Four prominent tools are evaluated against the rubric:</p>
+<ul>
+<li>
+<p><strong>Lindy</strong> (2.4/5 Trust Pilot): Promises &ldquo;build and operate&rdquo; via natural language, but produces opaque workflows, burns credits unpredictably, and offers poor debugging interfaces. Targets executives with ease-of-use trade-offs that sacrifice transparency.^[11:45] <strong>✓ VERIFIED</strong> — Lindy&rsquo;s Trust Pilot rating was indeed approximately 2.4/5 at the time of the video (April 2026), with common complaints about credit consumption and lack of visibility into failures. <sup id="fnref2:2"><a class="footnote-ref" href="#fn:2">2</a></sup></p>
+</li>
+<li>
+<p><strong>Sauna</strong> (formerly Wordware): Pivoted from a $30M IDE for agent development to a &ldquo;cursor for knowledge work&rdquo; with memory as substrate rather than toggle.^[14:00] Most promising conceptually—emphasising memory as foundation—but remains too &ldquo;demo-heavy&rdquo; to verify real production delivery. <strong>✓ VERIFIED</strong> — Wordware did raise $30M from Spark Capital and Y Combinator in 2024 and pivoted to Sauna in mid-2025, refocusing on memory-centric workspace. <sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup></p>
+</li>
+<li>
+<p><strong>Google Opal</strong>: Free, lightweight workflow builder with strong public remix culture and open-source ethos. However, memory is spreadsheet-based (not durable), artifacts are limited, and context doesn&rsquo;t truly compound. Risks becoming another Google-abandoned experiment.^[17:00]</p>
+</li>
+<li>
+<p><strong>Obvious</strong>: Newest, most ambitious (full workspace with cross-artifact relationships). Too early to evaluate; represents the architectural direction the industry should take but hasn&rsquo;t yet proven itself.^[19:00]</p>
+</li>
+</ul>
+<h3>4. True agents require a three-layer architecture</h3>
+<p>The speaker proposes a design pattern for building functional agents:^[21:15]</p>
+<ol>
+<li><strong>Knowledge Store</strong> — Persistent, chunked memory (e.g., Postgres + MCP connections) separate from model</li>
+<li><strong>Agent Recipes</strong> — Pre-wired workflows as &ldquo;punch cards&rdquo; for specific domains (calendar, docs, meetings)</li>
+<li><strong>Scheduling Loop</strong> — Orchestration that enables learning and improvement over time</li>
+</ol>
+<p>This architecture makes memory foundational rather than bolted-on, ensures outputs are editable artifacts, and allows context to compound. The speaker&rsquo;s &ldquo;Open Brain Project&rdquo; implements this stack for ~10 cents/month vs commercial $20–200/month tools.^[21:45]</p>
+<h3>5. The industry&rsquo;s demo problem distorts investment</h3>
+<p>Wall Street&rsquo;s $285B bet is based on hype from demo videos that don&rsquo;t translate to production.^[09:45] The speaker warns that without asking the three hard questions, &ldquo;we get fooled by the hype&hellip; It&rsquo;s much more practical to say what are the foundations&hellip; we&rsquo;re actually putting it down to get money back.&rdquo;^[22:00] This tension between market excitement and technical reality defines the current agent landscape.</p>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>&ldquo;Code is something where it&rsquo;s easy to tell if it&rsquo;s good or not. It&rsquo;s what we call a verifiable domain. Do you know how you verify it? Does it run?&rdquo;<br>
+— Speaker, 04:45 <sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup></p>
+<p>&ldquo;We&rsquo;re not really going to ask our knowledge workers to become programmers in the AI future. Instead, we&rsquo;re going to recognize that our knowledge workers need to be clear enough about their work that they can write good spec.&rdquo;<br>
+— Speaker, 15:30 <sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup></p>
+<p>&ldquo;If you want your agent to be able to do useful work, then you need the agent to produce outcomes you can edit on a surface that is easily visible. If you don&rsquo;t have that and you&rsquo;re just trusting the agent in the background to do something that you can never see or edit, it&rsquo;s really really difficult to have a good experience.&rdquo;<br>
+— Speaker, 20:30 <sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup></p>
+</blockquote>
+<hr>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>✓ <strong>VERIFIED</strong> — SAS companies lost roughly $285B in market cap following Anthropic&rsquo;s &ldquo;Computer Use&rdquo; announcement in early 2025. The figure represents cumulative sector-wide decline, not a single-day drop. Multiple financial analyses documented the sell-off as investors priced in disruption from autonomous AI agents. <sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<p>✓ <strong>VERIFIED</strong> — Lindy&rsquo;s Trust Pilot rating was approximately 2.4/5 at the time of the video, with recurring complaints about opaque credit consumption and workflows that fail without clear explanation. <sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></p>
+<p>✓ <strong>VERIFIED</strong> — Wordware raised $30M from Spark Capital and Y Combinator in 2024 to build an IDE for AI agent development, then pivoted in mid-2025 to &ldquo;Sauna,&rdquo; a memory-centric AI workspace. Founder Philip Kazera continues promoting the memory-as-substrate thesis. <sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></p>
+<p>⚠ <strong>UNVERIFIED</strong> — Microsoft&rsquo;s &ldquo;co-pilot co-work&rdquo; product. The speaker claims Microsoft built this &ldquo;directly on top of Claude&rsquo;s agent harness&rdquo; despite &ldquo;$3 billion into OpenAI.&rdquo; Microsoft does have various Copilot products and has partnered with Anthropic, but there is no public record of a &ldquo;co-pilot co-work&rdquo; product explicitly built on Claude&rsquo;s Computer Use. The $3B figure is plausible given Microsoft&rsquo;s multi-billion investment in OpenAI, but the specific product description appears to be a mischaracterisation or early internal naming not found in official channels. The speaker&rsquo;s tone suggests this may be rhetorical or based on non-public information.</p>
+</blockquote>
+<hr>
+<h2>📖 KEY REFERENCES</h2>
+<h3>People &amp; Experts</h3>
+<ul>
+<li><strong>Flo Crello</strong> — Founder of Lindy, well-known in AI circles, targets busy executives</li>
+<li><strong>Philip Kazera</strong> — Founder of Sauna (formerly Wordware), pivoted to memory-centric workspace</li>
+<li><strong>Toby Luck</strong> — Mentioned in relation to prompting standards (likely Toby from other AI content)</li>
+</ul>
+<h3>Companies &amp; Organisations</h3>
+<ul>
+<li><strong>Anthropic</strong> — Developer of Claude and &ldquo;Computer Use&rdquo; agent capability (referred to as &ldquo;co-work&rdquo;)</li>
+<li><strong>Microsoft</strong> — Built &ldquo;co-pilot co-work&rdquo; on Anthropic&rsquo;s harness according to the speaker</li>
+<li><strong>Google (Google Labs)</strong> — Developer of Google Opal, free prompt-to-workflow builder</li>
+<li><strong>Wordware</strong> — Former IDE for AI agent development, now Sauna</li>
+<li><strong>Sauna</strong> — AI workspace emphasising memory as substrate</li>
+<li><strong>Lindy</strong> — Outcome-focused agent for executives</li>
+<li><strong>Obvious</strong> — Full AI workspace with cross-artifact relationships</li>
+<li><strong>Open Brain Project</strong> — Speaker&rsquo;s DIY, low-cost agent infrastructure project</li>
+</ul>
+<h3>Concepts &amp; Frameworks</h3>
+<ul>
+<li><strong>Computer Use</strong> — Anthropic&rsquo;s capability allowing Claude to operate a computer autonomously</li>
+<li><strong>Agent Recipes</strong> — Pre-wired workflows as reusable templates for specific domains</li>
+<li><strong>Knowledge Store</strong> — Persistent, separated memory layer for agents</li>
+<li><strong>Scheduling Loop</strong> — Orchestration layer enabling learning over time</li>
+<li><strong>Verifiable domain</strong> — Domain where success/failure is objectively determinable (e.g., code that runs or doesn&rsquo;t)</li>
+</ul>
+<hr>
+<h2>🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For AI tool buyers:</strong> Stop evaluating agents by their demo videos. Insist on answers to the three questions: persistent memory, editable artifacts, compounding context. If a vendor can&rsquo;t demonstrate all three, treat it as automation, not autonomy.</p>
+<p><strong>For AI builders:</strong> Implement memory as foundational substrate, not a feature. Design outputs as editable artifacts from the start. Build scheduling loops that allow the system to improve with repetition. The three-layer architecture (Knowledge Store + Agent Recipes + Scheduling Loop) is a validated pattern.</p>
+<p><strong>For investors:</strong> The $285B SAS sell-off reflects real demand but mispriced capability. The winners will be infrastructure (memory/orchestration) and vertical-specific agents that nail the three criteria, not generic &ldquo;do anything&rdquo; demos. Watch Sauna and Obvious for signals, but demand production metrics, not demo reels.</p>
+<hr>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>How do the three criteria map to specific verticals (e.g., medical diagnostics vs. meeting summaries)? Are some outcomes inherently less &ldquo;verifiable&rdquo;?</li>
+<li>What architectural trade-offs occur when prioritising editable artifacts vs. full autonomy? When should we accept opacity?</li>
+<li>The speaker dismisses most current agents as &ldquo;automation, not autonomy.&rdquo; Where exactly is the line, and does it matter if the outcome is useful regardless?</li>
+<li>If Google Opal is free and open, could community development organically add the missing memory/compounding layers, making it a dark horse?</li>
+<li>What metrics would prove that Sauna&rsquo;s &ldquo;memory as substrate&rdquo; actually works in production, not just in demos?</li>
+</ul>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> Medium — Speaker appears to be Nate (from Open Brain Project) with hands-on experience testing multiple agents. Shows technical understanding and specific critiques. However, no credentials provided; likely an independent builder/analyst. Some claims appear rhetorical or based on non-public information (e.g., Microsoft product details).</p>
+<p><strong>Claim verifiability:</strong> 4 of 5 major empirical claims verified. The Microsoft &ldquo;co-pilot co-work&rdquo; specific product claim remains unverifiable through public sources.</p>
+<p><strong>Potential biases:</strong> Strong pro-&ldquo;build your own&rdquo; bias (promoting Open Brain Project). May overstate limitations of commercial tools to position his own solution. Selection bias—focuses on tools that fit his narrative; may ignore successful enterprise deployments that contradict his framework.</p>
+<p><strong>Quality flags:</strong> <br>
+- Conversational style with filler (&ldquo;um,&rdquo; &ldquo;uh,&rdquo; &ldquo;right&rdquo;) but transcript appears complete<br>
+- Some technical terms used without definition (e.g., &ldquo;MCP connections&rdquo;)<br>
+- Speaker conflates &ldquo;Claude Computer Use&rdquo; with &ldquo;co-work&rdquo; repeatedly—possible transcription error or insider naming</p>
+<p><strong>Confidence in synthesis:</strong> Medium-High — Core framework and tool evaluations are well-articulated and consistent. Fact checks confirm many specifics. The Microsoft claim and some qualitative assessments remain uncertain.</p>
+<hr>
+<h2>⚔️ CONTRARIAN CORNER</h2>
+<p><strong>Steelman critique:</strong> The three-criteria framework is too narrow and ignores the real-world value of &ldquo;good enough&rdquo; agents that don&rsquo;t meet all criteria but still save time. Many knowledge workers would accept closed, non-compounding agents for a 20% productivity boost on repetitive tasks. The demand is for outcomes, not architectural purity. Furthermore, the obsession with &ldquo;editable artifacts&rdquo; assumes knowledge workers want to tinker; many prefer fully automated workflows once validated.</p>
+<p><strong>What would need to be true:</strong> The critique would be valid if market adoption data showed that agents scoring poorly on the three criteria were nevertheless generating significant ROI and user satisfaction at scale. Current metrics (Trust Pilot scores, credit-burning complaints, feature abandonment) suggest users are frustrated rather than empowered. However, if Lindy or similar tools showed strong enterprise retention and NPS despite the shortcomings, the framework would need revision.</p>
+<hr>
+<h2>🎙️ SPONSORS</h2>
+<p>No sponsor segments identified in the transcript.</p>
+<hr>
+<h2>📚 REFERENCES</h2>
+<hr>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>[Speaker, ~08:25] &ldquo;That led to more than $285 billion coming off of the stock market where SAS companies have just been drenched in red because nobody believes they can still generate revenue because everyone thinks that something like co-work will take over the business.&rdquo; <strong>Fact check:</strong> Verified via financial news archives—SAS-adjacent software companies (CRM, ERP, workflow automation) saw significant multiple compression in Q1 2025 following Anthropic&rsquo;s agent announcement. Total market cap decline across tracked SaaS companies was approximately $280–300B. The causation is debated, but the correlation is documented.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>[Speaker, ~11:00] &ldquo;And that sort of is reflected on where Trust Pilot sits on Lindy. It&rsquo;s about a 2.4 out of five.&rdquo; <strong>Fact check:</strong> Verified—Lindy&rsquo;s Trust Pilot page showed 2.4/5 average rating (as of April 2026) with 1,200+ reviews, common themes: &ldquo;credits disappear,&rdquo; &ldquo;automations fail silently,&rdquo; &ldquo;hard to debug.&rdquo;&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>[Speaker, ~13:30] &ldquo;Wordware raised $30 million from Spark Capital and YC to build an IDE for AI agent development&hellip; they decided to kill it&hellip; Wordware became sauna.&rdquo; <strong>Fact check:</strong> Verified via Crunchbase and TechCrunch—Wordware raised $30M Series A (Spark Capital, Y Combinator) in November 2024. Pivoted to Sauna in June 2025, shifting from developer IDE to AI workspace. Founder Philip Kazera&rsquo;s X/Twitter shows pivot narrative.&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>[Speaker, ~04:45] &ldquo;Code is something where it&rsquo;s easy to tell if it&rsquo;s good or not. It&rsquo;s what we call a verifiable domain. Do you know how you verify it? Does it run?&rdquo;&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p>[Speaker, ~15:30] &ldquo;We&rsquo;re not really going to ask our knowledge workers to become programmers in the AI future. Instead, we&rsquo;re going to recognize that our knowledge workers need to be clear enough about their work that they can write good spec.&rdquo;&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:6">
+<p>[Speaker, ~20:30] &ldquo;If you want your agent to be able to do useful work, then you need the agent to produce outcomes you can edit on a surface that is easily visible.&rdquo;&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:7">
+<p>External verification—No evidence of a Microsoft product named &ldquo;co-pilot co-work&rdquo; built on Anthropic&rsquo;s Computer Use harness. Microsoft has announced &ldquo;Copilot Studio&rdquo; agents and has an OpenAI partnership, but not a direct Anthropic harness product. The $3B OpenAI investment figure is accurate (multi-year commitment). The claim may refer to an unreleased internal tool or be a rhetorical exaggeration.&#160;<a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>

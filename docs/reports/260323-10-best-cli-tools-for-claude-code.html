@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>10 Best CLI Tools for Claude Code &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-03-23 &middot; ~12:00 &middot; <a href="https://youtu.be/uULvhQrKB_c">source</a></p>
+<h2>1. BOTTOM LINE</h2>
+<p>The ecosystem is shifting from MCPs to CLI tools because CLIs share Claude Code&rsquo;s native terminal environment, producing the same capability with dramatically fewer tokens and no context overhead. Knowing which ten tools to install now puts you significantly ahead of the curve for AI-assisted development and content workflows.</p>
+<hr>
+<h2>2. RHYTHM MAP</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Chapter</th>
+<th>Time (approx.)</th>
+<th>Duration</th>
+<th>Type</th>
+<th>Emphasis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Intro: The CLI shift</td>
+<td>0:00&ndash;0:30</td>
+<td>0:30</td>
+<td>OPINION</td>
+<td>High &ndash; &ldquo;everyone is building CLI tools&rdquo;</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tool 1: CLI Anything</td>
+<td>0:30&ndash;1:45</td>
+<td>1:15</td>
+<td>EXPLAIN</td>
+<td>Medium &ndash; meta-tool framing</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sponsor / CTA</td>
+<td>1:45&ndash;2:30</td>
+<td>0:45</td>
+<td>META</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Tool 2: NotebookLM-PI</td>
+<td>2:30&ndash;4:30</td>
+<td>2:00</td>
+<td>EXPLAIN</td>
+<td>High &ndash; personal daily use, token savings</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Tool 3: Stripe CLI</td>
+<td>4:30&ndash;5:15</td>
+<td>0:45</td>
+<td>EXPLAIN</td>
+<td>Medium &ndash; pain-point framing</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Tool 4: FFmpeg</td>
+<td>5:15&ndash;6:30</td>
+<td>1:15</td>
+<td>EXPLAIN + DEMO</td>
+<td>High &ndash; visual animation example</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Tool 5: GitHub CLI</td>
+<td>6:30&ndash;7:15</td>
+<td>0:45</td>
+<td>EXPLAIN</td>
+<td>Medium &ndash; &ldquo;you should already know this&rdquo;</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Tool 6: Vercel CLI</td>
+<td>7:15&ndash;8:00</td>
+<td>0:45</td>
+<td>EXPLAIN</td>
+<td>Medium &ndash; free tier + CI/CD framing</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Tool 7: Supabase CLI</td>
+<td>8:00&ndash;8:30</td>
+<td>0:30</td>
+<td>EXPLAIN</td>
+<td>Low &ndash; brief mention</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Tool 8: Playwright CLI</td>
+<td>8:30&ndash;10:00</td>
+<td>1:30</td>
+<td>EXPLAIN + COMPARE</td>
+<td>High &ndash; CLI vs MCP benchmark cited</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Tool 9: LLM Fit</td>
+<td>10:00&ndash;10:45</td>
+<td>0:45</td>
+<td>EXPLAIN</td>
+<td>Medium &ndash; niche but useful</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Tool 10: GWS CLI</td>
+<td>10:45&ndash;11:30</td>
+<td>0:45</td>
+<td>EXPLAIN</td>
+<td>High &ndash; security caveat + skill selection strategy</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Outro: Macro trend</td>
+<td>11:30&ndash;12:00</td>
+<td>0:30</td>
+<td>OPINION</td>
+<td>High &ndash; &ldquo;we&rsquo;re moving away from MCPs&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Narrative arc:</strong> Hub-and-spoke. A central thesis (CLIs beat MCPs in the terminal) is stated at the open and close, with each tool as a spoke radiating from that hub. Tools are loosely grouped by domain (multimedia, deployment, backend, browser, AI infra, productivity) but not explicitly signposted.</p>
+<p><strong>Content ratio:</strong> EXPLAIN 65% / OPINION 15% / COMPARE 10% / META (sponsor) 7% / DEMO 3%</p>
+<hr>
+<h2>3. KEY INSIGHTS</h2>
+<p><strong>1. [0:00&ndash;0:30] The CLI-over-MCP paradigm shift</strong> <code>OPINION</code></p>
+<ul>
+<li><strong>What:</strong> The Claude Code ecosystem is migrating away from MCPs toward CLI tools because both Claude Code and CLIs are native to the terminal, eliminating the protocol overhead MCPs introduce.</li>
+<li><strong>So what:</strong> This is not a minor preference; Playwright&rsquo;s own benchmark showed CLI execution used ~90,000 fewer tokens than the equivalent MCP for the same task. At scale this is a material cost and latency difference.</li>
+<li><strong>Now what:</strong> Audit your current MCP stack and identify where a CLI equivalent exists. Prioritise replacing high-frequency MCPs first.</li>
+</ul>
+<blockquote>
+<p>&ldquo;Cloud Code lives in the terminal. CLIs live in the terminal. There&rsquo;s no overhead. It&rsquo;s just a straight connection.&rdquo; (Outro)</p>
+</blockquote>
+<hr>
+<p><strong>2. [0:30&ndash;1:45] CLI Anything &ndash; a meta-tool that generates CLI tools</strong> <code>EXPLAIN</code></p>
+<ul>
+<li><strong>What:</strong> CLI Anything (from the makers of LightRAG and RAG Anything) points Claude Code at any open-source project and generates a bespoke CLI tool for it, even when no API exists. Already demonstrated on Blender, Inkscape, OBS, Zoom, NotebookLM.</li>
+<li><strong>So what:</strong> This dissolves the most common blocker to terminal automation: the absence of an official API. If the project is open source, it is now scriptable.</li>
+<li><strong>Now what:</strong> Identify any open-source tool you use manually today (video editors, design tools, productivity apps) and test CLI Anything against it as a first integration step.</li>
+</ul>
+<hr>
+<p><strong>3. [2:30&ndash;4:30] NotebookLM-PI &ndash; bridging Claude Code to video intelligence</strong> <code>EXPLAIN</code></p>
+<ul>
+<li><strong>What:</strong> No public API exists for NotebookLM, but this CLI tool wraps browser automation to give Claude Code full control: add sources (including YouTube URLs), trigger analysis, and generate all NotebookLM output types (podcasts, slide decks, infographics, quizzes, flashcards).</li>
+<li><strong>So what:</strong> Claude Code and Sonnet/Opus cannot natively process video. NotebookLM can, and its compute runs on Google&rsquo;s servers at no token cost to the user. This is effectively free video intelligence piped directly into your Claude Code workflow.</li>
+<li><strong>Now what:</strong> For any video-heavy research workflow (product research, competitor analysis, learning), route YouTube URLs through NotebookLM-PI rather than attempting direct transcript processing. Requires a skill file in addition to the CLI install.</li>
+</ul>
+<blockquote>
+<p>&ldquo;These tokens are on Google servers, not ours.&rdquo; (Tool 2 segment)</p>
+</blockquote>
+<hr>
+<p><strong>4. [4:30&ndash;5:15] Stripe CLI &ndash; abstracting payment complexity</strong> <code>EXPLAIN</code></p>
+<ul>
+<li><strong>What:</strong> Stripe&rsquo;s web interface is multi-tab and unintuitive for product configuration. The Stripe CLI exposes all of that through the terminal, letting Claude Code handle product creation and workflow steps that would otherwise require manual navigation across many screens.</li>
+<li><strong>So what:</strong> The time cost of Stripe configuration is disproportionate to its complexity; it is a UI problem, not a logic problem. A CLI eliminates the UI entirely.</li>
+<li><strong>Now what:</strong> Still manually verify any transaction-adjacent changes, but delegate all product setup, price creation, and configuration steps to Claude Code via the Stripe CLI.</li>
+</ul>
+<hr>
+<p><strong>5. [5:15&ndash;6:30] FFmpeg &ndash; multimedia manipulation from the terminal</strong> <code>EXPLAIN + DEMO</code></p>
+<ul>
+<li><strong>What:</strong> FFmpeg is a library collection for manipulating video, audio, subtitles, and image frames. Demonstrated use case: exploding a keyboard animation video into individual frames to create a scrolling CSS animation; also auto-reversing and stitching video for hero section loops.</li>
+<li><strong>So what:</strong> Claude Code&rsquo;s out-of-the-box multimedia capability is weak. FFmpeg is the standard tool that closes this gap entirely, covering frame extraction, format conversion, subtitle embedding, and loop generation.</li>
+<li><strong>Now what:</strong> Any web project with animated assets should default to FFmpeg via Claude Code rather than manual video editing software. A dedicated video breakdown is linked in the original video.</li>
+</ul>
+<hr>
+<p><strong>6. [6:30&ndash;7:15] GitHub CLI &ndash; the non-negotiable baseline</strong> <code>EXPLAIN</code></p>
+<ul>
+<li><strong>What:</strong> If you are writing code and pushing to GitHub, the GitHub CLI is mandatory. Claude Code already has strong Git knowledge; adding the CLI makes the full commit/branch/push workflow terminal-native. Installation and authentication are a single guided step.</li>
+<li><strong>So what:</strong> Switching between terminal and browser for Git operations breaks flow and introduces friction. This tool eliminates that entirely with no meaningful trade-off.</li>
+<li><strong>Now what:</strong> Install this first if you have not already. It is the foundation all other deployment tools build on.</li>
+</ul>
+<hr>
+<p><strong>7. [7:15&ndash;8:00] Vercel CLI &ndash; terminal-native CI/CD</strong> <code>EXPLAIN</code></p>
+<ul>
+<li><strong>What:</strong> Vercel CLI connects to a generous free tier and, combined with GitHub CLI, creates a complete CI/CD pipeline from the terminal. Vercel also publishes a curated skill library covering deployment, browser automation, design, and UI patterns.</li>
+<li><strong>So what:</strong> The GitHub + Vercel CLI combination replaces the need to touch any web dashboard during a standard deploy cycle.</li>
+<li><strong>Now what:</strong> Review Vercel&rsquo;s skill library before writing custom deployment skills &ndash; many common patterns are already packaged. Link available in original video description.</li>
+</ul>
+<hr>
+<p><strong>8. [8:00&ndash;8:30] Supabase CLI &ndash; unified backend from the terminal</strong> <code>EXPLAIN</code></p>
+<ul>
+<li><strong>What:</strong> Supabase CLI manages both databases and authentication from one terminal interface. As an open-source Firebase alternative, it also supports fully local operation.</li>
+<li><strong>So what:</strong> Centralising database and auth management in the terminal removes the need to juggle a separate backend dashboard during development.</li>
+<li><strong>Now what:</strong> Evaluate Supabase as a default backend choice for new projects, particularly if you are already using Vercel on the frontend.</li>
+</ul>
+<hr>
+<p><strong>9. [8:30&ndash;10:00] Playwright CLI &ndash; browser automation with a benchmark advantage</strong> <code>EXPLAIN + COMPARE</code></p>
+<ul>
+<li><strong>What:</strong> Playwright CLI lets Claude Code spin up Chrome instances autonomously to test web applications. Playwright&rsquo;s own head-to-head comparison showed the CLI completing equivalent tasks faster and using approximately 90,000 fewer tokens than the Playwright MCP server.</li>
+<li><strong>So what:</strong> This is the clearest quantitative argument for the CLI-over-MCP thesis. The token saving is not marginal; it is approximately two orders of magnitude in context consumption for browser tasks.</li>
+<li><strong>Now what:</strong> Replace Playwright MCP with Playwright CLI. Install the companion skill file (one-liner, auto-installs to .claude folder). Explore the full repo if you need advanced automation beyond basic form testing &ndash; the capability depth is significant.</li>
+</ul>
+<hr>
+<p><strong>10. [10:00&ndash;10:45] LLM Fit &ndash; local model selection made tractable</strong> <code>EXPLAIN</code></p>
+<ul>
+<li><strong>What:</strong> LLM Fit is a CLI tool that analyses your local hardware and recommends which Ollama models will actually run well on your specific setup. The Ollama model library is enormous and frequently updated, making unaided selection impractical.</li>
+<li><strong>So what:</strong> Most developers waste time downloading and testing models that are wrong for their hardware. LLM Fit makes local model selection a single command rather than a trial-and-error process.</li>
+<li><strong>Now what:</strong> Run LLM Fit before any local model experimentation. Referenced in the author&rsquo;s separate &ldquo;How to run Claude Code locally&rdquo; video.</li>
+</ul>
+<hr>
+<p><strong>11. [10:45&ndash;11:30] GWS CLI &ndash; full Google Workspace control with a skills strategy</strong> <code>EXPLAIN</code></p>
+<ul>
+<li><strong>What:</strong> GWS CLI gives Claude Code access to Gmail, Docs, Sheets, and the broader Google Workspace. Google Workspace Armor provides prompt injection protection. The skill library is extremely large; strategy for selecting which skills to install matters more than the installation itself.</li>
+<li><strong>So what:</strong> Full Workspace access is genuinely powerful but the skill-selection problem is real: too many skills degrades trigger accuracy. The author&rsquo;s approach &ndash; cloning the repo, letting Claude Code survey it, then discussing which skills match your specific use case &ndash; is the correct way to configure this at scale.</li>
+<li><strong>Now what:</strong> If security is a concern, use folder filters and email filters to sandbox Claude Code&rsquo;s access scope before granting full Workspace permissions. Do not install all available skills; curate to your actual workflows.</li>
+</ul>
+<blockquote>
+<p>&ldquo;Triggering the right one becomes a problem. So this is the kind of repo where&hellip; you have a discussion with Claude Code and say: now that you have full visibility into how this works, what would make the most sense for us to install?&rdquo; (Tool 10 segment)</p>
+</blockquote>
+<hr>
+<h2>4. TECHNICAL REFERENCE</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Detail</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CLI Anything</td>
+<td>Open-source; from LightRAG/RAG Anything team; two-step install</td>
+<td>Tool 1 &ndash; generates CLIs for any open-source project</td>
+</tr>
+<tr>
+<td>NotebookLM-PI</td>
+<td>GitHub CLI tool; browser automation wrapper; requires companion skill file</td>
+<td>Tool 2 &ndash; YouTube/video intelligence pipeline</td>
+</tr>
+<tr>
+<td>Stripe CLI</td>
+<td>Official Stripe tooling</td>
+<td>Tool 3 &ndash; payment product configuration</td>
+</tr>
+<tr>
+<td>FFmpeg</td>
+<td>Library collection; video/audio/subtitle/frame manipulation</td>
+<td>Tool 4 &ndash; multimedia processing</td>
+</tr>
+<tr>
+<td>GitHub CLI</td>
+<td>Official; single-sentence install via Claude Code; OAuth authentication</td>
+<td>Tool 5 &ndash; Git workflow terminal-native</td>
+</tr>
+<tr>
+<td>Vercel CLI</td>
+<td>Official; free tier; skill library available at Vercel docs</td>
+<td>Tool 6 &ndash; deployment and CI/CD</td>
+</tr>
+<tr>
+<td>Supabase CLI</td>
+<td>Official; open-source; supports local-only operation</td>
+<td>Tool 7 &ndash; database + auth backend</td>
+</tr>
+<tr>
+<td>Playwright CLI</td>
+<td>Official; skill one-liner auto-installs to .claude folder</td>
+<td>Tool 8 &ndash; browser automation and testing</td>
+</tr>
+<tr>
+<td>LLM Fit</td>
+<td>CLI tool; analyses hardware; recommends compatible Ollama models</td>
+<td>Tool 9 &ndash; local model selection</td>
+</tr>
+<tr>
+<td>GWS CLI</td>
+<td>Google Workspace CLI; large skill library; supports access scoping via filters</td>
+<td>Tool 10 &ndash; full Google suite control</td>
+</tr>
+<tr>
+<td>Google Workspace Armor</td>
+<td>Google-native prompt injection protection layer</td>
+<td>Tool 10 &ndash; security guardrail</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>5. WATCH THESE SEGMENTS</h2>
+<table>
+<thead>
+<tr>
+<th>Timestamp</th>
+<th>What happens</th>
+<th>Why watch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>~5:20&ndash;6:30</td>
+<td>FFmpeg keyboard animation demo &ndash; video exploded to frames, used as scrolling CSS animation</td>
+<td>Only segment with a concrete before/after visual output; shows the real creative application of multimedia CLI tools</td>
+</tr>
+<tr>
+<td>~8:30&ndash;9:30</td>
+<td>Playwright CLI vs MCP comparison discussion</td>
+<td>Clearest articulation of the CLI-over-MCP argument; the 90,000-token benchmark is the key quantitative data point in the entire video</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>6. SKIP THESE</h2>
+<table>
+<thead>
+<tr>
+<th>Timestamp</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>~1:45&ndash;2:30</td>
+<td>Sponsor segment &ndash; Claude Code Masterclass / Chase AI Plus promotion and free community CTA</td>
+</tr>
+<tr>
+<td>~11:30&ndash;12:00</td>
+<td>Outro &ndash; subscribe prompt and comments CTA (macro trend argument is covered in Insight 1)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>7. EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> Chase Lean is a practitioner-educator in the Claude Code space with consistent hands-on coverage; not an Anthropic affiliate. Claims are experiential and practical rather than theoretical. The Playwright CLI vs MCP token benchmark is attributed to Playwright&rsquo;s own YouTube channel, which adds credibility but is unverified in this distillation.</p>
+<p><strong>Claim density:</strong> Moderate. Most claims are tool recommendations with light justification. The 90,000-token figure is the only quantitative claim and is second-hand. No academic or technical citations.</p>
+<p><strong>Potential biases:</strong> The author sells a Claude Code course (Chase AI Plus), creating an incentive to keep the content accessible and aspirational rather than deeply technical. Tool selection likely reflects personal workflow rather than systematic evaluation.</p>
+<p><strong>Confidence in synthesis:</strong> High for the tool list and macro trend framing. Medium for the specific token savings figure (needs independent verification against Playwright&rsquo;s benchmark video). Low for the claim that the ecosystem is &ldquo;moving away from MCPs&rdquo; wholesale &ndash; this may be overstated; MCPs and CLIs serve different integration patterns.</p>
+<hr>
+<h2>8. FURTHER EXPLORATION</h2>
+<ol>
+<li>
+<p><strong>CLI vs MCP token economics at scale:</strong> The 90,000-token claim for Playwright is striking. Do other CLI-vs-MCP comparisons show similar ratios? Is this a structural property of the CLI approach or specific to browser automation tasks?</p>
+</li>
+<li>
+<p><strong>Skill file architecture:</strong> Several tools require companion skill files. What is the optimal structure for managing a large skill file library without degrading trigger accuracy? Is there a principled selection framework beyond &ldquo;discuss with Claude Code&rdquo;?</p>
+</li>
+<li>
+<p><strong>CLI Anything limitations:</strong> The tool is demonstrated on open-source projects. What happens with proprietary desktop software that exposes no API and is not open source? Are there accessibility APIs (macOS Accessibility, Windows UI Automation) that could fill the gap?</p>
+</li>
+<li>
+<p><strong>Google Workspace Armor in practice:</strong> Prompt injection via email is a realistic attack vector when Claude Code has full Workspace access. What does Armor actually intercept, and what attack patterns does it leave unaddressed? What is the minimum viable scoping strategy for a production workflow?</p>
+</li>
+</ol>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>

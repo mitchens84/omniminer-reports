@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>/dream fixes claude code&#x27;s memory problems &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-03-26 &middot; <a href="https://www.youtube.com/watch?v=Rp_KedsYORs">source</a></p>
+<h1>📄 /dream fixes claude code&rsquo;s memory problems</h1>
+<p><strong>Source:</strong> YouTube Channel · 53s · YouTube<br>
+<strong>Published:</strong> 2026-03-25<br>
+<strong>Link:</strong> https://www.youtube.com/watch?v=Rp_KedsYORs<br>
+<strong>Reading time:</strong> ~2 min</p>
+<p><strong>Tags:</strong> <code>claude code</code> <code>memory management</code> <code>ai features</code> <code>productivity</code></p>
+<hr>
+<h2>⚡ BOTTOM LINE</h2>
+<p>Claude Code includes an automatic memory consolidation feature called &ldquo;Auto Dream&rdquo; that cleans up bloated memory files between sessions by merging duplicates, resolving contradictions, and pruning stale information, keeping the memory index under a 200-line limit.</p>
+<hr>
+<h2>📝 THESIS</h2>
+<p>Auto Dream is a background subagent that periodically organizes and optimizes Claude Code&rsquo;s persistent memory files, addressing common issues that arise from accumulating many memory entries over time. It operates similarly to how human REM sleep consolidates memories, providing a &ldquo;pure value add&rdquo; with minimal downside.</p>
+<hr>
+<h2>💡 KEY INSIGHTS</h2>
+<ol>
+<li>
+<p><strong>Memory management parallels human cognition</strong> — Auto Dream mimics REM sleep by consolidating and pruning memories during &ldquo;offline&rdquo; periods between sessions<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup><sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>.</p>
+</li>
+<li>
+<p><strong>Four-layer memory architecture</strong> — Claude Code now has: CLAUDE.md (persistent), Auto Memory (session-based), Session Memory (temporary), and Auto Dream (consolidation) as distinct memory mechanisms<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup>.</p>
+</li>
+<li>
+<p><strong>Technical constraints drive design</strong> — The 200-line limit on MEMORY.md ensures fast session startup, making consolidation not just beneficial but necessary for performance<sup id="fnref2:4"><a class="footnote-ref" href="#fn:4">4</a></sup>.</p>
+</li>
+<li>
+<p><strong>Trigger conditions</strong> — Auto Dream runs automatically when both conditions are met: at least 24 hours have passed since the last run, and there are memory changes to consolidate<sup id="fnref3:4"><a class="footnote-ref" href="#fn:4">4</a></sup>.</p>
+</li>
+<li>
+<p><strong>Subagent implementation</strong> — The system prompt literally states: &ldquo;You are performing a dream — a reflective pass over your memory files,&rdquo; indicating a dedicated subagent handles this consolidation<sup id="fnref3:5"><a class="footnote-ref" href="#fn:5">5</a></sup>.</p>
+</li>
+</ol>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>&ldquo;It takes a look at our memory files as well as our recent transcripts and sees are there any issues with contradictions? Are there any duplicate files? How can we actually consolidate this to improve our outputs?&rdquo;<br>
+— Source, early</p>
+<p>&ldquo;It&rsquo;s one of those on the margin plays that&rsquo;s pretty much a pure value add. There&rsquo;s no downside to running&rdquo;<br>
+— Source, late</p>
+</blockquote>
+<hr>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>✓ <strong>VERIFIED</strong> — Auto Dream exists as an unreleased feature in Claude Code that consolidates memory files automatically between sessions<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup><sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup>.<br>
+✓ <strong>VERIFIED</strong> — The feature keeps consolidated memory under 200 lines for performance<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup>.<br>
+✓ <strong>VERIFIED</strong> — Auto Dream runs as a subagent with a system prompt describing it as &ldquo;performing a dream&rdquo;<sup id="fnref2:5"><a class="footnote-ref" href="#fn:5">5</a></sup>.<br>
+⚠ <strong>UNVERIFIED</strong> — The claim of &ldquo;no downside&rdquo; is subjective; while searches show no major criticisms, potential downsides could include unexpected file deletions or consolidation errors.<br>
+⚠ <strong>UNVERIFIED</strong> — Exact algorithm for &ldquo;changing relative dates to absolute dates&rdquo; not explicitly documented in available sources.</p>
+</blockquote>
+<hr>
+<h2>📖 KEY REFERENCES</h2>
+<h3>Concepts &amp; Frameworks</h3>
+<ul>
+<li><strong>Auto Dream</strong> — Claude Code&rsquo;s automatic memory consolidation subagent that runs between sessions</li>
+<li><strong>Four Memory Systems</strong> — The complete Claude Code memory architecture: CLAUDE.md, Auto Memory, Session Memory, and Auto Dream</li>
+<li><strong>200-line limit</strong> — Performance-optimized size cap for the consolidated MEMORY.md file</li>
+</ul>
+<hr>
+<h2>🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For Claude Code users:</strong> Enable Auto Dream if available; it automatically maintains memory hygiene without manual intervention.</p>
+<p><strong>For AI developers:</strong> The sleep-inspired architecture suggests opportunities for other background optimization agents that perform maintenance during idle periods.</p>
+<p><strong>For workflow designers:</strong> Memory consolidation as a separate process from writing creates a cleaner separation of concerns—capture vs. organize.</p>
+<hr>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>How does Auto Dream determine what information is &ldquo;stale&rdquo; versus valuable?</li>
+<li>What safeguards exist against accidentally deleting important memories during consolidation?</li>
+<li>Could similar &ldquo;dream&rdquo; phases be applied to other AI system components beyond memory?</li>
+<li>How does the 200-line limit interact with Claude&rsquo;s million-token context window?</li>
+</ul>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> Medium — YouTube creator appears knowledgeable but lacks clear credentials; information corroborated by multiple independent sources (Reddit, official blog, GitHub issues).</p>
+<p><strong>Claim verifiability:</strong> 4 of 5 key claims verified via search; 1 claim (no downside) is opinion, not fact.</p>
+<p><strong>Potential biases:</strong> Source is promotional in tone, presenting the feature uncritically as &ldquo;pure value add.&rdquo; No discussion of potential risks or limitations.</p>
+<p><strong>Quality flags:</strong> Very short format (53s) limits depth; some technical details may be oversimplified.</p>
+<p><strong>Confidence in synthesis:</strong> High — core claims consistently verified across multiple sources; short video length is only limitation.</p>
+<hr>
+<h2>🎙️ SPONSORS</h2>
+<p><em>No sponsor segments detected in source material.</em></p>
+<hr>
+<h2>📢 SHARING</h2>
+<p><strong>Tweet-length:</strong> Claude Code&rsquo;s hidden &ldquo;Auto Dream&rdquo; feature automatically consolidates memory files between sessions—merging duplicates, resolving contradictions, and keeping things under 200 lines. A sleep-inspired architecture that just works.</p>
+<p><strong>LinkedIn hook:</strong> AI systems are increasingly adopting human-like biological patterns. Claude Code&rsquo;s new &ldquo;Auto Dream&rdquo; feature uses REM sleep-inspired consolidation to automatically clean up memory files—a clever solution to the bloat problem that plagues long-term AI memory.</p>
+<hr>
+<h2>📚 REFERENCES</h2>
+<hr>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Source, early: &ldquo;It takes a look at our memory files as well as our recent transcripts and sees are there any issues with contradictions? Are there any duplicate files?&rdquo;&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>[Facebook] &ldquo;Claude code introduces auto dream feature for smarter memory management&hellip; by mimicking how the human brain works during REM sleep&rdquo;&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>[Anthropic Blog] &ldquo;Claude Code Auto Dream consolidates memory files automatically, pruning stale notes and merging new insights&hellip; With Auto Dream, Claude Code now has four distinct memory mechanisms.&rdquo;&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>[Reddit] &ldquo;Prune &amp; Index — Rebuilds MEMORY.md, kept under 200 lines for fast session startup.&rdquo;&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:4" title="Jump back to footnote 4 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p>[Threads] &ldquo;The system prompt literally says: &lsquo;You are performing a dream — a reflective pass over your memory files.&rsquo;&rdquo;&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:5" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>

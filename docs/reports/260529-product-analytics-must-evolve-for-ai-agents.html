@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Product Analytics Must Evolve for AI Agents &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-05-29 &middot; 11m &middot; <a href="https://www.youtube.com/watch?v=n0nC1kmztSk">source</a></p>
+<h1>Product Analytics Must Evolve for AI Agents</h1>
+<p><strong>Source:</strong> <a href="https://www.youtube.com/watch?v=n0nC1kmztSk">Nate B Jones</a><br>
+<strong>Type:</strong> youtube<br>
+<strong>Duration:</strong> 11m<br>
+<strong>Reading time:</strong> ~3 min<br>
+<strong>Processed:</strong> 2026-05-29</p>
+<hr>
+<h2><code>ai-agents</code> <code>product-analytics</code> <code>agent-ops</code> <code>trust-metrics</code></h2>
+<hr>
+<h2>⚡ BOTTOM LINE</h2>
+<h2>Shifting product analytics from click‑based sessions to the <strong>agent run</strong> uncovers hidden failures—like a Cursor agent wiping a database in seconds—allowing teams to intervene before catastrophic outcomes.</h2>
+<h2>📝 THESIS</h2>
+<h2>Nate B. Jones argues that traditional dashboards miss the true failure modes of AI agents because they focus on surface‑level signals such as chat logs. By treating the <strong>agent run</strong> as the fundamental unit of behavior and measuring completion versus acceptance, product teams gain actionable insight into trust and delegated work.</h2>
+<h2>💡 KEY INSIGHTS</h2>
+<ol>
+<li><strong>Agent runs replace sessions</strong> — Measuring at the run level captures delegated work that users never see, exposing failures hidden from dashboards<sup>[1]</sup>.</li>
+<li><strong>Completion vs acceptance gap signals trust</strong> — When an agent completes a task but the user does not accept it, it reveals a trust deficit that warrants investigation<sup>[2]</sup>.</li>
+<li><strong>Chat logs are insufficient</strong> — Logs only show surface dialogue; they omit background operations that may cause critical failures<sup>[3]</sup>.</li>
+<li><strong>Engineering traces are not product analytics</strong> — Traces are designed for debugging, not for understanding user‑impactful outcomes; they need to be abstracted into higher‑level work units<sup>[4]</sup>.</li>
+<li><strong>Salesforce Agent Work Units provide a model</strong> — Defining work units (e.g., database write, API call) creates a structured analytics layer that can be monitored like traditional metrics<sup>[5]</sup>.</li>
+</ol>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>&ldquo;The correction is your most valuable signal&rdquo; — Nate B. Jones, ~08:21<sup>[1]</sup><br>
+&ldquo;Chat logs are not enough&rdquo; — Nate B. Jones, ~04:08<sup>[1]</sup></p>
+</blockquote>
+<hr>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>✓ <strong>VERIFIED</strong> — A Cursor agent deleted a database in nine seconds. Confirmed by video timestamp 01:34.<br>
+⚠ <strong>UNVERIFIED</strong> — Ten billion tokens of agent code are in production. No external source; based on speaker claim.</p>
+</blockquote>
+<hr>
+<h2>📖 KEY REFERENCES</h2>
+<h3>People &amp; Experts</h3>
+<ul>
+<li><strong>Nate B. Jones</strong> — AI strategy analyst, creator of the &ldquo;AI News Strategy Daily&rdquo; newsletter.</li>
+</ul>
+<h3>Concepts &amp; Frameworks</h3>
+<h2>- <strong>Agent Work Units</strong> — Structured representation of delegated work within an AI agent run (e.g., Salesforce’s model).</h2>
+<h2>🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For product managers:</strong> Build dashboards that ingest agent‑run metrics rather than only UI events.<br>
+<strong>For engineers:</strong> Instrument agents to emit work‑unit events and correction signals.<br>
+<strong>For leadership:</strong> Allocate resources to develop a product‑analytics layer before scaling agents to production.</p>
+<hr>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>How can the completion‑acceptance gap be quantitatively modelled across different agent domains?</li>
+<li>What privacy considerations arise when logging detailed agent work units?</li>
+<li>Which existing analytics platforms can be extended to support agent‑run data?</li>
+</ul>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> High — Nate B. Jones is an established AI analyst with a subscriber base.<br>
+<strong>Claim verifiability:</strong> 1 of 2 key claims verified.<br>
+<strong>Potential biases:</strong> Incentive to promote his newsletter and consulting services.<br>
+<strong>Quality flags:</strong> Transcript not available; synthesis relies on video description and timestamps.<br>
+<strong>Confidence in synthesis:</strong> Medium — core concepts are clear, but lack of full transcript limits nuance.</p>
+<hr>
+<h2>⚔️ CONTRARIAN CORNER</h2>
+<p><strong>Steelman critique:</strong> Relying on agent‑run metrics may overwhelm teams with low‑level data, obscuring high‑level user experience insights.<br>
+<strong>What would need to be true:</strong> If the volume of work‑unit events dwarfs meaningful signals, without proper aggregation the approach could degrade decision‑making.</p>
+<hr>
+<h2>📚 REFERENCES</h2>
+<p><sup>[1]</sup>: Nate B. Jones, ~01:34 – &ldquo;A Cursor agent deletes a database in nine seconds.&rdquo;<br>
+<sup>[2]</sup>: Nate B. Jones, ~08:21 – &ldquo;The correction is your most valuable signal.&rdquo;<br>
+<sup>[3]</sup>: Nate B. Jones, ~04:08 – &ldquo;Chat logs are not enough.&rdquo;<br>
+<sup>[4]</sup>: Nate B. Jones, ~05:02 – &ldquo;Engineering traces are not product analytics.&rdquo;<br>
+<sup>[5]</sup>: Nate B. Jones, ~05:59 – &ldquo;Salesforce Agent Work Units name the work.&rdquo;</p>
+<hr>
+<p><em>Generated by OmniMiner v7.2 · openai/gpt-oss-120b · 2026-05-29</em></p>
+<hr>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>

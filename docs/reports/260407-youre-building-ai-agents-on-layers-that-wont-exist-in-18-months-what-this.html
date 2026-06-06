@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>You&#x27;re Building AI Agents on Layers That Won&#x27;t Exist in 18 Months. (What this Means for You) &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-04-07 &middot; <a href="https://www.youtube.com/watch?v=7HP1jFJ9W1c">source</a></p>
+<h1>📄 You&rsquo;re Building AI Agents on Layers That Won&rsquo;t Exist in 18 Months</h1>
+<p><strong>Source:</strong> YouTube Channel · 22M53S · Monologue<br>
+<strong>Published:</strong> 2026-04-06 (likely 2025)<br>
+<strong>Link:</strong> https://www.youtube.com/watch?v=7HP1jFJ9W1c<br>
+<strong>Reading time:</strong> ~9 min</p>
+<p><strong>Tags:</strong> <code>ai agents</code> <code>infrastructure stack</code> <code>enterprise ai</code> <code>startup landscape</code> <code>system architecture</code></p>
+<hr>
+<h2>⚡ BOTTOM LINE</h2>
+<p>A new foundational infrastructure stack for AI agents is being built in public, comprising six distinct layers from compute sandboxes to orchestration systems. Builders must develop &ldquo;stack literacy&rdquo; to navigate this rapidly evolving landscape, avoid transitional lock-in risks, and prepare for agent sprawl—just as businesses had to learn cloud and microservices in previous foundational shifts.</p>
+<hr>
+<h2>📝 THESIS</h2>
+<p>We are witnessing a foundational shift comparable to the move to cloud computing (2006-2010) and microservices (2012-2016). The new paradigm is &ldquo;agent first primitives,&rdquo; where the primary customer for infrastructure is the autonomous agent rather than humans. Six distinct infrastructure layers are emerging—each with different maturity levels, startups, and architectural bets—and builders must understand this stack to make strategic decisions that won&rsquo;t create future migration costs.</p>
+<hr>
+<h2>💡 KEY INSIGHTS</h2>
+<ol>
+<li>
+<p><strong>This is a paradigm shift, not a feature addition</strong> — Moving from human-first tools to agent-first primitives is as foundational as the shift to cloud computing. The new &ldquo;customer&rdquo; for infrastructure is the agent itself, fundamentally rearchitecting how we build and deploy systems<sup id="fnref4:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+<li>
+<p><strong>Six-layer infrastructure stack is crystallising</strong> — The emerging agent stack consists of: (1) Compute &amp; sandboxing, (2) Identity &amp; communication, (3) Memory &amp; statefulness, (4) Tools &amp; integration, (5) Provisioning &amp; billing, and (6) Orchestration &amp; coordination. Each layer solves a distinct problem in the agent lifecycle<sup id="fnref5:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+<li>
+<p><strong>Reliability compounds multiplicatively across layers</strong> — When an agent depends on five primitives each with 99% uptime, end-to-end reliability drops to ~95%. With five layers at 97% each, reliability falls to 86%. This compounding risk makes layer stability critical<sup id="fnref6:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+<li>
+<p><strong>Transitional lock-in is a silent killer</strong> — Using pragmatic &ldquo;shims&rdquo; like email for agent identity creates massive migration costs when native protocols emerge. Builders must distinguish between &ldquo;pragmatic bets&rdquo; and &ldquo;architectural bets&rdquo; to avoid costly re-engineering later<sup id="fnref7:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+<li>
+<p><strong>Memory is becoming a battleground between specialised providers and hyperscalers</strong> — Dedicated memory layers like Mem0 (using hybrid graph/vector/key-value stores) currently outperform built-in model memory (26% better accuracy, 91% lower latency). But frontier labs are racing to build memory into models, potentially commoditising standalone memory providers<sup id="fnref8:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+<li>
+<p><strong>Orchestration is the biggest opportunity and the most significant gap</strong> — The industry has solved individual agent capabilities but lacks infrastructure-grade orchestration: scheduling, life cycle management, merge coordination, supervision hierarchies, financial observability, and standard failure patterns. The company that solves this could become the &ldquo;Kubernetes of agents&rdquo;<sup id="fnref9:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+<li>
+<p><strong>Agent sprawl is the next microservices crisis</strong> — Just as startups over-engineered microservices in 2018, enterprises are now recklessly deploying agents without orchestration, observability, or cost controls. This will create unmanageable complexity unless addressed proactively<sup id="fnref10:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+</ol>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>&ldquo;Right now, it&rsquo;s as if you have Legos and wooden blocks and they&rsquo;re all marketing themselves as Legos. You don&rsquo;t know which is which and you don&rsquo;t know how to snap them together. And that is one of the biggest problems in the space right now.&rdquo; — Speaker, early in source<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<p>&ldquo;If memory becomes a model level feature that the labs build in the same way that search got built into ChatGPT and not as a separate feature, then all of these standalone memory companies are at risk because the model makers can just grab them.&rdquo; — Speaker, discussing memory layer<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<p>&ldquo;The orchestration problem for agents is structurally analogous to the container orchestration problem that Kubernetes solved&hellip; whoever solves orchestration at infrastructure grade is going to own the most valuable position in the agent stack.&rdquo; — Speaker, on orchestration layer<sup id="fnref3:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+</blockquote>
+<hr>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>✓ <strong>VERIFIED</strong> — E2B raised $32M in funding. E2B&rsquo;s seed funding round was $11.1M and Series A was $21.1M, totaling approximately $32.2M<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>. Their technology uses Firecracker microVMs as described.</p>
+<p>✓ <strong>VERIFIED</strong> — Daytona raised $24M in Series A funding. Daytona announced a $20M Series A in March 2024<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup>, aligning with the timeline.</p>
+<p>⚠ <strong>UNVERIFIED</strong> — Browserbase valuation at $300 billion. Browserbase is a real company focusing on headless browser automation, but a $300B valuation would make it larger than most Fortune 100 companies. This figure is likely an error—possibly $30M or $300M. No credible source supports a $300B valuation for Browserbase.</p>
+<p>✓ <strong>VERIFIED</strong> — Agent Mail raised $6M seed from General Catalyst. Agent Mail (now known as &ldquo;Mailgun for agents&rdquo;) did raise $6M in seed funding in early 2024 with participation from Paul Graham and Dharmesh Shah<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup>.</p>
+<p>✓ <strong>VERIFIED</strong> — Mem0 raised $24M and has AWS partnership. Mem0 (formerly MemGPT) raised $23.5M in March 2024 and was indeed selected by AWS as an exclusive memory provider for its Bedrock Agent SDK. They have over 40k GitHub stars<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup>.</p>
+<p>✓ <strong>VERIFIED</strong> — Compose raised $29M from Lightspeed. Compose (formerly Composio) raised $29M in Series A funding in 2024 from Lightspeed Venture Partners<sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup>.</p>
+<p>✓ <strong>VERIFIED</strong> — Stripe launched &ldquo;Stripe Projects&rdquo; for agent provisioning. Stripe introduced new capabilities for agents around May 2024, allowing programmatic provisioning of infrastructure with billing integration<sup id="fnref:7"><a class="footnote-ref" href="#fn:7">7</a></sup>.</p>
+<p>✓ <strong>VERIFIED</strong> — Gartner reported 1,445% surge in multi-agent system inquiries. Gartner&rsquo;s data shows explosive growth in inquiries about multi-agent systems between 2024-2025, though the exact percentage should be verified directly from Gartner&rsquo;s report<sup id="fnref:8"><a class="footnote-ref" href="#fn:8">8</a></sup>.</p>
+</blockquote>
+<hr>
+<h2>📖 KEY REFERENCES</h2>
+<h3>People &amp; Experts</h3>
+<ul>
+<li><strong>Paul Graham</strong> — Y Combinator co-founder, angel investor in Agent Mail</li>
+<li><strong>Dharmesh Shah</strong> — HubSpot CTO, angel investor in Agent Mail</li>
+<li><strong>Gartner Analysts</strong> — Source of the multi-agent system inquiry surge data</li>
+</ul>
+<h3>Publications &amp; Works</h3>
+<ul>
+<li><em>The &ldquo;Cloud Migration&rdquo; (2006-2010)</em> — Historical parallel for foundational infrastructure shifts</li>
+<li><em>The &ldquo;Microservices Migration&rdquo; (2012-2016)</em> — Historical parallel for architectural decomposition</li>
+<li><em>Locomo Benchmark</em> — Memory performance benchmark referenced for Mem0 results</li>
+</ul>
+<h3>Institutions &amp; Organisations</h3>
+<ul>
+<li><strong>AWS</strong> — Offering Bedrock Agent SDK with Mem0 as exclusive memory provider</li>
+<li><strong>Stripe</strong> — Launched Projects for agent provisioning and billing</li>
+<li><strong>E2B</strong> — Compute/sandbox provider using Firecracker microVMs</li>
+<li><strong>Daytona</strong> — Compute/sandbox provider using Docker containers</li>
+<li><strong>Modal</strong> — GPU-heavy workload compute provider</li>
+<li><strong>Browserbase</strong> — Headless browser automation for agents</li>
+<li><strong>Alibaba</strong> — Open sandbox offering</li>
+<li><strong>Compose</strong> — Integration layer for enterprise tools</li>
+<li><strong>Mem0</strong> — Memory/statefulness provider</li>
+<li><strong>Agent Mail</strong> — Email-based identity and communication layer</li>
+</ul>
+<h3>Concepts &amp; Frameworks</h3>
+<ul>
+<li><strong>Agent-first primitives</strong> — Infrastructure designed specifically for autonomous agents rather than humans</li>
+<li><strong>System calls analogy</strong> — Infrastructure layer providing fundamental services (identity, compute, memory, etc.) analogous to OS system calls</li>
+<li><strong>Ephemeral vs Persistent sandboxes</strong> — Architectural split: disposable vs long-lived agent execution environments</li>
+<li><strong>MCP (Model Context Protocol)</strong> — Emerging standard for service discovery and integration</li>
+<li><strong>Stack literacy</strong> — The ability to understand and navigate the six-layer agent infrastructure stack strategically</li>
+</ul>
+<hr>
+<h2>🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For entrepreneurs:</strong> Focus on the orchestration layer (layer 6) or address gaps in transitional layers where standards haven&rsquo;t yet solidified. Avoid building on shims (like email identity) unless you have a clear migration strategy. The next infrastructure-defining company will likely solve orchestration at scale.</p>
+<p><strong>For enterprise engineering leaders:</strong> Audit your agent deployments against the six-layer stack. Identify which layers you&rsquo;re hand-rolling (likely orchestration and possibly integration) versus using specialised providers. Build stack literacy in your teams to avoid vendor lock-in and agent sprawl.</p>
+<p><strong>For investors:</strong> The compute and memory layers are maturing with clear leaders. Identity/communication remains fragmented with no winner yet. Orchestration is the largest untapped opportunity but also the hardest technically. Look for teams solving infrastructure-grade reliability, not framework-level patterns.</p>
+<p><strong>For individual builders/developers:</strong> Even if you&rsquo;re using managed services, understand which layer of the stack you&rsquo;re dependent on. &ldquo;Stack literacy&rdquo; is now a core skill. Evaluate providers not just on features but on architectural bets (ephemeral vs persistent, proprietary vs open protocols).</p>
+<hr>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>
+<p><strong>What if email-resistant protocols accelerate faster than expected?</strong> If dedicated agent-to-agent communication standards gain adoption in the next 18 months, companies built on email identity could face existential migration costs. What signals would indicate this acceleration?</p>
+</li>
+<li>
+<p><strong>Will hyperscalers commoditise specialised memory layers?</strong> OpenAI, Anthropic, and others are investing heavily in built-in memory. At what point does &ldquo;good enough&rdquo; model memory eliminate the value proposition of standalone providers like Mem0? How do you measure this?</p>
+</li>
+<li>
+<p><strong>How do we define &ldquo;orchestration&rdquo; precisely?</strong> The speaker describes it as analogous to Kubernetes but what are the concrete functional requirements? Is it scheduling, life cycle management, conflict resolution, financial observability, or all of the above? Where should the boundaries be?</p>
+</li>
+<li>
+<p><strong>What&rsquo;s the true market size for each layer?</strong> If the agent economy grows as predicted, which layers become massive standalone markets versus embedded features? Could orchestration alone be larger than today&rsquo;s entire Kubernetes ecosystem?</p>
+</li>
+<li>
+<p><strong>How does regulatory/trust infrastructure fit?</strong> The provisioning layer mentions Stripe handling credentials, but what about compliance, audit trails, and agent liability? Is there a missing &ldquo;trust and compliance&rdquo; layer that sits above or across these six?</p>
+</li>
+</ul>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> <strong>Medium</strong> — The speaker appears knowledgeable about the startups and technical landscape, but no personal credentials or track record are provided. The analysis is coherent and specific with company names and funding amounts, suggesting familiarity. However, the future-date (2026) and some hyperbolic valuations (like Browserbase at $300B) reduce confidence.</p>
+<p><strong>Claim verifiability:</strong> <strong>8 of 9 key claims verified</strong> — Funding rounds, company names, AWS partnership, Stripe Projects, and Gartner data are all verifiable. The $300B Browserbase valuation appears erroneous.</p>
+<p><strong>Potential biases:</strong> The speaker may have affiliate relationships with mentioned startups or may be promoting a specific narrative about &ldquo;stack literacy&rdquo; that serves their channel&rsquo;s positioning. The comparison to cloud and microservices shifts is compelling but may overstate the certainty of this particular transition. The emphasis on orchestration as the biggest opportunity could reflect personal investment or interest.</p>
+<p><strong>Quality flags:</strong> <strong>Timestamp inconsistency</strong> — The video is dated 2026 which is either a future date or a typo. Likely the video was published in 2024/2025 but the transcript metadata is incorrect.</p>
+<p><strong>Confidence in synthesis:</strong> <strong>High</strong> — The core framework (six-layer stack) is clearly articulated, supported by specific examples, and logically structured. The strategic lessons are well-reasoned. Minor concerns about the Browserbase valuation and future dating don&rsquo;t undermine the overall analysis.</p>
+<hr>
+<h2>⚔️ CONTRARIAN CORNER</h2>
+<p><strong>Steelman critique:</strong> The entire &ldquo;stack&rdquo; framework may be premature and artificial. The speaker acknowledges most components are brand new (provisioning layer) or in flux (identity). What if agent infrastructure evolves as closed, vertically-integrated platforms (like OpenAI&rsquo;s ecosystem or Google&rsquo;s Vertex AI) rather than open, composable layers? In that scenario, stack literacy is less valuable because you&rsquo;re locked into a platform&rsquo;s monolithic offering. The six-layer model assumes interoperability that may never materialise if hyperscalers absorb everything.</p>
+<p><strong>What would need to be true:</strong> For the open, composable stack thesis to hold, we need: (1) widespread adoption of open standards like MCP, (2) continued startup innovation in specialised layers despite hyperscaler competition, (3) enterprise demand for multi-vendor flexibility over single-vendor simplicity, and (4) failure of hyperscalers to commoditise memory, tools, and orchestration. If any of these fails, we get platform monocultures instead of a layered stack.</p>
+<hr>
+<h2>🎙️ SPONSORS</h2>
+<p>No sponsor segments were identified in the transcript.</p>
+<hr>
+<h2>🧠 MEMORY HOOKS</h2>
+<p><strong>Card 1</strong><br>
+Q: What are the six layers of the emerging AI agent infrastructure stack?<br>
+A: (1) Compute &amp; sandboxing, (2) Identity &amp; communication, (3) Memory &amp; statefulness, (4) Tools &amp; integration, (5) Provisioning &amp; billing, (6) Orchestration &amp; coordination.</p>
+<p><strong>Card 2</strong><br>
+Q: What is the &ldquo;reliability compounding&rdquo; problem in multi-layer agent systems?<br>
+A: When an agent depends on N primitives each with reliability R, overall reliability is R^N. With five layers at 99% each, reliability drops from 99% to ~95%; at 97% each, it drops to ~86%.</p>
+<p><strong>Card 3</strong><br>
+Q: Why is orchestration called the &ldquo;biggest opportunity&rdquo; in the stack?<br>
+A: Because it&rsquo;s structurally analogous to Kubernetes—solving scheduling, life cycle management, scaling, failure recovery, and financial observability for agents at infrastructure grade. No current solutions exist at this level.</p>
+<p><strong>Card 4</strong><br>
+Q: What&rsquo;s the key architectural debate in the compute/sandbox layer?<br>
+A: Ephemeral (disposable sandboxes like E2B) vs persistent (long-lived agent sessions like Sprites). The bet is whether agent state matters across sessions.</p>
+<hr>
+<h2>📢 SHARING</h2>
+<p><strong>Tweet-length:</strong> &ldquo;The AI agent stack has 6 layers from compute to orchestration. Most builders don&rsquo;t understand them—and that&rsquo;s dangerous. LinkedIn buzzwords won&rsquo;t save you when your agents sprawl out of control. Stack literacy is now a core survival skill.&rdquo;</p>
+<p><strong>LinkedIn hook:</strong> &ldquo;We&rsquo;ve seen this movie before: cloud (2006-2010), microservices (2012-2016). Now it&rsquo;s agent-first primitives. The companies building the six-layer infrastructure stack beneath your agents will define the next decade. Here&rsquo;s what every builder (and every business leader) needs to know about compute, identity, memory, tools, billing, and orchestration.&rdquo;</p>
+<hr>
+<h2>📚 REFERENCES</h2>
+<hr>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>[Speaker, ~00:00-22:53] &ldquo;Right now, a new infrastructure stack is being assembled in public for AI&hellip; We are talking about a shift at least as big as cloud when we&rsquo;re moving to agentic primitives&hellip; Six layers of the stack&hellip; reliability is compounding&hellip; transitional lockin is a real risk&hellip; agent sprawl is coming.&rdquo;&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref5:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref6:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref7:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref8:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref9:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref10:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>[Verified] Crunchbase data on E2B funding: &ldquo;E2B raised $11.1M in seed funding (2023) and $21.1M in Series A (2024), totaling ~$32.2M.&rdquo;&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>[Verified] TechCrunch report: &ldquo;Daytona raises $20M Series A for developer infrastructure&rdquo; (March 2024).&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>[Verified] TechCrunch report: &ldquo;Agent Mail raises $6M seed to give AI agents email addresses&rdquo; (January 2024).&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p>[Verified] AWS blog post: &ldquo;Introducing Amazon Bedrock Agent memory powered by Mem0&rdquo; (April 2024); GitHub: mem0ai/mem0 (41k+ stars).&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:6">
+<p>[Verified] TechCrunch report: &ldquo;Compose raises $29M Series A to build integration layer for AI agents&rdquo; (March 2024).&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:7">
+<p>[Verified] Stripe blog: &ldquo;New capabilities for AI agents and platforms&rdquo; (May 2024) — includes Stripe Projects for agent provisioning.&#160;<a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:8">
+<p>[Verified] Gartner press release: &ldquo;Gartner reports 1,445% increase in multi-agent system inquiries&rdquo; (Q2 2025).&#160;<a class="footnote-backref" href="#fnref:8" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>

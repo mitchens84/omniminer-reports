@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Claude Code Trick Nobody Uses Enough &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-04-04 &middot; <a href="https://www.youtube.com/watch?v=3ELKdRZ62ok">source</a></p>
+<h1>📄 The Claude Code Trick Nobody Uses Enough</h1>
+<p><strong>Source:</strong> YouTube Channel · 57s · YouTube<br>
+<strong>Published:</strong> 260403 (estimated)<br>
+<strong>Reading time:</strong> ~2 min</p>
+<p><strong>Tags:</strong> <code>Claude Code</code> <code>context management</code> <code>AI productivity</code> <code>token efficiency</code></p>
+<hr>
+<h2>⚡ BOTTOM LINE</h2>
+<p>Regularly using <code>/clear</code> to reset Claude Code&rsquo;s context window prevents performance degradation as token usage grows, with efficiency dropping from ~92% at 256k tokens to ~78% at 1M tokens<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. Most users likely operate at suboptimal context loads.</p>
+<hr>
+<h2>📝 THESIS</h2>
+<p>The transcript argues that the <code>/clear</code> slash command is critically underutilised in Claude Code. Because model efficiency degrades predictably as context fills—even within large windows like 1M tokens—periodic context resets maintain performance. The presenter claims the efficiency drop is substantial enough that users operating beyond 20% of the context window should clear regularly.</p>
+<hr>
+<h2>💡 KEY INSIGHTS</h2>
+<ol>
+<li>
+<p><strong>Performance degrades non-linearly with context load</strong> — Claude Code efficiency drops from ~92% at 256k tokens to ~78% at 1M tokens on a cited benchmark<sup id="fnref4:1"><a class="footnote-ref" href="#fn:1">1</a></sup> [⚠].</p>
+</li>
+<li>
+<p><strong>Even 1M token windows suffer from high-usage decay</strong> — Despite massive context capacity, performance penalties appear well before hitting the limit, making manual intervention valuable<sup id="fnref5:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+<li>
+<p><strong>Most performance complaints stem from context bloat</strong> — The presenter hypothesises that users reporting slow or poor Opus performance often operate at high context loads without resetting<sup id="fnref6:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+<li>
+<p><strong>Simple intervention, high leverage</strong> — The <code>/clear</code> command provides disproportionate performance gains relative to its minimal adoption<sup id="fnref7:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
+</li>
+</ol>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>&ldquo;The single slash command that will improve your performance more than anything else inside of Claude code is slash clear. And most people don&rsquo;t use it nearly often enough.&rdquo;<br>
+— [Speaker, early]<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<p>&ldquo;At 256,000 tokens, Claude code is working at about 92% efficiency on this particular benchmark. By 1 million, it&rsquo;s at 78.3.&rdquo;<br>
+— [Speaker, early]<sup id="fnref3:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+</blockquote>
+<hr>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>⚠ <strong>UNVERIFIED</strong> — Claim about efficiency percentages (92% at 256k, 78.3% at 1M). While multiple sources confirm efficiency drops at high context windows, these specific figures from &ldquo;this particular benchmark&rdquo; lack traceable origin. MindStudio reports ~90% retrieval accuracy at 1M tokens<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>, which is close but not matching the 78.3% claim. The exact benchmark and methodology remain unidentified.</p>
+</blockquote>
+<hr>
+<h2>📖 KEY REFERENCES</h2>
+<h3>Tools &amp; Resources</h3>
+<ul>
+<li><strong>Claude Code</strong> — Anthropic&rsquo;s command-line AI coding assistant with built-in slash commands including <code>/clear</code><sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></li>
+<li><strong>Slash commands</strong> — Control surface for Claude Code operations like resetting context, initializing projects, and invoking tools<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup></li>
+</ul>
+<hr>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>What empirical studies exist on context efficiency degradation curves for Claude models? Are the claimed drop-offs linear, exponential, or task-dependent?</li>
+<li>How frequently should users reset based on actual usage patterns? Is there an optimal threshold (e.g., 20% of window as suggested)?</li>
+<li>Does the type of task (coding vs. document analysis) affect the rate of performance decay?</li>
+<li>Could automated context management tools mitigate this without manual <code>/clear</code> interventions?</li>
+</ul>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> Low — Anonymous YouTube channel, future publication date (2026), minimal content length, unverifiable specific statistics.<br>
+<strong>Claim verifiability:</strong> 1 of 2 key empirical claims unverifiable (specific percentages).<br>
+<strong>Potential biases:</strong> Promotional/clickbait title; possible affiliate or view-seeking incentives.<br>
+<strong>Quality flags:</strong> Duration &lt;1 minute; future-dated; heavy reliance on single unreferenced benchmark.<br>
+<strong>Confidence in synthesis:</strong> Low — Core claim (use <code>/clear</code>) is plausible and corroborated generally, but supporting statistics lack traceability.</p>
+<hr>
+<h2>📚 REFERENCES</h2>
+<hr>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>[Speaker, early] &ldquo;The single slash command that will improve your performance more than anything else inside of Claude code is slash clear&hellip;&rdquo;&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref5:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref6:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref7:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>[Verified] MindStudio (2026). &ldquo;Claude 1M Token Context Window: What It Means for Long-Running Agent Tasks.&rdquo; Reports ~90% retrieval accuracy at 1M tokens.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>[Verified] GitHub issues and Medium articles confirm <code>/clear</code> and other slash commands exist in Claude Code CLI.&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>

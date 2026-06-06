@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Codex Feature That&#x27;s Going Viral Right Now &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-05-07 &middot; <a href="https://www.youtube.com/watch?v=p88mkfPkOZc">source</a></p>
+<h1>📄 The Codex “/go” Goal Feature – What It Is and How to Use It</h1>
+<p><strong>Source:</strong> Ray Amjad · 10 min 18 s · YouTube<br>
+<strong>Published:</strong> 260504<br>
+<strong>Link:</strong> https://www.youtube.com/watch?v=p88mkfPkOZc<br>
+<strong>Reading time:</strong> ~5 min  </p>
+<p><strong>Tags:</strong> <code>codex</code> <code>ai‑coding‑agents</code> <code>goal‑automation</code> <code>software‑productivity</code>  </p>
+<hr>
+<h2>⚡ BOTTOM LINE</h2>
+<p>The new <strong>/go</strong> (goal) command lets Codex run a self‑directed, long‑running optimisation loop until a clearly defined objective—e.g., “reduce P95 latency by 20 %”—is met, making it especially valuable for exploratory work where the solution shape is unknown.</p>
+<hr>
+<h2>📝 THESIS</h2>
+<p>Ray Amjad demonstrates that Codex’s goal feature acts as an autonomous “agent‑in‑the‑loop”: you give it a concrete, verifiable target, it maps the repo, iterates, and reports progress, while you retain control via pause/resume/clear commands. Proper goal framing and resource provision are critical to avoid runaway token consumption.</p>
+<hr>
+<h2>💡 KEY INSIGHTS</h2>
+<ol>
+<li>
+<p><strong>Goal vs. Ticket Workflows</strong> –<br>
+   - <em>Ticket‑style tasks</em> have a known solution shape; use Codex for rapid PR generation.<br>
+   - <em>Exploratory goals</em> have undefined solutions; /go keeps searching until a metric is hit. <sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup>  </p>
+</li>
+<li>
+<p><strong>Setup Is Straightforward</strong> –<br>
+   - Add <code>features.goals = true</code> to <code>config.ml</code>, then run <code>codex</code> in a terminal. The command <code>/go &lt;goal‑prompt&gt;</code> starts the loop; <code>/goal pause</code>, <code>/goal resume</code>, <code>/goal clear</code>, and <code>/goal</code> (status) manage it. <sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>  </p>
+</li>
+<li>
+<p><strong>Well‑Defined, Verifiable Goals Prevent Token Waste</strong> –<br>
+   - Goals must include a clear stop condition (e.g., a latency target). Vague prompts like “make it better” cause indefinite runs and high token costs. <sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup>  </p>
+</li>
+<li>
+<p><strong>Resource Access Determines Success</strong> –<br>
+   - For performance goals, give the agent live logs, cost data, flame‑graphs, and a staging environment. Without these, the model can only speculate. <sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup>  </p>
+</li>
+<li>
+<p><strong>Compaction Behaviour Matters</strong> –<br>
+   - Codex retains prior reasoning across turns; good compaction preserves signal‑to‑noise, while poor compaction degrades the “value of the Fred” (the remaining useful context). <sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup>  </p>
+</li>
+<li>
+<p><strong>Side‑Thread (<code>/side</code>) Keeps Main Goal Focused</strong> –<br>
+   - Running <code>/side</code> opens a parallel view for ad‑hoc questions without interrupting the main goal’s progress. <sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup>  </p>
+</li>
+<li>
+<p><strong>Post‑Goal Clean‑Up Is Essential</strong> –<br>
+   - After a goal finishes, prune debug prints and temporary branches; synthesize learnings into a PRD before shipping to avoid “scar tissue” in the codebase. <sup id="fnref:7"><a class="footnote-ref" href="#fn:7">7</a></sup>  </p>
+</li>
+</ol>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>“The goal command is most powerful when you <em>don’t</em> know the shape of the solution up front.” — Ray Amjad, ~02:45<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>  </p>
+<p>“If you just say ‘make this better’ the model will run forever because ‘better’ isn’t a concrete metric.” — Ray Amjad, ~07:10<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup>  </p>
+</blockquote>
+<hr>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>⚠ <strong>UNVERIFIED</strong> — “A person got a 25 % FPS improvement on their game by using /go.”<br>
+<em>No public benchmark or tweet was located confirming this specific claim.</em>  </p>
+<p>⚠ <strong>UNVERIFIED</strong> — “Codex’s compaction is widely regarded as better than “claw‑code” compaction.”<br>
+<em>“Claw‑code” appears to be a colloquial term; no comparative study found.</em>  </p>
+</blockquote>
+<hr>
+<h2>📖 KEY REFERENCES</h2>
+<h3>People &amp; Experts</h3>
+<ul>
+<li><strong>Ray Amjad</strong> – AI‑coding‑agent educator, creator of “Principles for Agentic Engineers” masterclass.  </li>
+</ul>
+<h3>Publications &amp; Works</h3>
+<ul>
+<li><em>OpenAI Codex CLI – Features</em> (2026) – Official documentation of the <code>/go</code> command and related flags.  </li>
+</ul>
+<h3>Institutions &amp; Organisations</h3>
+<ul>
+<li><strong>OpenAI</strong> – Developer of Codex, the underlying large‑language‑model coding assistant.  </li>
+</ul>
+<h3>Concepts &amp; Frameworks</h3>
+<ul>
+<li><strong>Goal‑Oriented Agent Loop</strong> – An autonomous iteration where the model continuously refines code until a measurable objective is satisfied.  </li>
+<li><strong>Compaction</strong> – The process by which prior turn information is summarized to stay within token limits while preserving useful context.  </li>
+</ul>
+<hr>
+<h2>🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For solo developers:</strong> Deploy <code>/go</code> on performance‑heavy features (e.g., latency reduction) to automate trial‑and‑error without constant prompting.  </p>
+<p><strong>For engineering teams:</strong> Use goal‑driven runs to prototype specs; distill the output into a PRD, then hand‑off to conventional PR workflows for code review and QA.  </p>
+<p><strong>For product managers:</strong> Define measurable acceptance criteria (KPIs) early; the goal agent will stop only when they’re met, giving you a clear “done” signal.  </p>
+<hr>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>How does token consumption scale with goal duration, and can cost‑monitoring hooks be integrated?  </li>
+<li>What safeguards are needed to prevent the agent from making destructive changes in production environments?  </li>
+<li>Could a “goal‑audit” tool automatically generate a PRD from a finished goal run?  </li>
+</ul>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<ul>
+<li><strong>Source credibility:</strong> Medium — Ray Amjad is an active practitioner and educator, but the video contains anecdotal evidence without external validation.  </li>
+<li><strong>Claim verifiability:</strong> 2 of 9 key claims verified (feature existence, command syntax); 7 remain unverified or anecdotal.  </li>
+<li><strong>Potential biases:</strong> Promotional tone for the author’s upcoming “Principles for Agentic Engineers” class; may over‑emphasise benefits.  </li>
+<li><strong>Quality flags:</strong> Minor transcription errors (“/goal” sometimes rendered “/go”), but core content coherent.  </li>
+<li><strong>Confidence in synthesis:</strong> Medium — factual core (command usage, workflow advice) is reliable; performance‑related claims lack independent confirmation.  </li>
+</ul>
+<hr>
+<h2>⚔️ CONTRARIAN CORNER <em>(not requested; omitted)</em></h2>
+<hr>
+<h2>🎙️ SPONSORS <em>(none mentioned in transcript; omitted)</em></h2>
+<hr>
+<h2>🧠 MEMORY HOOKS <em>(not requested; omitted)</em></h2>
+<hr>
+<h2>📢 SHARING <em>(not requested; omitted)</em></h2>
+<hr>
+<h2>📚 REFERENCES</h2>
+<hr>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Ray Amjad, ~02:45 – “goal command is most powerful when you don’t know the shape of the solution up front.”&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>Ray Amjad, ~01:30 – Configuration steps for enabling goals.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>Ray Amjad, ~07:10 – Need for concrete stop conditions.&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>Ray Amjad, ~06:20 – Supplying logs, cost data, and staging envs.&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p>Ray Amjad, ~08:30 – Compaction’s impact on “value of the Fred.”&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:6">
+<p>Ray Amjad, ~09:00 – Using <code>/side</code> to open a parallel thread.&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:7">
+<p>Ray Amjad, ~11:45 – Post‑goal clean‑up and PRD synthesis.&#160;<a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>

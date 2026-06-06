@@ -1,0 +1,6 @@
+# OmniMiner Reports — publication exclude list
+# One report slug per line (the slug is the report's filename without the
+# date prefix, "_complete"/"-REPORT-OMNIMINER" suffix, and extension, lowercased
+# with non-alphanumerics collapsed to hyphens). A report can also be withheld by
+# putting the literal marker EXCLUDE_FROM_PUBLIC anywhere in its source .md.
+# Lines starting with # are ignored.

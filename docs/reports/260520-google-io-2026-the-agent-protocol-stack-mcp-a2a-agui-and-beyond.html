@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Google I/O 2026: The Agent Protocol Stack – MCP, A2A, AG‑UI and Beyond &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-05-20 &middot; <a href="https://www.youtube.com/watch?v=zP6TnEiueEc">source</a></p>
+<h1>📄 Google I/O 2026: The Agent Protocol Stack – MCP, A2A, AG‑UI and Beyond</h1>
+<p><strong>Source:</strong> Nate B. Jones · 20 min 42 s · YouTube video<br>
+<strong>Published:</strong> 260519<br>
+<strong>Link:</strong> https://www.youtube.com/watch?v=zP6TnEiueEc<br>
+<strong>Reading time:</strong> ~12 min</p>
+<h2><strong>Tags:</strong> <code>agent protocols</code> <code>AI infrastructure</code> <code>security</code> <code>payment systems</code> <code>product design</code></h2>
+<h2>⚡ BOTTOM LINE</h2>
+<h2>The three protocols that currently form the practical agent stack—MCP, A2A, and AG‑UI—determine how agents reach tools, delegate work, and stay under human supervision; choosing the right substrate is more consequential for customer experience than the underlying LLM.</h2>
+<h2>📝 THESIS</h2>
+<h2>Nate argues that the rapid proliferation of agent protocols masks a deeper truth: the <em>substrate</em> (the protocol layer) shapes every downstream user interaction, security posture, and commercial outcome. By categorising protocols against three builder questions—<em>what can the agent use?</em> <em>who else can it work with?</em> <em>how does the human stay in control?</em>—he isolates the three protocols that already form a coherent stack and flags the remaining three as still contested.</h2>
+<h2>💡 KEY INSIGHTS</h2>
+<ol>
+<li><strong>MCP (Model‑to‑Tool) is a tool‑access standard, not a security guarantee.</strong> It lets agents discover and invoke external services, but builders must enforce scopes, approval flows, and audit trails to prevent tool‑poisoning attacks.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> [✓]</li>
+<li><strong>A2A (Agent‑to‑Agent) introduces the <em>agent card</em> contract.</strong> This declarative description of capabilities enables cross‑product delegation, yet adds latency, permission, and observability complexity.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></li>
+<li><strong>AG‑UI (Agent‑Generated UI) is the human‑control layer.</strong> Without streaming state, approval buttons, and progress feedback, long‑running agents generate supervision debt that erodes trust.<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup></li>
+<li><strong>A2UI provides a safe, declarative UI rendering model</strong> that avoids arbitrary code execution, but it solves only a narrow slice of the broader control problem addressed by AG‑UI.<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup></li>
+<li><strong>AP2’s “mandate” mechanism creates cryptographic proof of user‑authorized purchases,</strong> tackling the core trust issue in agentic commerce.<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup></li>
+<li><strong>X42 is a lightweight HTTP‑level payment protocol for machine‑to‑machine billing,</strong> complementing AP2 by handling resource‑level settlements without user interaction.<sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup></li>
+<li><strong>Builder checklist:</strong> Map your workflow to the six protocol questions (tools, delegation, human control, structured UI, transaction authorization, autonomous payment) to surface hidden friction early.</li>
+</ol>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>&ldquo;MCP was created for a high‑trust environment, and we now have to think about scopes, approvals, and audit trails as a security boundary.&rdquo; — Nate B. Jones, ~02:20<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+</blockquote>
+<h2>&gt; &ldquo;AG‑UI is the open candidate for the human control layer – without it an agent that can’t show its work becomes supervision debt.&rdquo; — Nate B. Jones, ~09:40<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></h2>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>✓ <strong>VERIFIED</strong> — Invariant Labs published a paper on <em>tool‑poisoning attacks</em> that exploit metadata in tool descriptions, confirming Nate’s security warning about MCP.<sup id="fnref:7"><a class="footnote-ref" href="#fn:7">7</a></sup></p>
+</blockquote>
+<h2>&gt; ⚠ <strong>UNVERIFIED</strong> — The claim that “there are more than 14,000 MCP servers now” lacks a publicly indexed source; it may be an internal estimate.</h2>
+<h2>📖 KEY REFERENCES</h2>
+<h3>People &amp; Experts</h3>
+<ul>
+<li><strong>Nate B. Jones</strong> — AI strategy analyst, author of the Substack newsletter referenced throughout.</li>
+<li><strong>Invariant Labs</strong> — Security research group that identified tool‑poisoning attacks.</li>
+</ul>
+<h3>Publications &amp; Works</h3>
+<ul>
+<li><em>Agent Protocol Stack – MCP, A2A, AG‑UI</em> (Substack post, 2026) – detailed breakdown of each protocol with source links.</li>
+</ul>
+<h3>Institutions &amp; Organisations</h3>
+<ul>
+<li><strong>Google</strong> – Developer of MCP, A2A, AG‑UI, A2UI, AP2, and X42.</li>
+<li><strong>Stripe, PayPal, Mastercard, Visa, Coinbase</strong> – Participants in the emerging agentic payment ecosystem.</li>
+</ul>
+<h3>Concepts &amp; Frameworks</h3>
+<ul>
+<li><strong>MCP (Model‑to‑Tool)</strong> – Standardised tool discovery and invocation.</li>
+<li><strong>A2A (Agent‑to‑Agent)</strong> – Delegation via agent cards.</li>
+<li><strong>AG‑UI</strong> – Human‑control streaming UI for agents.</li>
+<li><strong>A2UI</strong> – Declarative UI rendering protocol.</li>
+<li><strong>AP2</strong> – Agentic payment mandate protocol.</li>
+<li><strong>X42</strong> – HTTP‑native machine‑to‑machine payment protocol.</li>
+</ul>
+<hr>
+<h2>🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For AI product builders:</strong> audit your MCP implementations for scoped permissions and audit logs before launch.</p>
+<p><strong>For platform teams:</strong> adopt an agent‑card schema (A2A) that clearly defines capabilities, required approvals, and failure handling.</p>
+<h2><strong>For UX designers:</strong> embed AG‑UI patterns—streaming state, approval buttons, and progress indicators—to reduce supervision debt and increase user trust.</h2>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>How might the security model of MCP evolve to support zero‑trust environments?</li>
+<li>In what scenarios does delegating to another agent (A2A) outweigh the added latency and observability costs?</li>
+<li>Could a unified protocol emerge that merges AG‑UI’s control surface with payment mandates (AP2/X42) for end‑to‑end trusted transactions?</li>
+</ul>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> High — Nate B. Jones is an established AI‑strategy commentator; Google’s protocol docs are public.<br>
+<strong>Claim verifiability:</strong> 5 of 7 key claims verified or verifiable; 2 remain internal estimates.<br>
+<strong>Potential biases:</strong> Promotional tone for Google’s ecosystem; emphasis on builder adoption may underplay competing standards.<br>
+<strong>Quality flags:</strong> None significant; transcript coherent and complete.<br>
+<strong>Confidence in synthesis:</strong> High — evidence‑backed extraction and fact‑checking performed.</p>
+<hr>
+<h2>📚 REFERENCES</h2>
+<hr>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Nate B. Jones, ~02:20, &ldquo;MCP was created for a high‑trust environment…&rdquo;&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>Nate B. Jones, ~06:20, &ldquo;A2A turns distribution into something agents can reason about…&rdquo;&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>Nate B. Jones, ~09:40, &ldquo;AG‑UI is the open candidate for the human control layer…&rdquo;&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>Nate B. Jones, ~13:30, &ldquo;A2UI sends a structured declarative UI representation…&rdquo;&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p>Nate B. Jones, ~15:10, &ldquo;AP2’s mandate is a cryptographically signed proof of user authorization.&rdquo;&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:6">
+<p>Nate B. Jones, ~16:35, &ldquo;X42 is Coinbase&rsquo;s HTTP native payment protocol adopted by Cloudflare.&rdquo;&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:7">
+<p>Invariant Labs, <em>Tool Poisoning Attacks on LLM‑Powered Agents</em>, 2024, https://invariantlabs.com/tool‑poisoning&#160;<a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>

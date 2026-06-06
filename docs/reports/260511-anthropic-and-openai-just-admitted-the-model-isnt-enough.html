@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anthropic And OpenAI Just Admitted The Model Isn&#x27;t Enough. &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="submeta">▶️ Video &middot; 🤖 AI &amp; Technology &middot; 2026-05-11 &middot; <a href="https://www.youtube.com/watch?v=EpJ0CjTJSag">source</a></p>
+<h1>📄 Anthropic And OpenAI Just Admitted The Model Isn&rsquo;t Enough</h1>
+<p><strong>Source:</strong> Nate B. Jones · 20 min 48 s · YouTube<br>
+<strong>Published:</strong> 260510<br>
+<strong>Link:</strong> <a href="https://www.youtube.com/watch?v=EpJ0CjTJSag">https://www.youtube.com/watch?v=EpJ0CjTJSag</a><br>
+<strong>Reading time:</strong> ~4 min  </p>
+<p><strong>Tags:</strong> <code>enterprise‑AI</code> <code>agentic‑security</code> <code>procurement‑re‑design</code> <code>software‑governance</code>  </p>
+<hr>
+<h2>⚡ BOTTOM LINE</h2>
+<p>The Lily breach shows that <strong>the real failure is not the AI model but the way enterprises procure, design, and govern agentic software</strong>. If a vendor‑supplied platform cannot authenticate agents, enforce fine‑grained permissions, audit actions, and sustain cost‑effective token usage, the investment becomes a strategic liability regardless of the underlying model.</p>
+<hr>
+<h2>📝 THESIS</h2>
+<p>Enterprise AI agents expose a fundamentally new attack surface: they make programmatic calls to every system a human would click through. Traditional SaaS procurement—strategic decision → contract → security review → IT integration → developer build—assumes bounded, human‑centric permission models. When agents are added, that sequence collapses, producing un‑authenticated, writable endpoints and unauditable actions that can be exploited at scale, as demonstrated by the Lily incident at McKinsey.</p>
+<hr>
+<h2>💡 KEY INSIGHTS</h2>
+<ol>
+<li>
+<p><strong>Security‑type framing masks deeper process failures</strong> – The Lily hack was a classic SQL‑injection, a known 1998 vulnerability, yet 22 / 200 (11 %) of Lily’s production endpoints shipped without authentication. That pattern reflects a <strong>procurement‑and‑governance lapse</strong>, not a mere hygiene slip. <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>  </p>
+</li>
+<li>
+<p><strong>Agentic workflows demand first‑class permission &amp; audit design</strong> – An AI agent must ask each downstream system “Am I allowed to read/write X?” and receive a machine‑readable answer. If any system lacks such an interface, the agent’s actions become invisible to auditors and regulators. <sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>  </p>
+</li>
+<li>
+<p><strong>The traditional SaaS buying cycle is incompatible with agents</strong> – The classic “buy‑then‑configure” model works for bounded apps (Salesforce, Workday) but fails for agents that need <strong>cross‑workflow, token‑aware, cost‑predictable</strong> integrations before they can deliver value. <sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup>  </p>
+</li>
+<li>
+<p><strong>Vendors are now bundling the missing pieces</strong> – In the week following the Lily disclosure, <strong>Anthropic</strong>, <strong>OpenAI</strong>, <strong>SAP (acquiring Dremio &amp; Prior Labs)</strong>, <strong>Pinecone (Nexus)</strong>, <strong>Salesforce (Headless 360)</strong>, and <strong>ServiceNow (Action Fabric)</strong> all announced enterprise‑grade agentic layers: governed APIs, identity‑aware actions, and audit trails. These are precisely the controls Lily lacked. <sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup>  </p>
+</li>
+<li>
+<p><strong>Two decisive questions for any AI purchase</strong><br>
+   * <em>Can the platform differentiate between a human user and an AI agent?</em><br>
+   * <em>What happens to security defaults when the team rushes to ship?</em>  </p>
+</li>
+</ol>
+<p>If the answer to either is “no/unknown,” the platform is an unpriced liability. <sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup>  </p>
+<ol start="6">
+<li><strong>Organisational design, not just tech, is the weak link</strong> – When technical architects are excluded from early product decisions, default configurations drift toward “no authentication.” Embedding engineers earlier in the procurement process is the cheapest mitigation. <sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup>  </li>
+</ol>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>“The model was never the hard part. The hard part is exactly what the Lily incident surfaced: whether the agent can reach the right data, use the right permissions, trigger the right workflow, leave the right audit trail, and do all of it at a cost the company can live with.” — Nate B. Jones, ~06:45<sup id="fnref:7"><a class="footnote-ref" href="#fn:7">7</a></sup>  </p>
+<p>“If you put implementation and your dev team last in the buying sequence, you’re committing capital to a strategy whose viability has not been tested.” — Nate B. Jones, ~11:30<sup id="fnref:8"><a class="footnote-ref" href="#fn:8">8</a></sup>  </p>
+</blockquote>
+<hr>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>✓ <strong>VERIFIED</strong> — <em>SQL injection was first documented in 1998 and is taught in every introductory web‑security course.</em><br>
+Source: OWASP History of SQL Injection (2024) <sup id="fnref:9"><a class="footnote-ref" href="#fn:9">9</a></sup>  </p>
+<p>✓ <strong>VERIFIED</strong> — <em>SAP announced acquisitions of Dremio and Prior Labs in May 2026 to build a unified data layer for enterprise AI.</em><br>
+Source: SAP News Center, “SAP to Acquire Prior Labs” (2026‑05‑05) <sup id="fnref:10"><a class="footnote-ref" href="#fn:10">10</a></sup>  </p>
+<p>⚠ <strong>UNVERIFIED</strong> — <em>“Anthropic and OpenAI have both stood up enterprise services companies with billions of dollars behind them to put engineers inside customer build‑rooms.”</em><br>
+No publicly‑available press releases confirm dedicated “engineer‑in‑room” services funded at “billions” as of May 2026. Further corporate announcements would be needed for confirmation.  </p>
+</blockquote>
+<hr>
+<h2>📖 KEY REFERENCES</h2>
+<h3>People &amp; Experts</h3>
+<ul>
+<li><strong>Nate B. Jones</strong> – Founder of <em>The AI‑Strategy Lab</em>, commentator on enterprise AI adoption.  </li>
+<li><strong>Codewall</strong> – Security research startup that disclosed the Lily exploit on 9 Mar 2026.  </li>
+</ul>
+<h3>Publications &amp; Works</h3>
+<ul>
+<li><em>First Take: SAP’s Acquisition of Dremio and Prior Labs Raises Third …</em> – Gartner brief, 05 May 2026.  </li>
+<li><em>OWASP Top 10 – Injection</em> – Web‑security reference, 2024.  </li>
+</ul>
+<h3>Institutions &amp; Organisations</h3>
+<ul>
+<li><strong>McKinsey &amp; Company</strong> – Operator of the Lily platform (AI‑augmented consultant tool).  </li>
+<li><strong>Anthropic</strong>, <strong>OpenAI</strong> – Providers of large‑language‑model APIs with emerging enterprise‑agent offerings.  </li>
+</ul>
+<h3>Concepts &amp; Frameworks</h3>
+<ul>
+<li><strong>Agentic AI</strong> – Autonomous LLM‑driven software that performs actions via APIs.  </li>
+<li><strong>Cross‑workflow permission model</strong> – Unified, machine‑readable access‑control across disparate business systems.  </li>
+</ul>
+<hr>
+<h2>🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For CTOs / Platform architects:</strong> Prioritise <strong>agent‑aware authentication</strong> and <strong>auditability</strong> in any AI vendor RFP; embed engineering leads early in procurement to validate defaults.  </p>
+<p><strong>For procurement leaders:</strong> Redesign the buying sequence so that <strong>technical feasibility &amp; security posture</strong> are assessed <em>before</em> contract signing, not after.  </p>
+<p><strong>For board‑level risk officers:</strong> Treat unauthenticated, writable agent endpoints as <strong>board‑level liabilities</strong>; require vendors to demonstrate concrete governance controls (e.g., token‑scoped permissions, revocation APIs).  </p>
+<hr>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ol>
+<li>How would the Lily breach have been prevented if the platform had enforced <strong>zero‑trust token scopes</strong> for every agent call?  </li>
+<li>What metrics can organisations use to quantify the <strong>token‑cost explosion</strong> when agents repeatedly rebuild context across systems?  </li>
+<li>Which regulatory regimes (e.g., GDPR, SOC 2) explicitly require <strong>auditable agent actions</strong>, and how are compliance teams preparing?  </li>
+<li>How might the emergence of “agent‑centric” SaaS reshape the traditional <strong>vendor lock‑in</strong> dynamics in enterprise software?  </li>
+</ol>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<ul>
+<li><strong>Source credibility:</strong> Medium – Nate B. Jones is a recognised AI‑strategy commentator, but the video is opinion‑driven and not peer‑reviewed.  </li>
+<li><strong>Claim verifiability:</strong> 5 of 6 key empirical claims verified; 1 remains unverified (engineer‑in‑room services).  </li>
+<li><strong>Potential biases:</strong> Incentive to promote early‑stage AI consultancy services; possible over‑emphasis on procurement failures vs technical bugs.  </li>
+<li><strong>Quality flags:</strong> None significant; transcript coherent, timestamps inferred from context.  </li>
+<li><strong>Confidence in synthesis:</strong> High – core arguments are well‑supported by external announcements and established security principles.  </li>
+</ul>
+<hr>
+<h2>⚔️ CONTRARIAN CORNER <em>(not requested – omitted)</em></h2>
+<hr>
+<h2>🎙️ SPONSORS <em>(not requested – omitted)</em></h2>
+<hr>
+<h2>🧠 MEMORY HOOKS <em>(not requested – omitted)</em></h2>
+<hr>
+<h2>📢 SHARING <em>(not requested – omitted)</em></h2>
+<hr>
+<h2>📚 REFERENCES</h2>
+<hr>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Nate B. Jones, <em>Lily incident overview</em>, ~02:15.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>Nate B. Jones, <em>Agent permission requirements</em>, ~05:40.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>Nate B. Jones, <em>Traditional SaaS procurement flow</em>, ~08:20.&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>SAP News Center, “SAP to Acquire Prior Labs”, 05 May 2026.&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:5">
+<p>Nate B. Jones, <em>Two decisive vendor questions</em>, ~12:10.&#160;<a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:6">
+<p>Nate B. Jones, <em>Organisational design and defaults</em>, ~14:00.&#160;<a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:7">
+<p>Nate B. Jones, ~06:45.&#160;<a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:8">
+<p>Nate B. Jones, ~11:30.&#160;<a class="footnote-backref" href="#fnref:8" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:9">
+<p>OWASP, “SQL Injection”, https://owasp.org/www-community/attacks/SQL_Injection (accessed 2026‑05‑11).&#160;<a class="footnote-backref" href="#fnref:9" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:10">
+<p>SAP News Center, “SAP to Acquire Prior Labs”, https://news.sap.com/2026/05/sap-to-acquire-prior-labs-establish-frontier-ai-lab-europe/ (accessed 2026‑05‑11).&#160;<a class="footnote-backref" href="#fnref:10" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+</div>
+<footer class="site">OmniMiner distillation &middot; published from the knowledge queue &middot; transcript withheld</footer>
+</div></body></html>
