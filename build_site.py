@@ -387,8 +387,18 @@ def parse_report(path: Path) -> dict | None:
 # ---------------------------------------------------------------------------
 # Rendering
 # ---------------------------------------------------------------------------
+# Autolink bare URLs that markdown leaves as plain text (e.g. KA footnotes
+# "Link: https://…"). The lookbehind skips URLs already inside an attribute
+# (href="…") or as anchor text (>…<), so existing [title](url) links are untouched.
+_BARE_URL = re.compile(r"""(?<![">='])(https?://[^\s<>"')]+)""")
+
+
+def linkify(html_str: str) -> str:
+    return _BARE_URL.sub(lambda m: f'<a href="{m.group(1)}">{m.group(1)}</a>', html_str)
+
+
 def render_md(body_md: str) -> str:
-    return markdown.markdown(body_md, extensions=MD_EXTENSIONS, output_format="html5")
+    return linkify(markdown.markdown(body_md, extensions=MD_EXTENSIONS, output_format="html5"))
 
 
 CSS = """
