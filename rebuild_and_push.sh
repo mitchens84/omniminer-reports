@@ -1,13 +1,15 @@
 #!/bin/bash
 # rebuild_and_push.sh — regenerate the OmniMiner reports site and publish if changed.
 #
-# Trigger: launchd agent com.mitchens.omniminer-reports-rebuild (poll + WatchPaths on
-# _SYNC/OMNIMINER/). Replaces the retired in-workflow GITHUB_COMMIT push node
-# (PROC-OMNIMINER_TRIGGER §9). Idempotent: build_site.py rebuilds docs/ from scratch
-# and clears accumulated orphan pages; we commit+push only when docs/ actually changes.
+# Trigger: invoked (backgrounded) by the daily-maintenance job
+# (~/Local/AUTOMATION/CHANNELS/telegram/bin/daily-maintenance.sh, com.mitchens.daily-maintenance,
+# daily 08:00 ICT) — bundled there rather than a standalone daemon. Replaces the retired
+# in-workflow GITHUB_COMMIT push node (PROC-OMNIMINER_TRIGGER §9). Idempotent: build_site.py
+# rebuilds docs/ from scratch and clears orphan pages; the mtime guard below makes this a
+# cheap no-op unless a source .md is newer than the last build.
 #
-# ⚠ Publishes to the PUBLIC repo mitchens84/omniminer-reports. Enabling the launchd
-# agent is operator-gated (PROC §9 publish-by-default confirmation). Safe to run by hand.
+# Publishes to the PUBLIC repo mitchens84/omniminer-reports (privacy gates: transcript
+# truncation + quality gate + EXCLUDE_FROM_PUBLIC). Operator-authorised 260606. Safe to run by hand.
 set -euo pipefail
 
 REPO="$HOME/Local/APPS/omniminer-reports"

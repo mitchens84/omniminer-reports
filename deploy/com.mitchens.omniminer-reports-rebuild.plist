@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  OmniMiner reports-site rebuild watcher.  STAGED — NOT loaded by default.
-  Publishes to PUBLIC repo mitchens84/omniminer-reports; enabling is operator-gated
-  (PROC-OMNIMINER_TRIGGER §9 publish-by-default confirmation).
+  OPTIONAL ALTERNATIVE — NOT the active mechanism.
+  The reports-site publish is bundled into the daily-maintenance job (daily 08:00,
+  com.mitchens.daily-maintenance → rebuild_and_push.sh) as of 260606. That gives a
+  daily rebuild with no extra daemon. Load THIS standalone watcher ONLY if you want
+  near-instant publishing (15-min poll + on-change) instead of once-daily — e.g. so the
+  Telegram report deep-link resolves within minutes rather than by the next morning.
+  If you load this, you may want to drop the call from daily-maintenance.sh to avoid
+  two triggers (harmless if both run — the mtime guard makes the loser a no-op).
 
-  Install (after deciding to enable):
+  Install (only if choosing near-instant over the daily bundle):
     cp deploy/com.mitchens.omniminer-reports-rebuild.plist ~/Library/LaunchAgents/
     launchctl load ~/Library/LaunchAgents/com.mitchens.omniminer-reports-rebuild.plist
   Disable:
