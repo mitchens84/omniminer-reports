@@ -121,16 +121,13 @@ MD_EXTENSIONS = ["extra", "sane_lists", "nl2br"]
 
 INDEX_JS = """
 const q=document.getElementById('q'),chips=[...document.querySelectorAll('.chip')],
-items=[...document.querySelectorAll('li.item')],secs=[...document.querySelectorAll('section.cat')],
+items=[...document.querySelectorAll('li.item')],
 count=document.getElementById('count'),no=document.getElementById('noresults');
 let bf='all';
 function apply(){const term=q.value.trim().toLowerCase();let shown=0;
 items.forEach(li=>{const okB=bf==='all'||li.dataset.b===bf;
 const okT=!term||li.dataset.s.includes(term);const v=okB&&okT;
 li.style.display=v?'':'none';if(v)shown++;});
-secs.forEach(s=>{const vis=[...s.querySelectorAll('li.item')].some(li=>li.style.display!=='none');
-s.style.display=vis?'':'none';
-const h=s.querySelector('h2');if(h)h.style.display=(bf==='all')?'':'none';});
 no.style.display=shown?'none':'';
 count.textContent=shown+(shown===1?' report':' reports');}
 q.addEventListener('input',apply);
@@ -469,38 +466,33 @@ def report_page(r: dict) -> str:
 
 
 def index_page(reports: list[dict], built_at: str) -> str:
-    by_cat: dict[str, list[dict]] = {c: [] for c in CATEGORY_ORDER}
-    for r in reports:
-        by_cat.setdefault(r["category"], []).append(r)
+    from collections import Counter
+    counts = Counter(r["category"] for r in reports)
 
     chips = [f'<span class="chip active" data-b="all">All ({len(reports)})</span>']
-    sections = []
     for c in CATEGORY_ORDER:
-        items = sorted(by_cat.get(c, []), key=lambda x: x["date"], reverse=True)
-        if not items:
-            continue
-        chips.append(f'<span class="chip" data-b="{html.escape(c)}">{html.escape(c)} ({len(items)})</span>')
-        lis = []
-        for r in items:
-            srcline = f'<span class="src">{r["ctype"].upper()}'
-            if r["source_label"]:
-                srcline += f' &middot; {html.escape(r["source_label"])}'
-            srcline += "</span>"
-            tagstr = " ".join("#" + t for t in r["tags"][:4])
-            search = html.escape((r["title"] + " " + " ".join(r["tags"]) + " "
-                                  + r["source_label"] + " " + c).lower())
-            lis.append(
-                f'<li class="item" data-b="{html.escape(c)}" data-s="{search}">'
-                f'<a class="t" href="reports/{r["slug"]}.html">{html.escape(r["title"])}</a>'
-                f'{srcline}'
-                f'<span class="meta">{html.escape(friendly_date(r["date"]))}'
-                f'{(" &middot; " + r["duration"]) if r["duration"] else ""} '
-                f'<span class="tg">{html.escape(tagstr)}</span></span></li>'
-            )
-        sections.append(
-            f'<section class="cat" data-b="{html.escape(c)}">'
-            f'<h2>{html.escape(c)}</h2><ul class="items">{"".join(lis)}</ul></section>'
+        if counts.get(c):
+            chips.append(f'<span class="chip" data-b="{html.escape(c)}">{html.escape(c)} ({counts[c]})</span>')
+
+    # Single flat list, newest first; chips filter it (no category section headers).
+    lis = []
+    for r in sorted(reports, key=lambda x: x["date"], reverse=True):
+        srcline = f'<span class="src">{r["ctype"].upper()}'
+        if r["source_label"]:
+            srcline += f' &middot; {html.escape(r["source_label"])}'
+        srcline += "</span>"
+        tagstr = " ".join("#" + t for t in r["tags"][:4])
+        search = html.escape((r["title"] + " " + " ".join(r["tags"]) + " "
+                              + r["source_label"] + " " + r["category"]).lower())
+        lis.append(
+            f'<li class="item" data-b="{html.escape(r["category"])}" data-s="{search}">'
+            f'<a class="t" href="reports/{r["slug"]}.html">{html.escape(r["title"])}</a>'
+            f'{srcline}'
+            f'<span class="meta">{html.escape(friendly_date(r["date"]))}'
+            f'{(" &middot; " + r["duration"]) if r["duration"] else ""} '
+            f'<span class="tg">{html.escape(tagstr)}</span></span></li>'
         )
+    sections = [f'<ul class="items">{"".join(lis)}</ul>']
 
     return f"""<!DOCTYPE html>
 <html lang="en"><head>
