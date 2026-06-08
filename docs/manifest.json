@@ -1,6 +1,6 @@
 {
- "built_at": "2026-06-06 05:52 UTC",
- "count": 271,
+ "built_at": "2026-06-08 11:13 UTC",
+ "count": 274,
  "categories": [
   "AI & Technology",
   "Health & Nutrition",
@@ -11,6 +11,51 @@
   "General"
  ],
  "reports": [
+  {
+   "slug": "260608-how-to-actually-scale-ai-beyond-individual-tasks",
+   "title": "How to Actually Scale AI Beyond Individual Tasks",
+   "date": "2026-06-08",
+   "category": "AI & Technology",
+   "lbs": "6I",
+   "ctype": "video",
+   "source_label": "NATE B JONES",
+   "source_url": "https://www.youtube.com/watch?v=vXBB1YX7BDA",
+   "tags": [],
+   "duration": "",
+   "src_file": "260608-HOW_TO_ACTUALLY_SCALE_AI_BEYOND_INDIVIDUAL_TASKS-REPORT-OMNIMINER.md"
+  },
+  {
+   "slug": "260608-the-future-of-food-with-bruce-friedrich",
+   "title": "The Future of Food with BRUCE FRIEDRICH",
+   "date": "2026-06-08",
+   "category": "Health & Nutrition",
+   "lbs": "4H",
+   "ctype": "video",
+   "source_label": "YOUTUBE",
+   "source_url": "https://www.youtube.com/watch?v=KZDG6R9RPNo",
+   "tags": [],
+   "duration": "",
+   "src_file": "260608-THE_FUTURE_OF_FOOD_WITH_BRUCE_FRIEDRICH-REPORT-OMNIMINER.md"
+  },
+  {
+   "slug": "260607-the-top-10-claude-code-plugins-to-10x-your-next-project-june-26",
+   "title": "The Top 10 Claude Code Plugins to 10x Your Next Project (June '26)",
+   "date": "2026-06-07",
+   "category": "AI & Technology",
+   "lbs": "6I",
+   "ctype": "video",
+   "source_label": "CHASE AI",
+   "source_url": "https://www.youtube.com/watch?v=IShdbDP4Jgg",
+   "tags": [
+    "claude-code",
+    "ai-coding-tools",
+    "knowledge-graph",
+    "obsidian",
+    "n8n"
+   ],
+   "duration": "",
+   "src_file": "260607-THE_TOP_10_CLAUDE_CODE_PLUGINS_TO_10X_YOUR_NEXT_PROJECT_JUNE_26-REPORT-OMNIMINER.md"
+  },
   {
    "slug": "260606-6-best-dry-eyes-treatment-tips-for-the-winter",
    "title": "6 BEST Dry Eyes Treatment Tips For The Winter",
