@@ -1,3 +1,4 @@
 rebuild.log
+rebuild.launchd.log
 __pycache__/
 .venv/
