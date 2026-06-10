@@ -1,6 +1,7 @@
 {
- "built_at": "2026-06-10 12:27 UTC",
- "count": 276,
+ "built_at": "2026-06-10 14:00 UTC",
+ "count": 277,
+ "source_count": 306,
  "categories": [
   "AI & Technology",
   "Health & Nutrition",
@@ -11,6 +12,27 @@
   "General"
  ],
  "reports": [
+  {
+   "slug": "260610-how-algorithms-use-your-data-to-control-you",
+   "title": "How Algorithms Use Your Data to Control You",
+   "date": "2026-06-10",
+   "category": "General",
+   "lbs": "0A",
+   "ctype": "podcast",
+   "source_label": "SNIPD",
+   "source_url": "https://share.snipd.com/episode/4492355e-3673-4e39-a94f-5491104c9275",
+   "tags": [
+    "prediction",
+    "surveillance",
+    "artificial-intelligence",
+    "privacy",
+    "utilitarianism",
+    "effective-altruism",
+    "epicureanism"
+   ],
+   "duration": "",
+   "src_file": "260610-HOW_ALGORITHMS_USE_YOUR_DATA_TO_CONTROL_YOU-REPORT-OMNIMINER.md"
+  },
   {
    "slug": "260609-beyond-the-hype-why-meta-and-block-are-firing-people",
    "title": "Beyond The Hype: Why Meta And Block Are Firing People",
