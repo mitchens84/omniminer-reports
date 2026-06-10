@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Graphify x Obsidian Is a Cheat Code &middot; OmniMiner</title>
+<link rel="stylesheet" href="../assets/om.css">
+</head><body class="report"><div class="wrap">
+<a class="backlink" href="../index.html">&larr; All reports</a>
+<div class="card">
+<p class="src">CHASE AI</p><h1>Graphify x Obsidian Is a Cheat Code</h1>
+<p class="submeta">Video &middot; AI &amp; Technology &middot; 9 Jun 2026 &middot; <a href="https://www.youtube.com/watch?v=pO90D744kIk">source</a></p>
+<h2>⚡ BOTTOM LINE</h2>
+<p>Graphify replaces grep with a queryable knowledge graph, and when paired with Obsidian as persistent memory, it transforms Claude Code from a session-bound assistant into an agent with permanent codebase awareness — claiming up to <strong>71.5x fewer tokens per session</strong>.<sup>[1]</sup></p>
+<hr>
+<h2>📝 THESIS</h2>
+<p>The core limitation of AI coding assistants like Claude Code is session amnesia: every new chat requires re-reading files and re-explaining context. Graphify (an open-source knowledge graph builder) solves the structural side by replacing token-heavy grep with a queryable graph, while Obsidian solves the memory side by persisting decisions and context across sessions. Together they form a "cheat code" stack that dramatically reduces token waste and improves agentic continuity.</p>
+<hr>
+<h2>💡 KEY INSIGHTS</h2>
+<ol>
+<li>
+<p><strong>Grep is a flashlight; Graphify is satellite telemetry.</strong> — Grep searches files linearly and burns tokens with every query. Graphify builds a semantic knowledge graph using Tree-sitter AST parsing (for 20+ programming languages) and LLM-driven extraction (for docs, PDFs, images, videos). The AI assistant queries this graph instead of scanning files from scratch. A typical ~40-file project burns ~20,000 tokens just for Claude to orient itself — Graphify eliminates nearly all of that.<sup>[1]</sup><sup>[2]</sup></p>
+</li>
+<li>
+<p><strong>Obsidian provides the long-term memory layer.</strong> — Claude Code has no built-in memory across sessions. By writing project decisions, architecture context, and progress to an Obsidian vault (accessed via <code>CLAUDE.md</code> and custom skills), you create a persistent "second brain." This bridges the gap between sessions so you never re-explain your stack or past decisions.<sup>[1]</sup></p>
+</li>
+<li>
+<p><strong>Up to 71.5x token reduction is the headline metric.</strong> — The <code>lucasrosati/claude-code-memory-setup</code> repository benchmarks this precisely: compiling your raw folder into a knowledge graph instead of reading files flat yields a <strong>71.5x reduction</strong> in tokens consumed per session. At Claude Code's pricing, this translates directly into major cost savings.<sup>[1]</sup></p>
+</li>
+<li>
+<p><strong>Graphify is YC-backed and exploding in adoption.</strong> — Created by Safi Shamsi (<code>safishamsi/graphify</code>), the tool is YC S26-backed and has surpassed <strong>58K+ GitHub stars</strong> in under two months. It integrates with 20+ platforms (Claude Code, Cursor, Codex, Gemini CLI, Copilot, Aider, and more) and installs via a single command: <code>pip install graphifyy</code>.<sup>[3]</sup><sup>[4]</sup></p>
+</li>
+</ol>
+<hr>
+<h2>💬 QUOTABLE MOMENTS</h2>
+<blockquote>
+<p>"graphify x obsidian is a cheat code"<br>
+— Chase AI (title, ~0:00)<sup>[5]</sup></p>
+<p>"Grep is token heavy and is like a flashlight on data vs graphify which is a satellite with 5g connections between your data."<br>
+— Chase AI, via Skool community post<sup>[6]</sup></p>
+</blockquote>
+<hr>
+<h2>🔍 FACT CHECK</h2>
+<blockquote>
+<p>✓ <strong>VERIFIED</strong> — Graphify installs via <code>pip install graphifyy</code> and works across 20+ AI coding platforms. Confirmed via official site and PyPI.<sup>[2]</sup><br>
+✓ <strong>VERIFIED</strong> — YC S26 backing and 58K+ GitHub stars. Confirmed via multiple sources.<sup>[3]</sup><sup>[4]</sup><br>
+⚠ <strong>UNVERIFIED</strong> — The exact 71.5x token reduction figure. This comes from a third-party GitHub setup guide (lucasrosati/claude-code-memory-setup), not from the official Graphify repo. The claim is plausible given the mechanism but has not been independently audited.<sup>[1]</sup><br>
+⚠ <strong>UNVERIFIED</strong> — The 20,000-token baseline for a 40-file project. Plausible but depends heavily on file size and structure; no controlled benchmark from an independent source.</p>
+</blockquote>
+<hr>
+<h2>📖 KEY REFERENCES</h2>
+<h3>People &amp; Experts</h3>
+<ul>
+<li><strong>Safi Shamsi</strong> — Creator of Graphify; YC S26 founder.</li>
+<li><strong>Andrej Karpathy</strong> — His Obsidian RAG workflow inspired the Graphify + Obsidian approach.</li>
+<li><strong>Chase AI</strong> — YouTube channel (Chase-H-AI) promoting advanced Claude Code workflows.</li>
+</ul>
+<h3>Publications &amp; Works</h3>
+<ul>
+<li><em><a href="https://github.com/safishamsi/graphify">safishamsi/graphify</a></em> — Open-source knowledge graph skill for AI coding assistants.</li>
+<li><em><a href="https://github.com/lucasrosati/claude-code-memory-setup">lucasrosati/claude-code-memory-setup</a></em> — Definitive guide to Claude Code + Obsidian + Graphify token savings.</li>
+<li><em><a href="https://graphify.net">Graphify official site</a></em> — Documentation, installation guide, and interactive demo.</li>
+</ul>
+<h3>Institutions &amp; Organisations</h3>
+<ul>
+<li><strong>Y Combinator (S26)</strong> — Backed Graphify.</li>
+</ul>
+<h3>Concepts &amp; Frameworks</h3>
+<ul>
+<li><strong>Knowledge Graph for AI Assistants</strong> — A structured, queryable map of code entities, relationships, and documentation that replaces flat file reading.</li>
+<li><strong>Tree-sitter Parsing</strong> — Deterministic AST analysis supporting 20+ languages, used by Graphify for code structure extraction.</li>
+<li><strong>Obsidian Zettelkasten</strong> — Note-taking methodology repurposed as persistent memory for AI agents.</li>
+</ul>
+<hr>
+<h2>🎯 STRATEGIC IMPLICATIONS</h2>
+<p><strong>For Claude Code power users:</strong> Install Graphify immediately — even a 10x token reduction at scale pays back the setup time within a few sessions. Pair with an Obsidian vault for persistent project memory.</p>
+<p><strong>For AI tool builders:</strong> Graphify's explosive growth (58K+ stars in ~2 months) signals that "memory" and "context efficiency" are the most pressing unmet needs in AI coding assistants. Any tool that solves either problem has massive demand.</p>
+<p><strong>For enterprises evaluating AI coding costs:</strong> Token spend from context-reloading is a hidden cost multiplier. A knowledge graph layer like Graphify can cut per-session costs by an order of magnitude, making AI coding assistants viable at scale.</p>
+<hr>
+<h2>🧭 FURTHER EXPLORATION</h2>
+<ul>
+<li>How does the 71.5x token reduction hold up in large monorepos with thousands of files, versus small projects?</li>
+<li>If Graphify obsoletes grep for code search, what happens when the AI assistant needs to find something the knowledge graph didn't index?</li>
+<li>Could the Obsidian vault pattern generalise to a universal "agent memory" standard that works across all LLM tools, not just Claude Code?</li>
+</ul>
+<hr>
+<h2>📊 EPISTEMIC STATUS</h2>
+<p><strong>Source credibility:</strong> Low — The transcript is entirely corrupted (<code>[object Object]</code> × 33); no usable content from the video itself. All substantive claims are reconstructed from external research into Graphify, Obsidian integrations, and the broader ecosystem.<br>
+<strong>Claim verifiability:</strong> 2 of 4 key claims verified via independent sources<br>
+<strong>Potential biases:</strong> Chase AI operates a paid Skool community and consulting practice around Claude Code — content likely frames tools in a way that drives engagement and course sales. Tool metrics (71.5x) may be optimistically presented.<br>
+<strong>Quality flags:</strong> Complete transcript corruption — no discernible dialogue, timestamps, or meaningful text from source.<br>
+<strong>Confidence in synthesis:</strong> Medium — The tool's capabilities and market traction are well-documented externally, but the specific claims and framing from this particular video cannot be confirmed from the transcript.</p>
+<hr>
+<h2>⚔️ CONTRARIAN CORNER</h2>
+<p><strong>Steelman critique:</strong> Knowledge graphs are only as good as their last build. If your codebase changes frequently, you must regenerate the graph — negating some of the efficiency gains. For rapid prototyping or frequently refactored projects, the overhead of maintaining the graph may exceed the savings. Additionally, grep has zero setup cost and works instantly on any codebase; Graphify adds a build step and dependency on Python 3.10+.</p>
+<p><strong>What would need to be true:</strong> For the critique to be valid, the user would need to be working in a codebase that changes faster than the graph can be rebuilt, or in an environment where installing Python packages is restricted, or on sufficiently small projects where token waste from grep is negligible.</p>
+<hr>
+<h2>📚 REFERENCES</h2>
+<p><sup>[1]</sup>: <a href="https://github.com/lucasrosati/claude-code-memory-setup">lucasrosati/claude-code-memory-setup</a> — Claude Code + Obsidian + Graphify token savings guide<br>
+<sup>[2]</sup>: <a href="https://graphify.net">Graphify official site</a> — Installation and documentation<br>
+<sup>[3]</sup>: <a href="https://www.augmentcode.com/learn/graphify-knowledge-graphs-ai-coding">Augment Code — Graphify hits 58.3K stars</a> — YC S26 backed, platform integration<br>
+<sup>[4]</sup>: <a href="https://www.star-history.com/safishamsi/graphify">Star History — safishamsi/graphify</a> — 59.6K stars, global rank #320<br>
+<sup>[5]</sup>: Chase AI, ~0:00 (video title) — "graphify x obsidian is a cheat code"<br>
+<sup>[6]</sup>: Chase AI Skool community — Grep vs Graphify analogy</p>
+<hr>
+<p><em>Generated by OmniMiner v7.2 · openai/gpt-oss-120b · 2026-06-09</em></p>
+<hr>
+</div>
+<footer class="site">OmniMiner distillation &middot; transcript withheld</footer>
+</div></body></html>

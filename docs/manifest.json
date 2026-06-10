@@ -1,6 +1,6 @@
 {
- "built_at": "2026-06-08 11:13 UTC",
- "count": 274,
+ "built_at": "2026-06-10 12:27 UTC",
+ "count": 276,
  "categories": [
   "AI & Technology",
   "Health & Nutrition",
@@ -11,6 +11,38 @@
   "General"
  ],
  "reports": [
+  {
+   "slug": "260609-beyond-the-hype-why-meta-and-block-are-firing-people",
+   "title": "Beyond The Hype: Why Meta And Block Are Firing People",
+   "date": "2026-06-09",
+   "category": "General",
+   "lbs": "0A",
+   "ctype": "video",
+   "source_label": "NATE B JONES",
+   "source_url": "https://www.youtube.com/watch?v=hzAcDU1FYDo",
+   "tags": [],
+   "duration": "",
+   "src_file": "260609-BEYOND_THE_HYPE_WHY_META_AND_BLOCK_ARE_FIRING_PEOPLE-REPORT-OMNIMINER.md"
+  },
+  {
+   "slug": "260609-graphify-x-obsidian-is-a-cheat-code",
+   "title": "Graphify x Obsidian Is a Cheat Code",
+   "date": "2026-06-09",
+   "category": "AI & Technology",
+   "lbs": "6I",
+   "ctype": "video",
+   "source_label": "CHASE AI",
+   "source_url": "https://www.youtube.com/watch?v=pO90D744kIk",
+   "tags": [
+    "graphify",
+    "obsidian",
+    "claude-code",
+    "knowledge-graph",
+    "ai-coding"
+   ],
+   "duration": "",
+   "src_file": "260609-GRAPHIFY_X_OBSIDIAN_IS_A_CHEAT_CODE-REPORT-OMNIMINER.md"
+  },
   {
    "slug": "260608-how-to-actually-scale-ai-beyond-individual-tasks",
    "title": "How to Actually Scale AI Beyond Individual Tasks",
