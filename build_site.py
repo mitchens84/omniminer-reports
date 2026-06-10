@@ -556,7 +556,8 @@ def main() -> int:
             return False
         return p.stem.endswith("_complete") or "REPORT-OMNIMINER" in p.name
 
-    files = sorted(p for p in src.glob("*.md") if is_report(p))
+    all_md_files = list(src.glob("*.md"))
+    files = sorted(p for p in all_md_files if is_report(p))
     if args.limit:
         files = files[-args.limit:]
 
@@ -610,6 +611,7 @@ def main() -> int:
     manifest = {
         "built_at": built_at,
         "count": len(reports),
+        "source_count": len(all_md_files),
         "categories": CATEGORY_ORDER,
         "reports": [{k: r[k] for k in ("slug", "title", "date", "category", "lbs",
                                         "ctype", "source_label", "source_url", "tags",

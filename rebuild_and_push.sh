@@ -35,10 +35,14 @@ if [ ! -f "$DEPS_STAMP" ] || [ "$REQ" -nt "$DEPS_STAMP" ]; then
   touch "$DEPS_STAMP"
 fi
 
-# Cheap guard: skip the rebuild entirely if no source .md is newer than the last build.
+# Guard: skip rebuild if source count matches manifest AND no file is newer than the last build.
+# Count-based check catches GDrive-synced files that have old timestamps (GDrive preserves
+# original mtime on sync, so a newly-synced report may be older than the manifest).
 if [ -f "$MANIFEST" ] && [ -d "$SRC" ]; then
+  src_count=$(find "$SRC" -name '*.md' 2>/dev/null | wc -l | tr -d ' ')
+  manifest_src_count=$("$PYTHON_BIN" -c "import json; d=json.load(open('$MANIFEST')); print(d.get('source_count', -1))" 2>/dev/null || echo -1)
   newer=$(find "$SRC" -name '*.md' -newer "$MANIFEST" -print -quit 2>/dev/null || true)
-  if [ -z "$newer" ]; then
+  if [ -z "$newer" ] && [ "$src_count" = "$manifest_src_count" ]; then
     exit 0
   fi
 fi
