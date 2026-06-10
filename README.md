@@ -3,7 +3,7 @@
 Auto-published rendered HTML distillations from the OmniMiner pipeline.
 Published site: https://mitchens84.github.io/omniminer-reports/
 
-- Source for Pages: `/docs` on `main`
+- Source for Pages: **GitHub Actions** (`.github/workflows/build.yml` builds `docs/` from `source/` and deploys)
 - Publish model: publish-all by default; per-report `EXCLUDE_FROM_PUBLIC` kill switch + `exclude.txt`
 - Report bodies are the distillation only (no raw transcript, no private notes/metadata)
 
@@ -46,12 +46,28 @@ LBS code is still emitted in `manifest.json` for downstream use (e.g. the websit
 **This repo is public.** Publishing is a deliberate act: rebuild, review, then
 `git push`. See `00-MASTER/00-KERNEL/PROC-OMNIMINER_TRIGGER.md` §9.
 
-## Publish
+## Publish (automated, 260610)
 
-```bash
-python3 build_site.py
-git add docs && git commit -m "Rebuild reports site" && git push
+Publishing is now a CI pipeline — no manual rebuild, and the Telegram link is only
+sent **after** the page is live (fixing the old premature-URL race):
+
+```
+report processed (n8n)
+  -> archive .md uploaded to GDrive _SYNC/OMNIMINER
+  -> rebuild_and_push.sh (launchd bridge): strip transcript -> source/<name>.md -> git push
+  -> GitHub Actions (.github/workflows/build.yml):
+       build_site.py --source source -> deploy Pages -> ONE Telegram message per new report
 ```
 
-Automatic regeneration on each new report is not yet wired (candidate: n8n
-post-success step, GH Action, or a launchd watcher on `_SYNC/OMNIMINER/`).
+- `source/` holds the **transcript-free** distillation `.md` corpus (the only thing the
+  public repo ever contains — transcripts stay in the private GDrive archive).
+- `.github/scripts/notify.py` posts the live report link to the HENSPHAM OmniMiner
+  thread (157) using the `TELEGRAM_BOT_TOKEN` Actions secret, diffing the push for new
+  `source/` files.
+
+Manual rebuild still works for testing: `python3 build_site.py --source source`.
+
+**Interim note:** the `rebuild_and_push.sh` bridge runs on the Mac (launchd
+`com.mitchens.omniminer-reports-rebuild`). The durable end-state is n8n committing
+`source/` directly (no Mac in the loop) — blocked on a Contents:write GitHub PAT
+(the current bws token is read-only). See OmniMiner `CHANGELOG.md` 260610.
