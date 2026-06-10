@@ -1,71 +1,66 @@
 #!/bin/bash
-# rebuild_and_push.sh — regenerate the OmniMiner reports site and publish if changed.
+# rebuild_and_push.sh — SOURCE BRIDGE (260610 rewrite).
 #
-# Trigger: invoked (backgrounded) by the daily-maintenance job
-# (~/Local/AUTOMATION/CHANNELS/telegram/bin/daily-maintenance.sh, com.mitchens.daily-maintenance,
-# daily 08:00 ICT) — bundled there rather than a standalone daemon. Replaces the retired
-# in-workflow GITHUB_COMMIT push node (PROC-OMNIMINER_TRIGGER §9). Idempotent: build_site.py
-# rebuilds docs/ from scratch and clears orphan pages; the mtime guard below makes this a
-# cheap no-op unless a source .md is newer than the last build.
+# Build, deploy, and Telegram notification now run in GitHub Actions
+# (.github/workflows/build.yml). This script's ONLY remaining job is to keep the
+# repo's source/ corpus in sync with the private GDrive corpus and push:
 #
-# Publishes to the PUBLIC repo mitchens84/omniminer-reports (privacy gates: transcript
-# truncation + quality gate + EXCLUDE_FROM_PUBLIC). Operator-authorised 260606. Safe to run by hand.
-set -euo pipefail
+#   GDrive _SYNC/OMNIMINER/*.md  --(strip transcript)-->  repo source/*.md  --> git push
+#       ... GitHub Actions then builds (build_site.py), deploys Pages, and sends ONE
+#       Telegram message per new report AFTER the page is live.
+#
+# Privacy: only the distillation is committed — bodies are cut at "## Full Transcript"
+# and EXCLUDE_FROM_PUBLIC reports are withheld (and removed from source/ if previously synced).
+#
+# INTERIM: the durable end-state is n8n committing source/ directly (no Mac in the loop).
+# That is blocked on a Contents:write GitHub PAT — the current bws GITHUB_PERSONAL_ACCESS_TOKEN
+# is read-only. Once a write-scoped token exists, wire n8n GITHUB_COMMIT -> source/ and retire
+# this launchd job (com.mitchens.omniminer-reports-rebuild). See CHANGELOG 260610.
+set -uo pipefail
 
 REPO="$HOME/Local/APPS/omniminer-reports"
 SRC="$HOME/Library/CloudStorage/GoogleDrive-henspham@gmail.com/My Drive/_SYNC/OMNIMINER"
 LOG="$REPO/rebuild.log"
-MANIFEST="$REPO/docs/manifest.json"
-PYTHON_BIN="$REPO/.venv/bin/python"
-REQ="$REPO/requirements.txt"
-DEPS_STAMP="$REPO/.venv/.deps-ok"
+PY="$REPO/.venv/bin/python"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOG"; }
 
-cd "$REPO"
+cd "$REPO" || { log "ERROR: repo dir missing"; exit 1; }
+[ -x "$PY" ] || PY="python3"
+[ -d "$SRC" ] || { log "GDrive source not mounted; skip"; exit 0; }
 
-if [ ! -x "$PYTHON_BIN" ]; then
-  log "Creating Python virtualenv."
-  python3 -m venv "$REPO/.venv" >> "$LOG" 2>&1
-fi
+"$PY" - "$SRC" "$REPO/source" <<'PY'
+import sys, pathlib
+src, dst = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
+dst.mkdir(parents=True, exist_ok=True)
+MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript")
+for f in sorted(src.glob("*.md")):
+    raw = f.read_text(encoding="utf-8", errors="replace")
+    target = dst / f.name
+    if "EXCLUDE_FROM_PUBLIC" in raw:
+        if target.exists():
+            target.unlink()          # withdraw a previously-synced excluded report
+        continue
+    lines = raw.splitlines()
+    cut = len(lines)
+    for i, ln in enumerate(lines):
+        if any(ln.strip().startswith(m) for m in MARKERS):
+            cut = i
+            break
+    target.write_text("\n".join(lines[:cut]).rstrip() + "\n", encoding="utf-8")
+PY
 
-if [ ! -f "$DEPS_STAMP" ] || [ "$REQ" -nt "$DEPS_STAMP" ]; then
-  log "Installing Python dependencies."
-  "$PYTHON_BIN" -m pip install -q -r "$REQ" >> "$LOG" 2>&1
-  touch "$DEPS_STAMP"
-fi
-
-# Guard: skip rebuild if source count matches manifest AND no file is newer than the last build.
-# Count-based check catches GDrive-synced files that have old timestamps (GDrive preserves
-# original mtime on sync, so a newly-synced report may be older than the manifest).
-if [ -f "$MANIFEST" ] && [ -d "$SRC" ]; then
-  src_count=$(find "$SRC" -name '*.md' 2>/dev/null | wc -l | tr -d ' ')
-  manifest_src_count=$("$PYTHON_BIN" -c "import json; d=json.load(open('$MANIFEST')); print(d.get('source_count', -1))" 2>/dev/null || echo -1)
-  newer=$(find "$SRC" -name '*.md' -newer "$MANIFEST" -print -quit 2>/dev/null || true)
-  if [ -z "$newer" ] && [ "$src_count" = "$manifest_src_count" ]; then
-    exit 0
-  fi
-fi
-
-log "Source change detected; rebuilding."
-if ! "$PYTHON_BIN" build_site.py --quiet >> "$LOG" 2>&1; then
-  log "ERROR: build_site.py failed; aborting (no push)."
-  exit 1
-fi
-
-# Publish only on a real content change.
-if [ -n "$(git status --porcelain docs)" ]; then
-  n=$("$PYTHON_BIN" -c "import json;print(json.load(open('$MANIFEST'))['count'])" 2>/dev/null || echo '?')
-  git add docs
-  git commit -q -m "Rebuild reports site (${n} reports)" \
-    -m "Automated rebuild via launchd watcher; supersedes in-workflow GITHUB_COMMIT push." \
+if [ -n "$(git status --porcelain source)" ]; then
+  git add source
+  git commit -q -m "Sync source corpus from GDrive" \
+    -m "Auto-bridge; build + deploy + Telegram notify run in GitHub Actions." \
     -m "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
   if git push -q origin main >> "$LOG" 2>&1; then
-    log "Pushed: ${n} reports."
+    log "Pushed source/ changes (GitHub Actions will build, deploy, and notify)."
   else
     log "ERROR: git push failed."
     exit 1
   fi
 else
-  log "Rebuilt; docs/ unchanged; nothing to push."
+  log "source/ unchanged; nothing to push."
 fi
