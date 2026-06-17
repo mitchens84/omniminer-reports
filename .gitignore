@@ -2,3 +2,4 @@ rebuild.log
 rebuild.launchd.log
 __pycache__/
 .venv/
+.bridge_state.json

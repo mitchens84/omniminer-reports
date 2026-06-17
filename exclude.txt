@@ -1,6 +1,16 @@
 # OmniMiner Reports — publication exclude list
-# One report slug per line (the slug is the report's filename without the
-# date prefix, "_complete"/"-REPORT-OMNIMINER" suffix, and extension, lowercased
-# with non-alphanumerics collapsed to hyphens). A report can also be withheld by
-# putting the literal marker EXCLUDE_FROM_PUBLIC anywhere in its source .md.
-# Lines starting with # are ignored.
+# One report slug per line. The slug = the filename with "_complete"/"-REPORT-OMNIMINER"
+# suffix and the " (N)" copy marker removed, extension dropped, lowercased, with
+# non-alphanumerics collapsed to hyphens, capped at 80 chars. NOTE: the date prefix
+# (e.g. "260616-") IS part of the slug (matches docs/reports/<slug>.html). A report
+# can also be withheld by putting the literal marker EXCLUDE_FROM_PUBLIC anywhere in
+# its source .md. Lines starting with # are ignored.
+
+# 260617 dedup — same content captured twice from two sources; publish-layer dedup
+# only (both .md stay in the GDrive corpus). Keep the better-metadata copy.
+# Pair 1 (George Lampropoulos $10k iOS-apps episode): keep MAKING_WITH_IOS (direct
+# flightcast mp3 + duration); drop the Snipd-share copy:
+260616-how-to-build-a-10kmonth-mobile-app-with-ai
+# Pair 2 (Dr. Candow creatine/brain dosing): keep CREATINE_RESEARCHER (more complete);
+# drop the shorter copy:
+260616-creatine-dosing-for-brain-health-researcher-says-5g-wont-reach-your-brain

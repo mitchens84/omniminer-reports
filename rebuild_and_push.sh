@@ -29,26 +29,13 @@ cd "$REPO" || { log "ERROR: repo dir missing"; exit 1; }
 [ -x "$PY" ] || PY="python3"
 [ -d "$SRC" ] || { log "GDrive source not mounted; skip"; exit 0; }
 
-"$PY" - "$SRC" "$REPO/source" <<'PY'
-import sys, pathlib
-src, dst = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
-dst.mkdir(parents=True, exist_ok=True)
-MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript")
-for f in sorted(src.glob("*.md")):
-    raw = f.read_text(encoding="utf-8", errors="replace")
-    target = dst / f.name
-    if "EXCLUDE_FROM_PUBLIC" in raw:
-        if target.exists():
-            target.unlink()          # withdraw a previously-synced excluded report
-        continue
-    lines = raw.splitlines()
-    cut = len(lines)
-    for i, ln in enumerate(lines):
-        if any(ln.strip().startswith(m) for m in MARKERS):
-            cut = i
-            break
-    target.write_text("\n".join(lines[:cut]).rstrip() + "\n", encoding="utf-8")
-PY
+# Hang-proof, incremental sync (260617 rewrite — see bridge_sync.py header).
+# The old inline loop content-read all 300+ FUSE files every run and stalled
+# (~file 90), silently never reaching the newest reports. bridge_sync.py skips
+# unchanged files via a stat-only sidecar, reads newest-first, and bounds each
+# read with a per-file timeout, so a single dataless FUSE read can't block the run.
+SYNC_OUT="$("$PY" "$REPO/bridge_sync.py" "$SRC" "$REPO/source" "$REPO/.bridge_state.json" 2>&1)"
+log "$SYNC_OUT"
 
 if [ -n "$(git status --porcelain source)" ]; then
   git add source
