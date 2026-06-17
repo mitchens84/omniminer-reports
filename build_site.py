@@ -283,6 +283,16 @@ def parse_report(path: Path) -> dict | None:
     # as `source_channel`; read either so the whole existing corpus gets a clean
     # source line without re-firing. (PROC-OMNIMINER_TRIGGER §10a)
     author = fv("author") or fv("source_channel")
+    if not author:
+        # Fallback: recover the channel/show/publication from the body's
+        # "**Source:** [Channel Name](url)" link text when frontmatter omitted it
+        # (older v7.2 reports wrote the channel only in the body). Ignore the case
+        # where the link text is the bare URL or an em-dash placeholder.
+        ms_a = META_SOURCE.search(raw)
+        if ms_a:
+            cand = ms_a.group(1).strip().strip("[]")
+            if cand and not cand.lower().startswith("http") and cand not in ("—", "-", ""):
+                author = cand
     lbs_fm = fv("lbs").upper()[:2]
     goal = fv("goal")
     tags = [str(t).lower().strip() for t in fm["tags"]] if isinstance(fm.get("tags"), list) else []
