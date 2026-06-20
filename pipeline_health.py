@@ -94,6 +94,10 @@ def fetch_records(table_id: str, max_records: int = 100) -> list:
     for r in data.get("records", []):
         f = r.get("fields", {})
         title = f.get("TITLE") or f.get("Title") or f.get("Name") or "(untitled)"
+        # Skip quarantine-tagged rows (CP10 🗑️ DELETE_ prefix) — marked-for-removal
+        # test/invalid artifacts, not real pipeline failures.
+        if str(title).lstrip().startswith("🗑️ DELETE_") or "DELETE_" in str(title)[:20]:
+            continue
         out.append({
             "id": r["id"],
             "status": (f.get("STATUS") or "").strip(),
