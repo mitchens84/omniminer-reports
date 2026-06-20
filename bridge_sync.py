@@ -13,9 +13,14 @@ Robustness properties:
     files only.
   * NEWEST-FIRST — files are processed by descending mtime, so a freshly generated
     report publishes even if an older file stalls.
-  * PER-FILE TIMEOUT — each content read is bounded by SIGALRM (default 30s). A
-    hanging dataless FUSE read is skipped (logged) and retried next run instead of
-    blocking the whole sync.
+  * SUBPROCESS COPY-OUT — each new/changed file is copied out of the GDrive FUSE
+    mount via a `cp` SUBPROCESS bounded by a timeout, then read from the local copy.
+    The previous implementation wrapped the in-process FUSE read() in signal.alarm();
+    on macOS File Provider, a signal delivered mid-read() makes the kernel raise
+    EDEADLK ("Resource deadlock avoided") — i.e. the SIGALRM "timeout" was ITSELF
+    the failure (the 260619 reports stuck on this). A subprocess can be killed on
+    timeout without signalling this thread mid-syscall, so a genuinely-hanging read
+    is dropped + retried next run instead of poisoning the file forever.
   * AUTO-SEED — on first run (empty sidecar) any file that already has a stripped
     target in source/ is recorded as synced via stat() alone (no content read), so
     the first run only reads genuinely-new files instead of re-reading the corpus.
@@ -30,21 +35,15 @@ operation, not a failure. Prints a one-line summary the shell logs.
 from __future__ import annotations
 
 import json
+import os
 import pathlib
-import signal
+import subprocess
 import sys
+import tempfile
 import time
 
 MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript")
-READ_TIMEOUT_S = 30  # per-file hard cap on a FUSE content read
-
-
-class _ReadTimeout(Exception):
-    pass
-
-
-def _on_alarm(_sig, _frame):
-    raise _ReadTimeout()
+READ_TIMEOUT_S = 30  # per-file hard cap on the copy-out-of-FUSE subprocess
 
 
 def _strip_transcript(raw: str) -> str:
@@ -55,6 +54,37 @@ def _strip_transcript(raw: str) -> str:
             cut = i
             break
     return "\n".join(lines[:cut]).rstrip() + "\n"
+
+
+def _read_via_copy(f: pathlib.Path) -> str:
+    """Copy f out of FUSE in a `cp` subprocess (timeout-bounded), then read locally.
+
+    Raises TimeoutError on a hanging read and OSError on a copy failure — both are
+    handled by the caller as skip-and-retry-next-run, never a hang of this process.
+    """
+    fd, tmp_name = tempfile.mkstemp(prefix="bridge-", suffix=".md")
+    os.close(fd)
+    tmp = pathlib.Path(tmp_name)
+    try:
+        try:
+            subprocess.run(
+                ["cp", str(f), str(tmp)],
+                check=True,
+                timeout=READ_TIMEOUT_S,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.PIPE,
+            )
+        except subprocess.TimeoutExpired as e:
+            raise TimeoutError(str(e)) from e
+        except subprocess.CalledProcessError as e:
+            msg = (e.stderr or b"").decode("utf-8", "replace").strip()
+            raise OSError(msg or f"cp exited {e.returncode}") from e
+        return tmp.read_text(encoding="utf-8", errors="replace")
+    finally:
+        try:
+            tmp.unlink()
+        except OSError:
+            pass
 
 
 def main() -> int:
@@ -73,8 +103,6 @@ def main() -> int:
     except (ValueError, OSError):
         state = {}
     seeded_empty = not state
-
-    signal.signal(signal.SIGALRM, _on_alarm)
 
     # Cheap metadata pass (stat() does NOT materialise dataless FUSE files).
     entries = []
@@ -101,6 +129,7 @@ def main() -> int:
 
     changed = removed = skipped = 0
     timed_out: list[str] = []
+    errored: list[str] = []
     t0 = time.time()
 
     for f, mtime, size in entries:
@@ -111,18 +140,16 @@ def main() -> int:
             skipped += 1
             continue
 
-        signal.alarm(READ_TIMEOUT_S)
         try:
-            raw = f.read_text(encoding="utf-8", errors="replace")
-        except _ReadTimeout:
+            raw = _read_via_copy(f)
+        except TimeoutError:
             timed_out.append(f.name)
-            print(f"[bridge] read timeout (retry next run): {f.name}", file=sys.stderr)
+            print(f"[bridge] copy timeout (retry next run): {f.name}", file=sys.stderr)
             continue
         except OSError as e:
-            print(f"[bridge] read error {f.name}: {e}", file=sys.stderr)
+            errored.append(f.name)
+            print(f"[bridge] copy error {f.name}: {e}", file=sys.stderr)
             continue
-        finally:
-            signal.alarm(0)
 
         excluded = "EXCLUDE_FROM_PUBLIC" in raw
         if excluded:
@@ -142,7 +169,7 @@ def main() -> int:
         print(f"[bridge] WARN could not write state: {e}", file=sys.stderr)
 
     print(f"[bridge] changed={changed} removed={removed} skipped={skipped} "
-          f"timeouts={len(timed_out)} elapsed={time.time() - t0:.1f}s")
+          f"timeouts={len(timed_out)} errors={len(errored)} elapsed={time.time() - t0:.1f}s")
     return 0
 
 
