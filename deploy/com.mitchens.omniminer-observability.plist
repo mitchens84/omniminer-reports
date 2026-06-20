@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  OmniMiner daily observability — the canary that was missing when the YouTube path
+  stayed silently broken (260618-20). Runs BOTH health checks once a day and alerts the
+  OmniMiner OPS thread on any regression (publish drift OR per-type/per-item processing
+  failure). Mirrors the proven with-secrets launchd pattern (com.mitchens.cc-telemetry-sync).
+
+  Install:
+    cp deploy/com.mitchens.omniminer-observability.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.mitchens.omniminer-observability.plist
+  Run once now (verify):
+    launchctl start com.mitchens.omniminer-observability
+  Disable:
+    launchctl unload ~/Library/LaunchAgents/com.mitchens.omniminer-observability.plist
+
+  Weekly active E2E canary (expensive — real LLM + AssemblyAI) is NOT scheduled here;
+  run on demand after any workflow edit:  pipeline_health.py --e2e --telegram
+-->
+<plist version="1.0">
+<dict>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/mitchens</string>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin:/Users/mitchens/.local/bin</string>
+    </dict>
+    <key>Label</key>
+    <string>com.mitchens.omniminer-observability</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/mitchens/.claude/with-secrets.sh</string>
+        <string>/bin/zsh</string>
+        <string>/Users/mitchens/Local/APPS/omniminer-reports/omniminer_observability.sh</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>40</integer>
+    </dict>
+    <key>RunAtLoad</key>
+    <false/>
+    <key>StandardOutPath</key>
+    <string>/Users/mitchens/Local/APPS/omniminer-reports/observability.launchd.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/mitchens/Local/APPS/omniminer-reports/observability.launchd.log</string>
+    <key>WorkingDirectory</key>
+    <string>/Users/mitchens/Local/APPS/omniminer-reports</string>
+</dict>
+</plist>
