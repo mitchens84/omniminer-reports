@@ -44,6 +44,8 @@ import time
 
 MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript")
 READ_TIMEOUT_S = 30  # per-file hard cap on the copy-out-of-FUSE subprocess
+COPY_RETRIES = 4            # in-run retries on transient EDEADLK from the FUSE mount
+COPY_RETRY_BACKOFF_S = 1.5  # base backoff between retries (×attempt: 1.5s, 3s, 4.5s)
 
 
 def _strip_transcript(raw: str) -> str:
@@ -66,20 +68,32 @@ def _read_via_copy(f: pathlib.Path) -> str:
     os.close(fd)
     tmp = pathlib.Path(tmp_name)
     try:
-        try:
-            subprocess.run(
-                ["cp", str(f), str(tmp)],
-                check=True,
-                timeout=READ_TIMEOUT_S,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.PIPE,
-            )
-        except subprocess.TimeoutExpired as e:
-            raise TimeoutError(str(e)) from e
-        except subprocess.CalledProcessError as e:
-            msg = (e.stderr or b"").decode("utf-8", "replace").strip()
-            raise OSError(msg or f"cp exited {e.returncode}") from e
-        return tmp.read_text(encoding="utf-8", errors="replace")
+        # macOS `cp` uses clonefile/fcopyfile, which intermittently raises EDEADLK
+        # ("Resource deadlock avoided") on the GDrive File-Provider FUSE mount — a
+        # TRANSIENT failure that succeeds on retry (proven: skipped files publish on a
+        # later bridge run). Retry in-run with backoff so a report publishes first-time
+        # instead of waiting for the next 15-min cycle. Genuine hangs are still caught
+        # by the per-attempt timeout → TimeoutError → skip-and-retry-next-run.
+        last_err = None
+        for attempt in range(COPY_RETRIES):
+            try:
+                subprocess.run(
+                    ["cp", str(f), str(tmp)],
+                    check=True,
+                    timeout=READ_TIMEOUT_S,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.PIPE,
+                )
+                return tmp.read_text(encoding="utf-8", errors="replace")
+            except subprocess.TimeoutExpired as e:
+                raise TimeoutError(str(e)) from e
+            except subprocess.CalledProcessError as e:
+                msg = (e.stderr or b"").decode("utf-8", "replace").strip()
+                last_err = msg or f"cp exited {e.returncode}"
+                if "deadlock" not in msg.lower() or attempt == COPY_RETRIES - 1:
+                    raise OSError(last_err) from e
+                time.sleep(COPY_RETRY_BACKOFF_S * (attempt + 1))
+        raise OSError(last_err or "cp failed")
     finally:
         try:
             tmp.unlink()
