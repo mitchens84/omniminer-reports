@@ -13,14 +13,21 @@ Robustness properties:
     files only.
   * NEWEST-FIRST — files are processed by descending mtime, so a freshly generated
     report publishes even if an older file stalls.
-  * SUBPROCESS COPY-OUT — each new/changed file is copied out of the GDrive FUSE
-    mount via a `cp` SUBPROCESS bounded by a timeout, then read from the local copy.
-    The previous implementation wrapped the in-process FUSE read() in signal.alarm();
-    on macOS File Provider, a signal delivered mid-read() makes the kernel raise
-    EDEADLK ("Resource deadlock avoided") — i.e. the SIGALRM "timeout" was ITSELF
-    the failure (the 260619 reports stuck on this). A subprocess can be killed on
-    timeout without signalling this thread mid-syscall, so a genuinely-hanging read
-    is dropped + retried next run instead of poisoning the file forever.
+  * SUBPROCESS READ-OUT — each new/changed file is read out of the GDrive FUSE
+    mount via a `cat` SUBPROCESS bounded by a timeout, then read from the local copy.
+    History of this line (each fix exposed the next bug):
+      1. in-process read() wrapped in signal.alarm() — on macOS File Provider a signal
+         delivered mid-read() makes the kernel raise EDEADLK ("Resource deadlock
+         avoided"); the SIGALRM "timeout" was ITSELF the failure (260619 stuck).
+      2. `cp` SUBPROCESS (260620) — macOS `cp` uses fcopyfile/clonefile, which ALSO
+         hard-deadlocks on a DEHYDRATED GDrive placeholder; the 260623 DeepSeek report
+         stuck for 4 days on exactly this (260624 diagnosis), silently blocking publish.
+      3. `cat` SUBPROCESS (260624, current) — cat uses plain read()/write(), NOT
+         fcopyfile, forcing normal on-read materialisation. PROVEN 260624: the file
+         `cp` deadlocked on read cleanly via cat/dd/plain read().
+    A subprocess can be killed on timeout without signalling this thread mid-syscall,
+    so a genuinely-hanging read is dropped + retried next run instead of poisoning the
+    file forever.
   * AUTO-SEED — on first run (empty sidecar) any file that already has a stripped
     target in source/ is recorded as synced via stat() alone (no content read), so
     the first run only reads genuinely-new files instead of re-reading the corpus.
@@ -43,8 +50,9 @@ import tempfile
 import time
 
 MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript")
-READ_TIMEOUT_S = 30  # per-file hard cap on the copy-out-of-FUSE subprocess
-COPY_RETRIES = 4            # in-run retries on transient EDEADLK from the FUSE mount
+READ_TIMEOUT_S = 90  # per-file hard cap on the read-out-of-FUSE subprocess (allows
+                     # first-fetch of a dehydrated placeholder; GDrive throttles ~<1KB/s)
+COPY_RETRIES = 4            # in-run retries on a slow/transient FUSE materialisation
 COPY_RETRY_BACKOFF_S = 1.5  # base backoff between retries (×attempt: 1.5s, 3s, 4.5s)
 
 
@@ -59,41 +67,49 @@ def _strip_transcript(raw: str) -> str:
 
 
 def _read_via_copy(f: pathlib.Path) -> str:
-    """Copy f out of FUSE in a `cp` subprocess (timeout-bounded), then read locally.
+    """Read f out of FUSE in a `cat` subprocess (timeout-bounded), then read locally.
 
-    Raises TimeoutError on a hanging read and OSError on a copy failure — both are
+    Raises TimeoutError on a hanging read and OSError on a read failure — both are
     handled by the caller as skip-and-retry-next-run, never a hang of this process.
     """
     fd, tmp_name = tempfile.mkstemp(prefix="bridge-", suffix=".md")
     os.close(fd)
     tmp = pathlib.Path(tmp_name)
     try:
-        # macOS `cp` uses clonefile/fcopyfile, which intermittently raises EDEADLK
-        # ("Resource deadlock avoided") on the GDrive File-Provider FUSE mount — a
-        # TRANSIENT failure that succeeds on retry (proven: skipped files publish on a
-        # later bridge run). Retry in-run with backoff so a report publishes first-time
-        # instead of waiting for the next 15-min cycle. Genuine hangs are still caught
-        # by the per-attempt timeout → TimeoutError → skip-and-retry-next-run.
+        # Read via `cat` (plain read()/write()), NOT `cp`. macOS `cp` uses
+        # fcopyfile/clonefile, which HARD-DEADLOCKS on a DEHYDRATED GDrive
+        # File-Provider placeholder — not a transient EDEADLK that retries away: the
+        # 260623 DeepSeek report hung `cp` on every 15-min cycle for 4 days (260624
+        # diagnosis). `cat` issues ordinary read() syscalls, which trigger normal
+        # on-read materialisation of the placeholder and succeed (PROVEN 260624: the
+        # exact file `cp` deadlocked on read cleanly via cat/dd/plain read()). The
+        # subprocess stays killable on a genuine hang via the per-attempt timeout, so
+        # a truly-stuck read is dropped + retried next run instead of poisoning the
+        # process. Retry in-run with backoff to absorb a slow first-fetch.
         last_err = None
         for attempt in range(COPY_RETRIES):
             try:
-                subprocess.run(
-                    ["cp", str(f), str(tmp)],
-                    check=True,
-                    timeout=READ_TIMEOUT_S,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.PIPE,
-                )
+                with open(tmp, "wb") as out:
+                    subprocess.run(
+                        ["cat", str(f)],
+                        check=True,
+                        timeout=READ_TIMEOUT_S,
+                        stdout=out,
+                        stderr=subprocess.PIPE,
+                    )
                 return tmp.read_text(encoding="utf-8", errors="replace")
             except subprocess.TimeoutExpired as e:
-                raise TimeoutError(str(e)) from e
+                if attempt == COPY_RETRIES - 1:
+                    raise TimeoutError(str(e)) from e
+                last_err = "read timeout"
+                time.sleep(COPY_RETRY_BACKOFF_S * (attempt + 1))
             except subprocess.CalledProcessError as e:
                 msg = (e.stderr or b"").decode("utf-8", "replace").strip()
-                last_err = msg or f"cp exited {e.returncode}"
-                if "deadlock" not in msg.lower() or attempt == COPY_RETRIES - 1:
+                last_err = msg or f"cat exited {e.returncode}"
+                if attempt == COPY_RETRIES - 1:
                     raise OSError(last_err) from e
                 time.sleep(COPY_RETRY_BACKOFF_S * (attempt + 1))
-        raise OSError(last_err or "cp failed")
+        raise OSError(last_err or "cat failed")
     finally:
         try:
             tmp.unlink()
