@@ -55,6 +55,40 @@ READ_TIMEOUT_S = 90  # per-file hard cap on the read-out-of-FUSE subprocess (all
 COPY_RETRIES = 4            # in-run retries on a slow/transient FUSE materialisation
 COPY_RETRY_BACKOFF_S = 1.5  # base backoff between retries (×attempt: 1.5s, 3s, 4.5s)
 
+# --- Self-escalation (FAIL LOUDLY) -------------------------------------------
+# The 260620→260624 outages were SILENT: a single file failed to read every 15-min
+# cycle for days and nothing raised a hand (the publish-drift watchdog runs in a
+# different launchd job that can't see GDrive). The bridge is the ONLY component that
+# knows a specific file is stuck, so it escalates directly. Alert keys live in the
+# sidecar under reserved __keys__ (never collide with YYMMDD-*.md report filenames).
+STUCK_RUNS_ALERT = 3                  # consecutive failed runs before a file is "stuck"
+                                      #   (3 × 15-min cycle ≈ 45 min — fast, not flappy)
+TELEGRAM_CHAT_ID = "-1003961257879"   # mitch-mai group (matches notify.py / health_check)
+TELEGRAM_THREAD_ID = 157              # OmniMiner / INBOX thread
+ERR_KEY = "__errors__"                # {filename: consecutive_fail_count}
+ALERTED_KEY = "__stuck_alerted__"     # [filename, ...] already escalated (dedup)
+
+
+def telegram_alert(text: str) -> bool:
+    """Best-effort OPS alert; never raises (alerting must not break the sync)."""
+    import urllib.request  # local import — keeps the no-token path import-free
+    token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    if not token:
+        return False
+    data = json.dumps({
+        "chat_id": TELEGRAM_CHAT_ID, "message_thread_id": TELEGRAM_THREAD_ID,
+        "text": text, "parse_mode": "HTML", "disable_web_page_preview": True,
+    }).encode()
+    req = urllib.request.Request(
+        f"https://api.telegram.org/bot{token}/sendMessage", data=data,
+        headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=20):
+            return True
+    except Exception as e:  # noqa: BLE001
+        print(f"[bridge] telegram alert failed: {e}", file=sys.stderr)
+        return False
+
 
 def _strip_transcript(raw: str) -> str:
     lines = raw.splitlines()
@@ -193,13 +227,44 @@ def main() -> int:
                 changed += 1
         state[f.name] = {"mtime": mtime, "size": size, "excluded": excluded}
 
+    # --- Per-file failure tracking + stuck-file escalation (FAIL LOUDLY) -------
+    # Rebuild the consecutive-failure map each run: a file not attempted this run was,
+    # by construction, not failing (a failing file has no target + no matching state
+    # entry, so it is never skipped). A file that reads cleanly simply doesn't reappear
+    # here → its count resets to 0. When a file crosses STUCK_RUNS_ALERT we escalate to
+    # Telegram ONCE (deduped via ALERTED_KEY) and post a recovery when it clears — this
+    # is the alarm that was missing while the 260623 report failed silently for 4 days.
+    failing = set(timed_out) | set(errored)
+    prev_errs = state.get(ERR_KEY) if isinstance(state.get(ERR_KEY), dict) else {}
+    err_counts = {name: prev_errs.get(name, 0) + 1 for name in failing}
+    stuck = sorted(n for n, c in err_counts.items() if c >= STUCK_RUNS_ALERT)
+    already = set(state.get(ALERTED_KEY) or [])
+    new_stuck = [n for n in stuck if n not in already]
+    recovered = sorted(already - set(stuck))
+
+    if new_stuck:
+        body = "\n".join(f"• {n} ({err_counts[n]} consecutive failed runs)" for n in new_stuck)
+        telegram_alert(
+            "🚨 <b>OmniMiner bridge STUCK</b> — report(s) generated but NOT publishing:\n"
+            + body
+            + "\n\nFix: <code>cd ~/Local/APPS/omniminer-reports &amp;&amp; bash rebuild_and_push.sh</code>"
+              " — or inspect rebuild.log.")
+    if recovered:
+        telegram_alert("✅ <b>OmniMiner bridge recovered</b>: "
+                       + ", ".join(recovered) + " now publishing.")
+    for n in stuck:
+        print(f"[bridge] STUCK: {n} ({err_counts[n]} consecutive failed runs)", file=sys.stderr)
+    state[ERR_KEY] = err_counts
+    state[ALERTED_KEY] = stuck
+
     try:
         state_path.write_text(json.dumps(state, indent=0, sort_keys=True))
     except OSError as e:
         print(f"[bridge] WARN could not write state: {e}", file=sys.stderr)
 
     print(f"[bridge] changed={changed} removed={removed} skipped={skipped} "
-          f"timeouts={len(timed_out)} errors={len(errored)} elapsed={time.time() - t0:.1f}s")
+          f"timeouts={len(timed_out)} errors={len(errored)} stuck={len(stuck)} "
+          f"elapsed={time.time() - t0:.1f}s")
     return 0
 
 

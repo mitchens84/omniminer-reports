@@ -61,3 +61,16 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: python .github/scripts/notify.py "${{ github.event.before }}" "${{ github.sha }}"
+
+      # FAIL LOUDLY: if build / deploy / notify errored, the site is stale and the
+      # operator would otherwise never know (the local watchdog sees publish-drift but
+      # not WHY). Alert the same OPS thread with a link to the failed run.
+      - name: Alert Telegram on CI failure
+        if: ${{ failure() }}
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          curl -s --max-time 20 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=-1003961257879" -d "message_thread_id=157" -d "parse_mode=HTML" \
+            --data-urlencode "text=🚨 <b>OmniMiner CI FAILED</b> — build/deploy/notify errored; the site did not update. Run: https://github.com/mitchens84/omniminer-reports/actions/runs/${{ github.run_id }}" \
+            >/dev/null 2>&1 || true
