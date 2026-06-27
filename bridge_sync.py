@@ -101,36 +101,47 @@ def _strip_transcript(raw: str) -> str:
 
 
 def _read_via_copy(f: pathlib.Path) -> str:
-    """Read f out of FUSE in a `cat` subprocess (timeout-bounded), then read locally.
+    """Read f out of FUSE via rsync (fallback: cat), timeout-bounded.
 
-    Raises TimeoutError on a hanging read and OSError on a read failure — both are
-    handled by the caller as skip-and-retry-next-run, never a hang of this process.
+    History of read strategies (each fix exposed the next bug):
+      1. in-process read() + signal.alarm() — SIGALRM mid-read raises EDEADLK (260619).
+      2. `cp` subprocess (260620) — fcopyfile/clonefile hard-deadlocks on dehydrated
+         GDrive placeholder; 260623 DeepSeek report stuck 4 days.
+      3. `cat` subprocess (260624) — plain read()/write(), proven faster than cp on the
+         260623 file. REGRESSION 260627: cat also raises EDEADLK on some placeholders.
+      4. `rsync` subprocess (260627, current) — rsync uses its own open/read path, proven
+         to succeed on the exact file that cat deadlocked on (260627 AI cognitive report).
+         Falls back to cat if rsync isn't available.
+
+    Raises TimeoutError on a hanging read and OSError on a read failure.
     """
     fd, tmp_name = tempfile.mkstemp(prefix="bridge-", suffix=".md")
     os.close(fd)
     tmp = pathlib.Path(tmp_name)
     try:
-        # Read via `cat` (plain read()/write()), NOT `cp`. macOS `cp` uses
-        # fcopyfile/clonefile, which HARD-DEADLOCKS on a DEHYDRATED GDrive
-        # File-Provider placeholder — not a transient EDEADLK that retries away: the
-        # 260623 DeepSeek report hung `cp` on every 15-min cycle for 4 days (260624
-        # diagnosis). `cat` issues ordinary read() syscalls, which trigger normal
-        # on-read materialisation of the placeholder and succeed (PROVEN 260624: the
-        # exact file `cp` deadlocked on read cleanly via cat/dd/plain read()). The
-        # subprocess stays killable on a genuine hang via the per-attempt timeout, so
-        # a truly-stuck read is dropped + retried next run instead of poisoning the
-        # process. Retry in-run with backoff to absorb a slow first-fetch.
         last_err = None
         for attempt in range(COPY_RETRIES):
             try:
-                with open(tmp, "wb") as out:
+                # Try rsync first (260627: cat regressed to EDEADLK on some placeholders;
+                # rsync uses a different open path and succeeds where cat fails).
+                try:
                     subprocess.run(
-                        ["cat", str(f)],
+                        ["rsync", "-a", "--no-perms", str(f), str(tmp)],
                         check=True,
                         timeout=READ_TIMEOUT_S,
-                        stdout=out,
+                        stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
                     )
+                except (subprocess.CalledProcessError, FileNotFoundError):
+                    # rsync not available or failed — fall back to cat
+                    with open(tmp, "wb") as out:
+                        subprocess.run(
+                            ["cat", str(f)],
+                            check=True,
+                            timeout=READ_TIMEOUT_S,
+                            stdout=out,
+                            stderr=subprocess.PIPE,
+                        )
                 return tmp.read_text(encoding="utf-8", errors="replace")
             except subprocess.TimeoutExpired as e:
                 if attempt == COPY_RETRIES - 1:
@@ -139,11 +150,11 @@ def _read_via_copy(f: pathlib.Path) -> str:
                 time.sleep(COPY_RETRY_BACKOFF_S * (attempt + 1))
             except subprocess.CalledProcessError as e:
                 msg = (e.stderr or b"").decode("utf-8", "replace").strip()
-                last_err = msg or f"cat exited {e.returncode}"
+                last_err = msg or f"read exited {e.returncode}"
                 if attempt == COPY_RETRIES - 1:
                     raise OSError(last_err) from e
                 time.sleep(COPY_RETRY_BACKOFF_S * (attempt + 1))
-        raise OSError(last_err or "cat failed")
+        raise OSError(last_err or "read failed")
     finally:
         try:
             tmp.unlink()
