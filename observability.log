@@ -1,0 +1,176 @@
+===== omniminer observability 2026-06-20T16:18:02Z =====
+--- publish drift (health_check.py) ---
+[health] OK — GDrive newest=2026-06-20 (251 reports) | live newest=2026-06-20 (290, built_at 2026-06-20 16:13 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 1 Error (all-time recent), last8: 4✓ 1✗
+  podcast : 1 Error (all-time recent), last8: 0✓ 1✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] WARN — 2 error record(s) standing (0 new)
+processing_exit=1
+
+===== omniminer observability 2026-06-20T16:19:07Z =====
+--- publish drift (health_check.py) ---
+[health] WARN: GDrive corpus not mounted / no reports found
+publish_exit=2
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 1 Error (all-time recent), last8: 4✓ 1✗
+  podcast : 1 Error (all-time recent), last8: 0✓ 1✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] WARN — 2 error record(s) standing (0 new)
+processing_exit=1
+
+===== omniminer observability 2026-06-21T01:40:13Z =====
+--- publish drift (health_check.py) ---
+[health] WARN: GDrive corpus not mounted / no reports found
+publish_exit=2
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 5✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 1✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-06-22T01:40:14Z =====
+--- publish drift (health_check.py) ---
+[health] WARN: GDrive corpus not mounted / no reports found
+publish_exit=2
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 5✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 1✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-06-23T02:00:20Z =====
+--- publish drift (health_check.py) ---
+[health] WARN: GDrive corpus not mounted / no reports found
+publish_exit=2
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 5✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-06-24T01:40:17Z =====
+--- publish drift (health_check.py) ---
+[health] WARN: GDrive corpus not mounted / no reports found
+publish_exit=2
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 6✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-06-24T09:47:43Z =====
+--- publish drift (health_check.py) ---
+[health] OK — GDrive newest=2026-06-23 (258 reports) | live newest=2026-06-23 (297, built_at 2026-06-24 09:39 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] WARN: AIRTABLE_API_KEY not set
+processing_exit=2
+
+===== omniminer observability 2026-06-25T01:44:12Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-06-24 (261 reports) | live newest=2026-06-24 (300, built_at 2026-06-24 10:21 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 6✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-06-26T01:40:21Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-06-24 (261 reports) | live newest=2026-06-24 (300, built_at 2026-06-24 10:21 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 6✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 1✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-06-27T02:00:10Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-06-24 (261 reports) | live newest=2026-06-24 (300, built_at 2026-06-24 10:21 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 6✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 1✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-06-28T01:40:16Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-06-27 (263 reports) | live newest=2026-06-27 (302, built_at 2026-06-27 15:29 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 7✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 1✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-06-29T01:57:03Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-06-27 (263 reports) | live newest=2026-06-27 (302, built_at 2026-06-27 15:29 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 8✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-06-30T01:40:23Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-06-28 (266 reports) | live newest=2026-06-28 (305, built_at 2026-06-29 05:15 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 8✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 3✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-07-01T01:40:15Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-06-30 (271 reports) | live newest=2026-06-30 (310, built_at 2026-06-30 05:45 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 8✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 4✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-07-02T01:51:20Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-06-30 (271 reports) | live newest=2026-06-30 (310, built_at 2026-06-30 05:45 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 8✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 1✓ 0✗
+  article : 0 Error (all-time recent), last8: 4✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
