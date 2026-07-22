@@ -354,3 +354,63 @@ publish_exit=0
 [pipeline] OK — all content types healthy
 processing_exit=0
 
+===== omniminer observability 2026-07-18T01:40:18Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-07-15 (275 reports) | live newest=2026-07-15 (314, built_at 2026-07-15 04:24 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 8✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 4✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-07-19T01:53:22Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-07-15 (275 reports) | live newest=2026-07-15 (314, built_at 2026-07-15 04:24 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 8✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 4✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-07-20T01:53:48Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-07-15 (275 reports) | live newest=2026-07-15 (314, built_at 2026-07-15 04:24 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 8✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 4✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-07-21T01:57:33Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-07-15 (275 reports) | live newest=2026-07-15 (314, built_at 2026-07-15 04:24 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 8✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 4✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
+===== omniminer observability 2026-07-22T01:40:20Z =====
+--- publish drift (health_check.py) ---
+[health] OK — source/ newest=2026-07-15 (275 reports) | live newest=2026-07-15 (314, built_at 2026-07-15 04:24 UTC)
+publish_exit=0
+--- processing health (pipeline_health.py) ---
+[pipeline] per-type health:
+  youtube : 0 Error (all-time recent), last8: 8✓ 0✗
+  podcast : 0 Error (all-time recent), last8: 0✓ 0✗
+  article : 0 Error (all-time recent), last8: 4✓ 0✗
+[pipeline] OK — all content types healthy
+processing_exit=0
+
