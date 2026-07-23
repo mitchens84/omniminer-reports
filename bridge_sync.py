@@ -100,8 +100,47 @@ def _strip_transcript(raw: str) -> str:
     return "\n".join(lines[:cut]).rstrip() + "\n"
 
 
+def _copy_rsync(f: pathlib.Path, tmp: pathlib.Path) -> None:
+    subprocess.run(["rsync", "-a", "--no-perms", str(f), str(tmp)],
+                   check=True, timeout=READ_TIMEOUT_S,
+                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def _copy_cat(f: pathlib.Path, tmp: pathlib.Path) -> None:
+    with open(tmp, "wb") as out:
+        subprocess.run(["cat", str(f)], check=True, timeout=READ_TIMEOUT_S,
+                       stdout=out, stderr=subprocess.PIPE)
+
+
+def _copy_dd(f: pathlib.Path, tmp: pathlib.Path) -> None:
+    subprocess.run(["dd", f"if={f}", f"of={tmp}", "bs=1m"],
+                   check=True, timeout=READ_TIMEOUT_S,
+                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def _copy_python(f: pathlib.Path, tmp: pathlib.Path) -> None:
+    """Plain in-process read, NO signal.alarm() (the 260619 EDEADLK cause).
+
+    The subprocess timeout that guards the other methods is absent here, so this
+    runs last: if the placeholder is going to hard-hang, one of the bounded
+    methods above has already had its turn.
+    """
+    tmp.write_bytes(f.read_bytes())
+
+
+# Ordered read strategies, tried in turn on EVERY attempt. Each uses a DIFFERENT
+# open/read path in the kernel, which is the whole point: a dehydrated GDrive
+# placeholder that raises EDEADLK through one path often succeeds through another.
+COPY_METHODS = (
+    ("rsync", _copy_rsync),
+    ("cat", _copy_cat),
+    ("dd", _copy_dd),
+    ("python", _copy_python),
+)
+
+
 def _read_via_copy(f: pathlib.Path) -> str:
-    """Read f out of FUSE via rsync (fallback: cat), timeout-bounded.
+    """Read f out of FUSE through an escalating list of copy methods.
 
     History of read strategies (each fix exposed the next bug):
       1. in-process read() + signal.alarm() — SIGALRM mid-read raises EDEADLK (260619).
@@ -109,9 +148,15 @@ def _read_via_copy(f: pathlib.Path) -> str:
          GDrive placeholder; 260623 DeepSeek report stuck 4 days.
       3. `cat` subprocess (260624) — plain read()/write(), proven faster than cp on the
          260623 file. REGRESSION 260627: cat also raises EDEADLK on some placeholders.
-      4. `rsync` subprocess (260627, current) — rsync uses its own open/read path, proven
-         to succeed on the exact file that cat deadlocked on (260627 AI cognitive report).
-         Falls back to cat if rsync isn't available.
+      4. `rsync` subprocess (260627) — rsync uses its own open/read path, proven to
+         succeed on the exact file that cat deadlocked on (260627 AI cognitive report).
+      5. FULL CHAIN (260723, current) — the 260627 shape nested cat INSIDE rsync's
+         `except`, so (a) an rsync TIMEOUT skipped cat entirely, and (b) once both
+         rsync and cat hit EDEADLK there was nothing left to try. That is exactly how
+         the 260723 LUCK_ALL_THE_WAY_DOWN report stuck for 79 consecutive runs and
+         held the live site 3 days stale. dd and a plain in-process read are now in
+         the chain (both were verified by hand to read that same file cleanly), and
+         every method is tried independently of how the previous one failed.
 
     Raises TimeoutError on a hanging read and OSError on a read failure.
     """
@@ -120,40 +165,25 @@ def _read_via_copy(f: pathlib.Path) -> str:
     tmp = pathlib.Path(tmp_name)
     try:
         last_err = None
+        last_timed_out = False
         for attempt in range(COPY_RETRIES):
-            try:
-                # Try rsync first (260627: cat regressed to EDEADLK on some placeholders;
-                # rsync uses a different open path and succeeds where cat fails).
+            for name, method in COPY_METHODS:
                 try:
-                    subprocess.run(
-                        ["rsync", "-a", "--no-perms", str(f), str(tmp)],
-                        check=True,
-                        timeout=READ_TIMEOUT_S,
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE,
-                    )
-                except (subprocess.CalledProcessError, FileNotFoundError):
-                    # rsync not available or failed — fall back to cat
-                    with open(tmp, "wb") as out:
-                        subprocess.run(
-                            ["cat", str(f)],
-                            check=True,
-                            timeout=READ_TIMEOUT_S,
-                            stdout=out,
-                            stderr=subprocess.PIPE,
-                        )
-                return tmp.read_text(encoding="utf-8", errors="replace")
-            except subprocess.TimeoutExpired as e:
-                if attempt == COPY_RETRIES - 1:
-                    raise TimeoutError(str(e)) from e
-                last_err = "read timeout"
+                    method(f, tmp)
+                    return tmp.read_text(encoding="utf-8", errors="replace")
+                except FileNotFoundError:
+                    # Method's binary isn't installed — not a read failure, skip it.
+                    continue
+                except subprocess.TimeoutExpired:
+                    last_err, last_timed_out = f"{name}: read timeout", True
+                except (subprocess.CalledProcessError, OSError) as e:
+                    stderr = getattr(e, "stderr", None) or b""
+                    msg = stderr.decode("utf-8", "replace").strip() or str(e)
+                    last_err, last_timed_out = f"{name}: {msg}", False
+            if attempt < COPY_RETRIES - 1:
                 time.sleep(COPY_RETRY_BACKOFF_S * (attempt + 1))
-            except subprocess.CalledProcessError as e:
-                msg = (e.stderr or b"").decode("utf-8", "replace").strip()
-                last_err = msg or f"read exited {e.returncode}"
-                if attempt == COPY_RETRIES - 1:
-                    raise OSError(last_err) from e
-                time.sleep(COPY_RETRY_BACKOFF_S * (attempt + 1))
+        if last_timed_out:
+            raise TimeoutError(last_err or "read timeout")
         raise OSError(last_err or "read failed")
     finally:
         try:
