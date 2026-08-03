@@ -3,3 +3,6 @@ rebuild.launchd.log
 __pycache__/
 .venv/
 .bridge_state.json
+
+# local diagnostics logs (written by launchd jobs; never publish state)
+*.log
