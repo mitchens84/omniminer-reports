@@ -120,6 +120,12 @@ def newest_live_date(manifest) -> "tuple":
 
 
 def telegram_alert(text: str):
+    # OPERATOR MUTE (260808): shared kill-switch with persist_notify.classify().
+    # This emitter bypasses the tg-send.sh/tg-alert.sh classifier, so it honours the
+    # mute file directly. Restore by deleting ~/.claude/channels/telegram/ALERTS-MUTED
+    import pathlib as _pl
+    if (_pl.Path.home() / ".claude/channels/telegram/ALERTS-MUTED").exists():
+        return False
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
     if not token:
         return False

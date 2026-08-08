@@ -37,6 +37,9 @@ if [ -f "$HOME/.claude/channels/telegram/.env" ]; then
   export TELEGRAM_BOT_TOKEN="$(grep -E '^TELEGRAM_BOT_TOKEN=' "$HOME/.claude/channels/telegram/.env" | head -1 | cut -d= -f2- | tr -d '"'"'"' ')"
 fi
 push_fail_alert() {  # belt-and-braces; bridge handles stuck reads, this handles push
+  # OPERATOR MUTE (260808): shared kill-switch with persist_notify.classify().
+  # Restore by deleting ~/.claude/channels/telegram/ALERTS-MUTED
+  [ -e "$HOME/.claude/channels/telegram/ALERTS-MUTED" ] && return 0
   [ -n "${TELEGRAM_BOT_TOKEN:-}" ] || return 0
   curl -s --max-time 20 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
     -d "chat_id=-1003961257879" -d "message_thread_id=157" -d "parse_mode=HTML" \
