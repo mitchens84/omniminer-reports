@@ -3,6 +3,9 @@ rebuild.launchd.log
 __pycache__/
 .venv/
 .bridge_state.json
+.omq.db
+.omq.db-shm
+.omq.db-wal
 
 # local diagnostics logs (written by launchd jobs; never publish state)
 *.log
