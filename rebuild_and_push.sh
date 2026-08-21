@@ -37,10 +37,25 @@ if [ -f "$HOME/.claude/channels/telegram/.env" ]; then
   export TELEGRAM_BOT_TOKEN="$(grep -E '^TELEGRAM_BOT_TOKEN=' "$HOME/.claude/channels/telegram/.env" | head -1 | cut -d= -f2- | tr -d '"'"'"' ')"
 fi
 push_fail_alert() {  # belt-and-braces; bridge handles stuck reads, this handles push
-  # OPERATOR MUTE (260808): shared kill-switch with persist_notify.classify().
-  # Restore by deleting ~/.claude/channels/telegram/ALERTS-MUTED
-  [ -e "$HOME/.claude/channels/telegram/ALERTS-MUTED" ] && return 0
+  # CLASSIFIER ROUTING (260821, card 6869 third of three): routed through the shared
+  # classifier instead of checking ALERTS-MUTED directly. classify()'s own first row is
+  # the same mute check this replaces, so muted behaviour is unchanged; fails OPEN (loud)
+  # if persist_notify.py is missing or errors, so a classifier problem can never blind this.
   [ -n "${TELEGRAM_BOT_TOKEN:-}" ] || return 0
+  PERSIST_NOTIFY="$HOME/Local/AUTOMATION/CHANNELS/telegram/bin/persist_notify.py"
+  ALERTS_LOG="$HOME/Local/AUTOMATION/CHANNELS/telegram/alerts.jsonl"
+  ACTION="loud"
+  if [ -f "$PERSIST_NOTIFY" ]; then
+    DECISION_JSON=$(python3 "$PERSIST_NOTIFY" classify "$ALERTS_LOG" \
+      source="omniminer-rebuild-and-push" severity="CRIT" subject="$1" 2>/dev/null) && \
+    ACTION=$(printf '%s' "$DECISION_JSON" | python3 -c 'import sys,json
+try:
+    print(json.load(sys.stdin).get("action","loud"))
+except Exception:
+    print("loud")' 2>/dev/null) || ACTION="loud"
+    [ -n "$ACTION" ] || ACTION="loud"
+  fi
+  [ "$ACTION" = "loud" ] || return 0
   curl -s --max-time 20 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
     -d "chat_id=-1003961257879" -d "message_thread_id=157" -d "parse_mode=HTML" \
     --data-urlencode "text=$1" >/dev/null 2>&1 || true
