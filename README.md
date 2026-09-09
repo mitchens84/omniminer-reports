@@ -7,6 +7,25 @@ Published site: https://mitchens84.github.io/omniminer-reports/
 - Publish model: publish-all by default; per-report `EXCLUDE_FROM_PUBLIC` kill switch + `exclude.txt`
 - Report bodies are the distillation only (no raw transcript, no private notes/metadata)
 
+## Private PKM search
+
+`omq` searches the public mirror and verified private OmniMiner reports in place.
+Private reports must match their local checkpoint's report hash and verified
+archive flag. They are never copied into `source/` or the publishing bridge.
+The search database and its SQLite journal files are local, permission-restricted
+and excluded from Git. Run `omq 'your topic' --limit 5` to retrieve source paths.
+An explicit `OMQ_SOURCE_DIR` isolates a custom corpus; `OMQ_PRIVATE_RUNS` can
+explicitly select a private checkpoint directory. Search results are evidence
+pointers, not automatic confirmation that source claims are true.
+
+Use `omq 'your topic' --json` when an existing PKM consumer needs structured
+matches. Source-bound `knowledge-note` Markdown artifacts can also be searched
+when explicitly registered in the same run's `derived-artifacts.json`. The
+manifest must match work/source identity, and the note must be a regular file
+inside that run with the recorded hash. Changed notes are withdrawn from search
+until reviewed and rebound. This reuses the current index; registration itself
+does not publish, route a learning goal or establish user consumption.
+
 ## Build
 
 ```bash

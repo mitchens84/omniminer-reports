@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import re
 import sqlite3
@@ -13,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 DEFAULT_SOURCE = ROOT / "source"
 DEFAULT_DB = ROOT / ".omq.db"
+DEFAULT_PRIVATE_RUNS = Path.home() / "Local/AUTOMATION/QUOTA-CONTROLLER/work/n8n-local-migration/runs"
 INDEX_VERSION = "1"
 SECTION_RE = re.compile(r"^##\s+.*?KEY INSIGHTS\s*$", re.IGNORECASE | re.MULTILINE)
 NEXT_SECTION_RE = re.compile(r"^##\s+", re.MULTILINE)
@@ -141,10 +144,59 @@ def _source_files(source_dir: Path) -> list[Path]:
     return sorted(files)
 
 
-def sync_index(source_dir: Path, db_path: Path) -> dict[str, int]:
+def _private_report_files(runs_dir: Path) -> list[Path]:
+    """Index verified local reports in place; never copy them into public source/."""
+    runs_dir = Path(runs_dir)
+    if runs_dir.is_symlink():
+        raise ValueError("Private report root must not be a symlink")
+    if not runs_dir.exists():
+        return []
+    files = []
+    for run in sorted(runs_dir.iterdir()):
+        if run.is_symlink() or not run.is_dir():
+            continue
+        report_path, state_path = run / "report.md", run / "state.json"
+        if (report_path.is_symlink() or state_path.is_symlink()
+                or not report_path.is_file() or not state_path.is_file()):
+            continue
+        try:
+            state = json.loads(state_path.read_text())
+            content = report_path.read_bytes()
+            if (state.get("drive_verified") is not True
+                    or not state.get("identity", {}).get("work_id")
+                    or hashlib.sha256(content).hexdigest() != state.get("report_sha256")):
+                continue
+        except (ValueError, AttributeError):
+            continue
+        files.append(report_path)
+        assets_path = run / 'derived-artifacts.json'
+        if assets_path.is_symlink() or not assets_path.is_file():
+            continue
+        try:
+            assets = json.loads(assets_path.read_text())
+            if (assets.get('work_id') != state['identity']['work_id'] or
+                    not state.get('source_sha256') or assets.get('source_sha256') != state['source_sha256']):
+                continue
+            for asset in assets.get('artifacts', []):
+                if asset.get('format') != 'knowledge-note':
+                    continue
+                path = Path(asset.get('path', ''))
+                if (not path.is_absolute() or path.suffix != '.md' or path.resolve() != path
+                        or not path.is_relative_to(run.resolve()) or not path.is_file()):
+                    continue
+                if hashlib.sha256(path.read_bytes()).hexdigest() == asset.get('sha256'):
+                    files.append(path)
+        except (ValueError, TypeError, AttributeError, OSError):
+            continue
+    return sorted(set(files))
+
+
+def sync_index(source_dir: Path, db_path: Path, *, private_runs: Path | None = None) -> dict[str, int]:
     source_dir = Path(source_dir)
     db_path = Path(db_path)
     files = _source_files(source_dir)
+    if private_runs is not None:
+        files += _private_report_files(private_runs)
     current_paths = {str(path.resolve()) for path in files}
     counts = {"indexed": 0, "removed": 0, "unchanged": 0}
 
@@ -196,6 +248,10 @@ def sync_index(source_dir: Path, db_path: Path) -> dict[str, int]:
                  report["primary_topic"], report["processed_date"], report["body"],
                  report["key_insights"]))
             counts["indexed"] += 1
+    # The search database may now contain private transcripts, while source/ stays public.
+    for index_file in (db_path, Path(str(db_path) + "-wal"), Path(str(db_path) + "-shm")):
+        if index_file.exists():
+            index_file.chmod(0o600)
     return counts
 
 
@@ -264,15 +320,25 @@ def main() -> int:
     parser.add_argument("--topic")
     parser.add_argument("--since", metavar="YYMMDD")
     parser.add_argument("--limit", type=int, default=10)
+    parser.add_argument("--json", action="store_true", help="Return structured matches for existing PKM consumers")
     args = parser.parse_args()
 
     source_dir = Path(os.environ.get("OMQ_SOURCE_DIR", DEFAULT_SOURCE))
     db_path = Path(os.environ.get("OMQ_DB_PATH", DEFAULT_DB))
+    private_setting = os.environ.get("OMQ_PRIVATE_RUNS")
+    # Explicit corpus overrides retain isolation for tests and scoped searches.
+    private_runs = (Path(private_setting) if private_setting else
+                    None if "OMQ_SOURCE_DIR" in os.environ else DEFAULT_PRIVATE_RUNS)
     try:
-        sync_index(source_dir, db_path)
-        _print_results(search(
+        sync_index(source_dir, db_path, private_runs=private_runs)
+        results = search(
             db_path, args.query, source_type=args.source_type, topic=args.topic,
-            since=args.since, limit=args.limit))
+            since=args.since, limit=args.limit)
+        if args.json:
+            print(json.dumps({'query': args.query, 'results': results,
+                              'evidence_class': 'retrieved AI distillations and knowledge notes; inspect source lineage'}, ensure_ascii=False))
+        else:
+            _print_results(results)
     except (OSError, sqlite3.Error, ValueError) as exc:
         parser.error(str(exc))
     return 0

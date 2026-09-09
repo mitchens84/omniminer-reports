@@ -1,4 +1,6 @@
 import importlib.util
+import hashlib
+import json
 import os
 import sqlite3
 import subprocess
@@ -40,7 +42,7 @@ processed_date: "{date}"
 class OmqTestCase(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.base = Path(self.tmp.name)
+        self.base = Path(self.tmp.name).resolve()
         self.source = self.base / "source"
         self.source.mkdir()
         self.db = self.base / ".omq.db"
@@ -52,6 +54,69 @@ class OmqTestCase(unittest.TestCase):
         path = self.source / name
         path.write_text(text, encoding="utf-8")
         return path
+
+    def test_verified_private_report_searches_without_copying_to_public_source(self):
+        self.write("public.md", report("Public", "public fixture"))
+        runs = self.base / "private-runs"
+        run = runs / "record-one"
+        run.mkdir(parents=True)
+        path = run / "report.md"
+        body = report("Private podcast", "unique private insight", source_type="podcast")
+        path.write_text(body)
+        state = {"drive_verified": True, "identity": {"work_id": "podcast:one"},
+                 "report_sha256": hashlib.sha256(body.encode()).hexdigest()}
+        (run / "state.json").write_text(json.dumps(state))
+        omq = load_omq()
+        counts = omq.sync_index(self.source, self.db, private_runs=runs)
+        self.assertEqual(counts["indexed"], 2)
+        self.assertEqual(omq.search(self.db, "unique private")[0]["path"], str(path.resolve()))
+        self.assertEqual(list(self.source.iterdir()), [self.source / "public.md"])
+        self.assertEqual(self.db.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(omq.sync_index(self.source, self.db, private_runs=runs)["unchanged"], 2)
+        path.write_text(body + "changed after verification")
+        self.assertEqual(omq.sync_index(self.source, self.db, private_runs=runs)["removed"], 1)
+        self.assertEqual(omq.search(self.db, "unique private"), [])
+        self.assertEqual(len(omq.search(self.db, "public fixture")), 1)
+
+    def test_private_search_rejects_symlink_and_unverified_report(self):
+        runs = self.base / "runs"
+        runs.mkdir()
+        external = self.base / "external"
+        external.mkdir()
+        (runs / "linked-run").symlink_to(external, target_is_directory=True)
+        run = runs / "unverified"
+        run.mkdir()
+        (run / "report.md").write_text("# Not accepted")
+        (run / "state.json").write_text(json.dumps({"drive_verified": False}))
+        self.assertEqual(load_omq()._private_report_files(runs), [])
+        alias = self.base / "alias"
+        alias.symlink_to(runs, target_is_directory=True)
+        with self.assertRaises(ValueError):
+            load_omq()._private_report_files(alias)
+
+    def test_source_bound_knowledge_note_retrieval_and_tamper_withdrawal(self):
+        run=self.base/'runs'/'one';run.mkdir(parents=True)
+        body=report('Source report','source fixture');(run/'report.md').write_text(body)
+        (run/'state.json').write_text(json.dumps({'drive_verified':True,'identity':{'work_id':'one'},'source_sha256':'source-hash','report_sha256':hashlib.sha256(body.encode()).hexdigest()}))
+        note=run/'knowledge.md';note.write_text(report('Application','distinct actionable answer'))
+        assets={'work_id':'one','source_sha256':'source-hash','artifacts':[{'format':'knowledge-note','path':str(note),'sha256':hashlib.sha256(note.read_bytes()).hexdigest()}]}
+        manifest=run/'derived-artifacts.json';manifest.write_text(json.dumps(assets))
+        omq=load_omq();omq.sync_index(self.source,self.db,private_runs=run.parent)
+        self.assertEqual(omq.search(self.db,'distinct actionable')[0]['path'],str(note))
+        note.write_text('tampered')
+        omq.sync_index(self.source,self.db,private_runs=run.parent)
+        self.assertEqual(omq.search(self.db,'distinct actionable'),[])
+        outside=self.base/'outside.md';outside.write_text(report('Wrong home','outside content'))
+        assets['artifacts'][0].update(path=str(outside),sha256=hashlib.sha256(outside.read_bytes()).hexdigest())
+        manifest.write_text(json.dumps(assets))
+        self.assertEqual(omq._private_report_files(run.parent),[run/'report.md'])
+
+    def test_json_cli_preserves_structured_identity(self):
+        p=self.write('one.md',report('Structured match','distinct structured query'))
+        result=subprocess.run([sys.executable,str(OMQ_PATH),'distinct structured','--json'],capture_output=True,text=True,env=dict(os.environ,OMQ_SOURCE_DIR=str(self.source),OMQ_DB_PATH=str(self.db)),check=True)
+        value=json.loads(result.stdout)
+        self.assertEqual(value['results'][0]['path'],str(p))
+        self.assertIn('inspect source lineage',value['evidence_class'])
 
     def test_known_topics_rank_expected_report_in_top_three(self):
         expected = {
