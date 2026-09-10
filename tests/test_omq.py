@@ -94,6 +94,24 @@ class OmqTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             load_omq()._private_report_files(alias)
 
+    def test_retained_report_created_date_survives_date_filtered_search(self):
+        run=self.base/'runs'/'opaque-execution';run.mkdir(parents=True)
+        body=report('New podcast','unique latest source',source_type='podcast',date='260910').replace('processed_date:', 'created:')
+        path=run/'report.md';path.write_text(body)
+        (run/'state.json').write_text(json.dumps({'drive_verified':True,'identity':{'work_id':'podcast:latest'},
+            'report_sha256':hashlib.sha256(body.encode()).hexdigest()}))
+        omq=load_omq();omq.sync_index(self.source,self.db,private_runs=run.parent)
+        matches=omq.search(self.db,'unique latest',since='260910')
+        self.assertEqual(matches[0]['path'],str(path))
+        self.assertEqual(matches[0]['processed_date'],'260910')
+        self.assertEqual(omq.search(self.db,'unique latest',since='260911'),[])
+        # Old cached rows must be re-parsed even though source bytes did not change.
+        with sqlite3.connect(self.db) as conn:
+            conn.execute("UPDATE metadata SET value='1' WHERE key='index_version'")
+            conn.execute("UPDATE reports SET processed_date=''")
+        omq.sync_index(self.source,self.db,private_runs=run.parent)
+        self.assertEqual(omq.search(self.db,'unique latest',since='260910')[0]['processed_date'],'260910')
+
     def test_source_bound_knowledge_note_retrieval_and_tamper_withdrawal(self):
         run=self.base/'runs'/'one';run.mkdir(parents=True)
         body=report('Source report','source fixture');(run/'report.md').write_text(body)

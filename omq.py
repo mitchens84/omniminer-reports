@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent
 DEFAULT_SOURCE = ROOT / "source"
 DEFAULT_DB = ROOT / ".omq.db"
 DEFAULT_PRIVATE_RUNS = Path.home() / "Local/AUTOMATION/QUOTA-CONTROLLER/work/n8n-local-migration/runs"
-INDEX_VERSION = "1"
+INDEX_VERSION = "2"
 SECTION_RE = re.compile(r"^##\s+.*?KEY INSIGHTS\s*$", re.IGNORECASE | re.MULTILINE)
 NEXT_SECTION_RE = re.compile(r"^##\s+", re.MULTILINE)
 
@@ -53,7 +53,7 @@ def _tags(text: str) -> list[str]:
 
 def _processed_date(path: Path, fields: dict[str, str]) -> str:
     match = re.match(r"(\d{8}|\d{6})", path.name)
-    raw = fields.get("processed_date", "")
+    raw = fields.get("processed_date") or fields.get("created", "")
     digits = re.sub(r"\D", "", raw)
     if len(digits) == 8:
         return digits[2:]
