@@ -537,7 +537,7 @@ def index_page(reports: list[dict], built_at: str) -> str:
 </head><body><div class="wrap">
 <header class="site">
 <h1>OmniMiner Reports</h1>
-<p>Fact-checked distillations of the videos, podcasts and articles I work through &mdash; the key points of each, without the transcript.</p>
+<p>Distillations and analysis from videos, podcasts and articles &mdash; with source links and research notes where available.</p>
 </header>
 <div class="controls">
 <input id="q" type="search" placeholder="Search title, source or tag&hellip;" autocomplete="off">
