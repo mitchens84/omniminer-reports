@@ -20,7 +20,8 @@ Two modes:
       regardless of how the workflow was changed (the n8n API key isn't available to a
       headless script, so a version-drift watch isn't possible here; E2E covers it).
 
-Exit: 0 = healthy, 1 = unhealthy (errors / path-down / canary fail), 2 = could not run.
+Exit: 0 = healthy, 1 = unhealthy (errors / path-down / ingestion stale / canary fail),
+2 = could not run (no API key, or corpus freshness could not be determined).
 Alerts (best-effort, never crash the check) go to the same OPS thread as health_check.py
 when TELEGRAM_BOT_TOKEN is set. Stdlib only.
 
@@ -61,6 +62,21 @@ CANARY = {
 }
 RECENT_WINDOW = 8   # of the last N records per type, used for path-down detection
 PROCESSING_STATES = {"Processing", "Requested", "In Progress"}
+
+# --- Ingestion staleness (added 260910) -------------------------------------
+# The scan above scores only records that ALREADY EXIST, so a TOTAL ingestion outage
+# produces no Error rows and no path-down, and this check printed "OK" for 15 straight
+# days while nothing whatsoever was produced (observability.log 260910 08:40; newest
+# report 2026-08-26; the n8n producer had no executor at all). A probe that scores only
+# history cannot see an outage — it needs an absolute freshness term.
+#
+# Age is measured from the report FILENAME date (YYMMDD), never from mtime: source/
+# mtimes are MIRROR-COPY times (newest mtime 2026-09-02 for the 2026-08-26 report), so
+# an mtime-based age would have understated this stall by 7 days.
+#
+# 10 days ~= 2x the observed pre-stall cadence (Aug 5 -> 12 -> 22 -> 26, i.e. 4-10 day
+# gaps), so an ordinary drought does not trip it but a dead producer does.
+MAX_REPORT_AGE_DAYS = 10
 
 
 def _api_key() -> str:
@@ -135,6 +151,59 @@ def scan() -> tuple:
     return lines, error_records, path_down
 
 
+def check_ingestion_staleness(telegram: bool) -> tuple:
+    """Absolute freshness of the watched report corpus. Returns (exit_code, note).
+
+    0 = fresh, 1 = STALE, 2 = UNKNOWN. NEVER returns 0 for a corpus it could not read:
+    an unreadable corpus cannot prove freshness, and "could not prove" must not be
+    reported as health. Reuses health_check.py's readers (sibling module, same dir) so
+    the date parsing has exactly one implementation.
+
+    Corpus preference matches health_check.py: GDrive first (sees generated-but-not-
+    bridged reports too), local source/ as the fallback for launchd runs where the
+    File-Provider mount is invisible.
+    """
+    try:
+        from health_check import newest_gdrive_date, newest_source_date
+    except Exception as e:  # noqa: BLE001
+        return 2, f"UNKNOWN — cannot load corpus readers ({e})"
+
+    newest = count = None
+    corpus = ""
+    try:
+        g_date, g_count = newest_gdrive_date()
+        if g_date is not None:
+            newest, count, corpus = g_date, g_count, "GDrive"
+        else:
+            s_date, s_count = newest_source_date(pathlib.Path(__file__).with_name("source"))
+            if s_date is not None:
+                newest, count, corpus = s_date, s_count, "source/"
+    except Exception as e:  # noqa: BLE001
+        return 2, f"UNKNOWN — corpus read failed ({e})"
+
+    if newest is None:
+        return 2, "UNKNOWN — neither GDrive corpus nor source/ readable (freshness unprovable)"
+
+    age = (_dt.date.today() - newest).days
+    if age <= MAX_REPORT_AGE_DAYS:
+        return 0, f"fresh — newest={newest} age={age}d (via {corpus}, {count} reports)"
+
+    note = (f"STALE — newest={newest} age={age}d "
+            f"(> {MAX_REPORT_AGE_DAYS}d, via {corpus}, {count} reports)")
+    # Alert once per stalled newest-date, not once per day (matches the error-dedup
+    # discipline above). Persisted here; run_scan merges rather than overwrites.
+    if telegram:
+        st = load_state()
+        if st.get("stale_alerted_for") != str(newest):
+            if telegram_alert(
+                    f"⚠️ <b>OmniMiner ingestion STALE</b> — newest report {newest} is "
+                    f"{age}d old (> {MAX_REPORT_AGE_DAYS}d). Nothing new has entered the "
+                    f"corpus; the producer may have no executor."):
+                st["stale_alerted_for"] = str(newest)
+                save_state(st)
+    return 1, note
+
+
 def load_state() -> dict:
     try:
         return json.loads(STATE_FILE.read_text())
@@ -175,6 +244,17 @@ def telegram_alert(text: str) -> bool:
 
 
 def run_scan(telegram: bool) -> int:
+    # Ingestion freshness FIRST, and INDEPENDENT of Airtable: a dead producer must stay
+    # visible even when the content-type scan cannot run at all (260908: no API key ->
+    # exit 2, and not one word about the ingestion outage already in progress).
+    stale_rc, stale_note = check_ingestion_staleness(telegram)
+    print(f"[ingestion] {stale_note}")
+
+    if not _api_key():
+        print("[pipeline] SCAN SKIPPED — AIRTABLE_API_KEY not set "
+              f"(content-type scan did not run; ingestion: {stale_note})")
+        return 2
+
     lines, error_records, path_down = scan()
     state = load_state()
     known = set(state.get("known_error_ids", []))
@@ -186,7 +266,6 @@ def run_scan(telegram: bool) -> int:
     for ln in lines:
         print(ln)
 
-    unhealthy = bool(error_records) or bool(path_down)
     # Only PING on something new (avoid daily spam on a standing backlog).
     if telegram and (new_errors or new_path_down):
         parts = ["⚠️ <b>OmniMiner pipeline</b>"]
@@ -198,7 +277,11 @@ def run_scan(telegram: bool) -> int:
                 parts.append(f"• [{ctype}] {title}")
         telegram_alert("\n".join(parts))
 
-    save_state({"known_error_ids": sorted(cur_err_ids), "path_down": path_down})
+    # Merge, don't overwrite: preserves stale_alerted_for written above.
+    state.update({"known_error_ids": sorted(cur_err_ids), "path_down": path_down})
+    if stale_rc == 0:
+        state.pop("stale_alerted_for", None)   # recovered — re-arm the alert
+    save_state(state)
 
     if path_down:
         print(f"[pipeline] UNHEALTHY — path-down: {path_down}")
@@ -207,7 +290,18 @@ def run_scan(telegram: bool) -> int:
         print(f"[pipeline] WARN — {len(error_records)} error record(s) standing "
               f"({len(new_errors)} new)")
         return 1
-    print("[pipeline] OK — all content types healthy")
+    # A clean content-type scan is NOT health if nothing is arriving. This branch is the
+    # whole point of the 260910 patch: the scan below it can only ever score history.
+    if stale_rc == 1:
+        print(f"[pipeline] UNHEALTHY — ingestion {stale_note}; content-type scan is clean "
+              f"but no new content is arriving")
+        return 1
+    if stale_rc == 2:
+        print("[pipeline] UNKNOWN — content-type scan clean, but corpus freshness could "
+              "not be proved (see the [ingestion] line above)")
+        return 2
+    # The OK line can never be printed without naming the freshness it is asserting.
+    print(f"[pipeline] OK — all content types healthy; ingestion {stale_note}")
     return 0
 
 
@@ -248,9 +342,13 @@ def main() -> int:
                     help="Run the active per-type canary (expensive; weekly/post-edit).")
     ap.add_argument("--telegram", action="store_true", help="Alert to OPS on regression.")
     args = ap.parse_args()
-    if not _api_key():
-        return 2
-    return run_e2e(args.telegram) if args.e2e else run_scan(args.telegram)
+    if args.e2e:
+        # E2E genuinely cannot run without Airtable; the scan path now degrades instead
+        # (it still reports ingestion freshness, which needs no API key).
+        if not _api_key():
+            return 2
+        return run_e2e(args.telegram)
+    return run_scan(args.telegram)
 
 
 if __name__ == "__main__":
