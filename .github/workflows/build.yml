@@ -57,7 +57,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
       - name: Notify Telegram for new reports
-        if: ${{ success() && github.event_name == 'push' }}
+        if: ${{ success() && github.event_name == 'push' && !contains(github.event.head_commit.message, '[pages-only]') }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: python .github/scripts/notify.py "${{ github.event.before }}" "${{ github.sha }}"
@@ -66,7 +66,7 @@ jobs:
       # operator would otherwise never know (the local watchdog sees publish-drift but
       # not WHY). Alert the same OPS thread with a link to the failed run.
       - name: Alert Telegram on CI failure
-        if: ${{ failure() }}
+        if: ${{ failure() && !(github.event_name == 'push' && contains(github.event.head_commit.message, '[pages-only]')) }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         run: |

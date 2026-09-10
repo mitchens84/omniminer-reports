@@ -49,7 +49,8 @@ import sys
 import tempfile
 import time
 
-MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript")
+MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript",
+           "## Full Source", "## Extracted PDF Text")
 READ_TIMEOUT_S = 90  # per-file hard cap on the read-out-of-FUSE subprocess (allows
                      # first-fetch of a dehydrated placeholder; GDrive throttles ~<1KB/s)
 COPY_RETRIES = 4            # in-run retries on a slow/transient FUSE materialisation

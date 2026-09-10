@@ -44,7 +44,8 @@ DEFAULT_SOURCE = (
     / "Library/CloudStorage/GoogleDrive-henspham@gmail.com/My Drive/_SYNC/OMNIMINER"
 )
 
-TRANSCRIPT_MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript")
+TRANSCRIPT_MARKERS = ("## Full Transcript", "## Transcript", "## Raw Transcript",
+                      "## Full Source", "## Extracted PDF Text")
 PRIVACY_MARKER = "EXCLUDE_FROM_PUBLIC"
 
 # Quality gate: a distillation that contains a raw unexecuted tool-call, or is
@@ -372,6 +373,14 @@ def parse_report(path: Path) -> dict | None:
     else:
         category = best
 
+    # Purpose-led reports distinguish the public topic from the knowledge
+    # beneficiary. A learning report is not necessarily about technology.
+    report_schema = fm.get('report_schema')
+    if report_schema == 3 and fv('topic_category') in CATEGORY_ORDER:
+        category = next(c for c in CATEGORIES + [FALLBACK_CATEGORY] if c[0] == fv('topic_category'))
+    lbs = (lbs_fm if report_schema == 3 and lbs_fm in
+           ('0A','1N','2L','3P','4H','5R','6I','7A','8C','9E') else LBS_OF[category[0]])
+
     ctype = content_type(source_url)
     src = source_label(author, source_url)
 
@@ -387,7 +396,8 @@ def parse_report(path: Path) -> dict | None:
         "duration": friendly_duration(duration),
         "tags": tags,
         "category": category[0],
-        "lbs": LBS_OF[category[0]],
+        "lbs": lbs,
+        "report_schema": report_schema,
         "ctype": ctype,
         "body_md": body_md,
         "src_file": path.name,
@@ -407,8 +417,9 @@ def linkify(html_str: str) -> str:
     return _BARE_URL.sub(lambda m: f'<a href="{m.group(1)}">{m.group(1)}</a>', html_str)
 
 
-def render_md(body_md: str) -> str:
-    return linkify(markdown.markdown(body_md, extensions=MD_EXTENSIONS, output_format="html5"))
+def render_md(body_md: str, *, soft_breaks=False) -> str:
+    extensions = [e for e in MD_EXTENSIONS if not (soft_breaks and e == 'nl2br')]
+    return linkify(markdown.markdown(body_md, extensions=extensions, output_format="html5"))
 
 
 CSS = """
@@ -471,7 +482,7 @@ def submeta_line(r: dict, with_category: bool) -> str:
 
 
 def report_page(r: dict) -> str:
-    body = render_md(r["body_md"])
+    body = render_md(r["body_md"], soft_breaks=r.get('report_schema') == 3)
     src = f'<p class="src">{html.escape(r["source_label"])}</p>' if r["source_label"] else ""
     return f"""<!DOCTYPE html>
 <html lang="en"><head>

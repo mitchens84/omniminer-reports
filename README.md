@@ -7,6 +7,15 @@ Published site: https://mitchens84.github.io/omniminer-reports/
 - Publish model: publish-all by default; per-report `EXCLUDE_FROM_PUBLIC` kill switch + `exclude.txt`
 - Report bodies are the distillation only (no raw transcript, no private notes/metadata)
 
+Purpose-led reports (`report_schema: 3`) may select an existing display category
+through `topic_category`, independently of their PKM `lbs` beneficiary. They use
+ordinary Markdown paragraph wrapping. Both publication legs also remove article
+`Full Source` and `Extracted PDF Text` sections, alongside transcript sections.
+
+A publication commit containing `[pages-only]` deploys without the workflow’s
+Telegram success or failure messages. Its operator must inspect the Actions result
+and deployed page. Other pushes retain their existing notification behaviour.
+
 ## Private PKM search
 
 `omq` searches the public mirror and verified private OmniMiner reports in place.
