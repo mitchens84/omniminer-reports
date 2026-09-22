@@ -1,6 +1,6 @@
 # Visual reference guides
 
-Status: the first format is published. Mitch subsequently rejected its design as too text-heavy and generic. An illustrated replacement is being reviewed separately; technical and editorial passes did not establish visual acceptance. This remains an optional format, not a redesign of every existing report.
+Status: the first format is published. Mitch subsequently rejected its design as too text-heavy and generic. An illustrated replacement is prepared for publication; technical and editorial passes did not establish visual acceptance. This remains an optional format, not a redesign of every existing report.
 
 ## Purpose and composition
 
@@ -59,6 +59,8 @@ Decision: use reader-controlled comparison and concise progressive disclosure he
 
 For a substantial redesign, explore visibly different illustrated concepts before implementation. Keep image-generation probes distinct from source-backed graphs: the generated mockup's chart labels and study names are not evidence. Generate the selected production art separately, then author all exact text, numeric marks and source links deterministically.
 
-The next candidate uses a generated dog illustration, study-cohort dot figures, three simultaneously visible environmental comparisons and a question-to-evidence interaction. It replaces the timed highlight overview with a reader-triggered relationship animation. It has not replaced the published page and has not received final user acceptance.
+The next candidate uses a generated dog illustration, study-cohort dot figures, three simultaneously visible environmental comparisons and a question-to-evidence interaction. It replaces the timed highlight overview with a reader-triggered relationship animation. The user approved the working candidate for publication. Its final editorial checks and destination verification are recorded with the release.
 
 The shared production owner is Content Architect's visual-routing reference, linked to Drive `STD-DATAVIZ §13` and `REF-VISUAL_STORY_PRODUCTION.md`. Those documents connect Impeccable, Image Generator, quantitative visualisation and Studio Pipeline without introducing a second publishing controller. Preserve static equivalence, data tables, reduced motion and primary-source provenance.
+
+Illustrated format: `presentation: illustrated-story`, with authored semantic HTML in the existing Markdown source and assets in `web/illustrated/`. It keeps the report slug, library metadata and source history.

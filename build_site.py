@@ -398,7 +398,9 @@ def parse_report(path: Path) -> dict | None:
         "category": category[0],
         "lbs": lbs,
         "report_schema": report_schema,
-        "presentation": "visual-reference" if report_schema == 3 and fv("presentation") == "visual-reference" else "",
+        "presentation": fv("presentation") if report_schema == 3 and fv("presentation") in ("visual-reference", "illustrated-story") else "",
+        "description": fv("description"),
+        "preview_image": fv("preview_image"),
         "ctype": ctype,
         "body_md": body_md,
         "src_file": path.name,
@@ -483,6 +485,21 @@ def submeta_line(r: dict, with_category: bool) -> str:
 
 
 def report_page(r: dict) -> str:
+    if r.get("presentation") == "illustrated-story":
+        # This opt-in format is authored HTML in the trusted repository source.
+        # Preserve semantic figures, controls and source disclosures verbatim.
+        title = html.escape(r["title"])
+        description = html.escape(r.get("description") or f"An illustrated evidence guide to {r['title']}.", quote=True)
+        preview = r.get("preview_image", "")
+        image_meta = (f'<meta property="og:image" content="https://mitchens84.github.io/omniminer-reports/assets/illustrated/{preview}">' if re.fullmatch(r'[a-zA-Z0-9_.-]+', preview) else "")
+        return f"""<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title} · OmniMiner</title>
+<meta name="description" content="{description}">
+<meta property="og:title" content="{title}"><meta property="og:description" content="{description}">
+<meta property="og:type" content="article">{image_meta}
+<link rel="stylesheet" href="../assets/illustrated/story.css">
+</head><body>{r["body_md"]}<script src="../assets/illustrated/story.js"></script></body></html>"""
     body = render_md(r["body_md"], soft_breaks=r.get('report_schema') == 3)
     src = f'<p class="src">{html.escape(r["source_label"])}</p>' if r["source_label"] else ""
     visual = r.get("presentation") == "visual-reference"
@@ -631,6 +648,9 @@ def main() -> int:
     (ASSETS / "om.css").write_text(CSS, encoding="utf-8")
     for name in ("visual-reference.css", "visual-reference.js"):
         shutil.copyfile(REPO / "web" / name, ASSETS / name)
+
+    if (REPO / "web" / "illustrated").exists():
+        shutil.copytree(REPO / "web" / "illustrated", ASSETS / "illustrated", dirs_exist_ok=True)
 
     for r in reports:
         (REPORTS_DIR / f"{r['slug']}.html").write_text(report_page(r), encoding="utf-8")
