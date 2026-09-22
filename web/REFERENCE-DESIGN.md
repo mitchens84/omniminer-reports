@@ -1,12 +1,12 @@
 # Visual reference guides
 
-Status: implemented in the OmniMiner renderer; first application is the plant-based dog guide. This is an optional format, not a redesign of every existing report.
+Status: the first format is published. Mitch subsequently rejected its design as too text-heavy and generic. An illustrated replacement is being reviewed separately; technical and editorial passes did not establish visual acceptance. This remains an optional format, not a redesign of every existing report.
 
 ## Purpose and composition
 
 Help a phone reader grasp the answer in a few minutes and inspect its basis without leaving the guide. Start with the question and supported conclusions. Use a visual for a comparison, relationship or sequence, not merely to fill space. Keep methods and source detail expandable; keep any qualification that changes the conclusion beside its visual.
 
-Use the library's existing system font and teal identity. Establish hierarchy with scale, spacing and a deliberate contrast region. Avoid repeated icon-card grids, ornamental charts, fake confidence percentages and motion on every scroll section.
+Retain OmniMiner attribution and navigation. Choose visual direction for the particular story; do not force every guide into the first example's system font and teal palette. Establish hierarchy with scale, spacing and a deliberate contrast region. Avoid repeated icon-card grids, ornamental charts, fake confidence percentages and motion on every scroll section.
 
 ## Reusable components
 
@@ -54,3 +54,11 @@ Inspect at 320/390 and desktop widths; test each metric, comparator and source d
 - [Flourish scrollytelling examples](https://flourish.studio/blog/scrollytelling-examples/): one idea per step, annotations and reader-paced narrative. Vendor design guidance, not independent evidence that animation improves comprehension.
 
 Decision: use reader-controlled comparison and concise progressive disclosure here. Retain long scrollytelling for a story whose sequence genuinely needs it. No paid tool, new account, plugin or external tracking is required.
+
+## Illustrated-story extension (22 September 2026)
+
+For a substantial redesign, explore visibly different illustrated concepts before implementation. Keep image-generation probes distinct from source-backed graphs: the generated mockup's chart labels and study names are not evidence. Generate the selected production art separately, then author all exact text, numeric marks and source links deterministically.
+
+The next candidate uses a generated dog illustration, study-cohort dot figures, three simultaneously visible environmental comparisons and a question-to-evidence interaction. It replaces the timed highlight overview with a reader-triggered relationship animation. It has not replaced the published page and has not received final user acceptance.
+
+The shared production owner is Content Architect's visual-routing reference, linked to Drive `STD-DATAVIZ §13` and `REF-VISUAL_STORY_PRODUCTION.md`. Those documents connect Impeccable, Image Generator, quantitative visualisation and Studio Pipeline without introducing a second publishing controller. Preserve static equivalence, data tables, reduced motion and primary-source provenance.
