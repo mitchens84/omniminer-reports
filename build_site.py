@@ -381,7 +381,7 @@ def parse_report(path: Path) -> dict | None:
     lbs = (lbs_fm if report_schema == 3 and lbs_fm in
            ('0A','1N','2L','3P','4H','5R','6I','7A','8C','9E') else LBS_OF[category[0]])
 
-    ctype = content_type(source_url)
+    ctype = ("reference guide" if report_schema == 3 and fv("content_kind") == "reference guide" else content_type(source_url))
     src = source_label(author, source_url)
 
     stem = path.stem.replace("_complete", "").split("-REPORT-OMNIMINER")[0]
@@ -398,6 +398,7 @@ def parse_report(path: Path) -> dict | None:
         "category": category[0],
         "lbs": lbs,
         "report_schema": report_schema,
+        "presentation": "visual-reference" if report_schema == 3 and fv("presentation") == "visual-reference" else "",
         "ctype": ctype,
         "body_md": body_md,
         "src_file": path.name,
@@ -484,19 +485,25 @@ def submeta_line(r: dict, with_category: bool) -> str:
 def report_page(r: dict) -> str:
     body = render_md(r["body_md"], soft_breaks=r.get('report_schema') == 3)
     src = f'<p class="src">{html.escape(r["source_label"])}</p>' if r["source_label"] else ""
+    visual = r.get("presentation") == "visual-reference"
+    extra_css = '<link rel="stylesheet" href="../assets/visual-reference.css"><script defer src="../assets/visual-reference.js"></script>' if visual else ""
+    page_class = "report visual-reference" if visual else "report"
+    card_tag = "main" if visual else "div"
+    footer = "OmniMiner reference guide · research synthesis" if r.get("ctype") == "reference guide" else "OmniMiner distillation · transcript withheld"
     return f"""<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(r["title"])} &middot; OmniMiner</title>
 <link rel="stylesheet" href="../assets/om.css">
-</head><body class="report"><div class="wrap">
+{extra_css}
+</head><body class="{page_class}"><div class="wrap">
 <a class="backlink" href="../index.html">&larr; All reports</a>
-<div class="card">
+<{card_tag} class="card">
 {src}<h1>{html.escape(r["title"])}</h1>
 <p class="submeta">{submeta_line(r, with_category=True)}</p>
 {body}
-</div>
-<footer class="site">OmniMiner distillation &middot; transcript withheld</footer>
+</{card_tag}>
+<footer class="site">{footer}</footer>
 </div></body></html>"""
 
 
@@ -537,7 +544,7 @@ def index_page(reports: list[dict], built_at: str) -> str:
 </head><body><div class="wrap">
 <header class="site">
 <h1>OmniMiner Reports</h1>
-<p>Distillations and analysis from videos, podcasts and articles &mdash; with source links and research notes where available.</p>
+<p>Source distillations and evidence guides, with research links and limitations.</p>
 </header>
 <div class="controls">
 <input id="q" type="search" placeholder="Search title, source or tag&hellip;" autocomplete="off">
@@ -546,7 +553,7 @@ def index_page(reports: list[dict], built_at: str) -> str:
 </div>
 <div id="results">{''.join(sections)}</div>
 <p class="empty" id="noresults" style="display:none">No reports match.</p>
-<footer class="site">Generated {built_at} &middot; distillation only, transcripts withheld</footer>
+<footer class="site">Generated {built_at} &middot; public summaries and guides; raw sources withheld</footer>
 </div>
 <script>{INDEX_JS}</script>
 </body></html>"""
@@ -622,6 +629,8 @@ def main() -> int:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     ASSETS.mkdir(parents=True, exist_ok=True)
     (ASSETS / "om.css").write_text(CSS, encoding="utf-8")
+    for name in ("visual-reference.css", "visual-reference.js"):
+        shutil.copyfile(REPO / "web" / name, ASSETS / name)
 
     for r in reports:
         (REPORTS_DIR / f"{r['slug']}.html").write_text(report_page(r), encoding="utf-8")

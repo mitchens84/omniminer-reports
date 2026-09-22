@@ -1,6 +1,6 @@
 # OmniMiner Reports
 
-Auto-published rendered HTML distillations from the OmniMiner pipeline.
+A searchable library of source distillations and sourced evidence guides.
 Published site: https://mitchens84.github.io/omniminer-reports/
 
 - Source for Pages: **GitHub Actions** (`.github/workflows/build.yml` builds `docs/` from `source/` and deploys)
@@ -99,3 +99,15 @@ Manual rebuild still works for testing: `python3 build_site.py --source source`.
 `com.mitchens.omniminer-reports-rebuild`). The durable end-state is n8n committing
 `source/` directly (no Mac in the loop) — blocked on a Contents:write GitHub PAT
 (the current bws token is read-only). See OmniMiner `CHANGELOG.md` 260610.
+
+## Visual reference guides
+
+Schema-3 reports may opt into `content_kind: reference guide` and
+`presentation: visual-reference`. Their authored HTML remains in the existing
+`source/` corpus; `web/visual-reference.css` adds responsive charts, native
+disclosures and reduced-motion support. Ordinary distillations are unchanged.
+Guides must identify methods, source dates, limitations and relevant interests.
+
+See [Visual reference design](web/REFERENCE-DESIGN.md) for the researched approach,
+existing skill routes, reusable components and verification contract. The optional
+JavaScript is source-fed and progressively enhances readable static content.

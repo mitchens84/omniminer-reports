@@ -11,6 +11,7 @@ on:
     paths:
       - 'source/**'
       - 'build_site.py'
+      - 'web/**'
       - 'exclude.txt'
       - 'requirements.txt'
       - '.github/workflows/build.yml'
