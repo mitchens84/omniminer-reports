@@ -57,7 +57,7 @@ except Exception:
   fi
   [ "$ACTION" = "loud" ] || return 0
   curl -s --max-time 20 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-    -d "chat_id=-1003961257879" -d "message_thread_id=157" -d "parse_mode=HTML" \
+    -d "chat_id=-1003961257879" -d "parse_mode=HTML" \
     --data-urlencode "text=$1" >/dev/null 2>&1 || true
 }
 
