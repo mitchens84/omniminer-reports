@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 DEFAULT_SOURCE = ROOT / "source"
 DEFAULT_DB = ROOT / ".omq.db"
-DEFAULT_PRIVATE_RUNS = Path.home() / "Local/AUTOMATION/QUOTA-CONTROLLER/work/n8n-local-migration/runs"
+DEFAULT_PRIVATE_RUNS = Path.home() / "Local/WORK/seats/n8n-local-migration/runs"
 INDEX_VERSION = "2"
 SECTION_RE = re.compile(r"^##\s+.*?KEY INSIGHTS\s*$", re.IGNORECASE | re.MULTILINE)
 NEXT_SECTION_RE = re.compile(r"^##\s+", re.MULTILINE)
